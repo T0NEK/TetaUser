@@ -1,0 +1,21 @@
+<mat-card class="mat-card">
+  <div class="obok">
+    <mat-label>Określ datę startu Dedala: </mat-label>
+    <input class="input-date" matInput [matDatepicker]="pickerDateStartu" (dateChange)="DataChange('change', $event)" [(ngModel)]="inputDSvalue" placeholder="yyyy.mm.dd" disabled="true">
+    <mat-datepicker-toggle matSuffix [for]="pickerDateStartu"></mat-datepicker-toggle>
+    <mat-datepicker #pickerDateStartu disabled="false"></mat-datepicker>
+  </div>
+  <div class="obok" style="min-width: 30px;"></div>
+  <div class="obok">
+    <mat-label class="obok">Określ czas startu Dedala: </mat-label>  
+    <ngb-timepicker class="obok" [(ngModel)]="timeDataStartuNew" [seconds]="seconds"></ngb-timepicker>
+  </div>
+  
+  <mat-card-actions align="end">
+    <div class="example-button-row">
+    <button type="button" class="btn btn-danger" (click)="data_startu_new()" [disabled]="buttonDSNdisabled">Zmień datę startu na wybraną</button>  
+    <button type="button" class="btn btn-info" (click)="data_startu_poprz()" [disabled]="buttonDSAPdisabled">Poprzedna: {{czas_startu_poprz}}</button>
+    <button type="button" class="btn btn-info" (click)="data_startu_org()" [disabled]="buttonDSOdisabled">Oryginalna: {{czas_startu_org}}</button>
+  </div>
+  </mat-card-actions>
+</mat-card>

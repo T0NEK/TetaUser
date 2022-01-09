@@ -1,0 +1,18 @@
+.example-viewport
+  {
+    height: var(--dialogmin);
+    width: 100%;
+    max-width: 100%;
+  }
+.example-item
+  {
+    height: 24px;
+  }
+.dialog
+  {
+    display: block;
+    height: var(--dialogmin);
+    max-height: var(--dialogmin);
+    border-bottom: 2px solid  deeppink;   
+    border-top: 2px solid  deeppink;     
+  }  

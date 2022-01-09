@@ -1,0 +1,46 @@
+<div class="ustawienia">
+<mat-card  class="example-mat-card">
+    <div class="col-2 obok text-success">ZAŁOGA</div>
+    <div class="col-2 obok">
+        <button type="button" class="btn btn-danger" (click)="setZaloga('logowanie', false)"> Wyloguj </button>
+        <button type="button" class="btn btn-success" (click)="setZaloga('logowanie', true)"> Zaloguj </button>  
+    </div>
+    <div class="col-2 obok">
+        <button type="button" class="btn btn-danger" (click)="setZaloga('blokowanie', false)"> Zablokuj </button>
+        <button type="button" class="btn btn-success" (click)="setZaloga('blokowanie', true)"> Odblokuj </button>  
+    </div>
+    <div class="col-2 obok">
+        <button type="button" class="btn btn-danger" (click)="setZaloga('hannah', false)"> Ukryj </button>
+        <button type="button" class="btn btn-success" (click)="setZaloga('hannah', true)"> Pokaż </button>  
+    </div>
+</mat-card>
+<mat-card *ngFor="let item of tablicaosoby"  class="example-mat-card">
+    <div class="col-2 obok text-success">{{item.imie}} {{item.nazwisko}} ({{item.funkcja}})</div>
+    <div class="col-2 obok"><mat-slide-toggle [(ngModel)]="item.zalogowany" (change)="setZalogaOne('logowanie', item, $event)"><span [ngClass]="{'text-success':item.zalogowany, 'text-danger':!item.zalogowany}">{{item.zalogowany ? "Zalogowany" : "Wylogowany"}}</span></mat-slide-toggle></div>
+    <div class="col-2 obok"><mat-slide-toggle [(ngModel)]="item.blokada" (change)="setZalogaOne('blokowanie', item, $event)"><span [ngClass]="{'text-success':item.blokada, 'text-danger':!item.blokada}">{{item.blokada ? "dostępny" : "zablokowany"}} </span></mat-slide-toggle></div>
+    <div class="col-2 obok"><mat-slide-toggle [(ngModel)]="item.hannah" (change)="setZalogaOne('hannah', item, $event)"><span [ngClass]="{'text-success':item.hannah, 'text-danger':!item.hannah}"> Hannah {{item.hannah ? "" : "nie"}}widoczna</span></mat-slide-toggle></div>
+    <div class="col-4 obok"><span> Ostatnie logowanie:</span></div>
+</mat-card>
+<mat-card  class="example-mat-card">
+    <div class="col-2 obok text-success">OSOBY DODATKOWE</div>
+    <div class="col-2 obok">
+        <button type="button" class="btn btn-danger" (click)="setGoscie('logowanie', false)"> Wyloguj </button>
+        <button type="button" class="btn btn-success" (click)="setGoscie('logowanie', true)"> Zaloguj </button>  
+    </div>
+    <div class="col-2 obok">
+        <button type="button" class="btn btn-danger" (click)="setGoscie('blokowanie', false)"> Zablokuj </button>
+        <button type="button" class="btn btn-success" (click)="setGoscie('blokowanie', true)"> Odblokuj </button>  
+    </div>
+    <div class="col-2 obok">
+        <button type="button" class="btn btn-danger" (click)="setGoscie('hannah', false)"> Ukryj </button>
+        <button type="button" class="btn btn-success" (click)="setGoscie('hannah', true)"> Pokaż </button>  
+    </div>
+</mat-card>
+<mat-card *ngFor="let item of tablicagoscie"  class="example-mat-card">
+    <div class="col-2 obok text-success">{{item.imie}} {{item.nazwisko}} ({{item.funkcja}})</div>
+    <div class="col-2 obok"><mat-slide-toggle [(ngModel)]="item.zalogowany" (change)="setGoscieOne('logowanie', item, $event)"><span [ngClass]="{'text-success':item.zalogowany, 'text-danger':!item.zalogowany}">{{item.zalogowany ? "Zalogowany" : "Wylogowany"}}</span></mat-slide-toggle></div>
+    <div class="col-2 obok"><mat-slide-toggle [(ngModel)]="item.blokada" (change)="setGoscieOne('blokowanie', item, $event)"><span [ngClass]="{'text-success':item.blokada, 'text-danger':!item.blokada}">{{item.blokada ? "dostępny" : "zablokowany"}} </span></mat-slide-toggle></div>
+    <div class="col-2 obok"><mat-slide-toggle [(ngModel)]="item.hannah" (change)="setGoscieOne('hannah', item, $event)"><span [ngClass]="{'text-success':item.hannah, 'text-danger':!item.hannah}"> Hannah {{item.hannah ? "" : "nie"}}widoczna</span></mat-slide-toggle></div>
+    <div class="col-4 obok"><span> Ostatnie logowanie:</span></div>
+</mat-card>
+</div>

@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'TetaUser'`, () => {
+  it(`should have as title 'TetaAdmin'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('TetaUser');
+    expect(app.title).toEqual('TetaAdmin');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('TetaUser app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('TetaAdmin app is running!');
   });
 });

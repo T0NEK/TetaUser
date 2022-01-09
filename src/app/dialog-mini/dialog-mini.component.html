@@ -1,0 +1,6 @@
+
+<div class="dialog">
+  <cdk-virtual-scroll-viewport #scrollViewportUstawienia appendOnly itemSize="24" minBufferPx="200" maxBufferPx="400" class="example-viewport" autosize>
+    <div *cdkVirtualFor="let item of tablicazawartosci"  class="example-item"  >{{item.data}}<span>,&nbsp;{{item.name}} ></span><span [style.color]="item.kolor">&nbsp;{{item.tekst}}</span></div>
+  </cdk-virtual-scroll-viewport>
+</div>

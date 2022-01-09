@@ -1,0 +1,32 @@
+:host
+{
+    color: lightgreen;
+    cursor: crosshair;
+}
+.ustawienia
+{
+    display: block;
+    height: var(--dialogmax);
+    max-height: var(--dialogmax);
+}
+.example-mat-card
+{
+    background: black;
+    color: lightgreen;
+    border: 1px solid silver;
+    padding: 10px;
+}
+.example-mat-card:hover
+{
+    border: 2px solid yellow;
+}
+.obok
+{
+  display: inline-block;
+}
+button
+{
+  width: 100px;
+}
+
+

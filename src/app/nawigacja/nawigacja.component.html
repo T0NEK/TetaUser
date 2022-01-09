@@ -1,0 +1,59 @@
+<div>
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-pills" (shown)="Changed($event)">
+  <li [ngbNavItem]="1" >
+    <a ngbNavLink >Komunikaty</a>
+    <ng-template ngbNavContent>
+      <app-dialog>
+      
+      </app-dialog>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2" >
+    <a ngbNavLink >Ustawienia</a>
+    <ng-template ngbNavContent>
+      <app-ustawienia>
+
+      </app-ustawienia>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="3">
+    <a ngbNavLink>Użytkownicy</a>
+    <ng-template ngbNavContent>
+      <app-uzytkownicy>
+
+      </app-uzytkownicy>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="4">
+    <a ngbNavLink>Wiadomości</a>
+    <ng-template ngbNavContent>
+      <app-wiadomosci>
+
+      </app-wiadomosci>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="5">
+    <a ngbNavLink>Testy</a>
+    <ng-template ngbNavContent>
+      <app-testy>
+        
+      </app-testy>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="6">
+    <a ngbNavLink>Notatki</a>
+    <ng-template ngbNavContent>
+      <app-notatki>
+        
+      </app-notatki>
+    </ng-template>
+  </li>
+</ul>
+
+
+<div [ngbNavOutlet]="nav" class="mt-1"></div>
+</div>
+
+<app-dialog-mini>
+
+</app-dialog-mini>

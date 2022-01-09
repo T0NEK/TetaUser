@@ -1,0 +1,17 @@
+:host
+{
+    font-size: 18px;
+}
+.informacje
+{
+    display: block;
+    height: var(--informacje);
+    max-height: var(--informacje);
+    overflow-y: hidden;
+    overflow-x: hidden; 
+    border-bottom: 2px solid rgb(57, 71, 255);
+}
+.nawigacja
+{
+    display: block;
+}
