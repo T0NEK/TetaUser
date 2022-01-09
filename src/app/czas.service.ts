@@ -22,7 +22,6 @@ export class CzasService implements OnDestroy
  
   ngOnDestroy() 
   {
-    if (this.czas_rzeczywisty_id) { clearInterval(this.czas_rzeczywisty_id); }
     if (this.czas_rzeczywisty_Dedala_id) { clearInterval(this.czas_rzeczywisty_Dedala_id); }
     if (this.czas_rzeczywisty_Dedala_org_id) { clearInterval(this.czas_rzeczywisty_Dedala_org_id); }
     if (this.czas_rzeczywisty_start_id) { clearInterval(this.czas_rzeczywisty_start_id); }
@@ -46,7 +45,7 @@ export class CzasService implements OnDestroy
       {
         this.funkcje.addLiniaKomunikatu('Połączenie z MySql: OK', '');
         this.odczytaj_startstop(10);
-        this.taktujCzas();
+//        this.taktujCzas();
         this.odczytaj_czas_startu(10);
         this.odczytaj_czas_dedala(10);
         this.osoby.wczytajOsoby(5);
@@ -55,22 +54,6 @@ export class CzasService implements OnDestroy
   }
 /* (end) START */  
 
-/* (start) czas rzeczywisty */
-  private czas_rzeczywisty: any;
-  private czas_rzeczywisty_id: any;
-
-  getCzasRzeczywisty() { return this.czas_rzeczywisty; }
-
-  private czasRzeczywisty = new Subject<any>();
-  czasRzeczywisty$ = this.czasRzeczywisty.asObservable();
-  taktujCzas() { 
-      this.czas_rzeczywisty = (moment()).format('YYYY-MM-DD HH:mm:ss');
-      this.czas_rzeczywisty_id = setInterval(() => { 
-            this.czas_rzeczywisty = (moment()).format('YYYY-MM-DD HH:mm:ss');
-            this.czasRzeczywisty.next( this.czas_rzeczywisty ) }
-            , 1000); 
-      }
-/* (end) czas rzeczywisty */
 
 
 /* (start) czas rzeczywisty Dedala */
