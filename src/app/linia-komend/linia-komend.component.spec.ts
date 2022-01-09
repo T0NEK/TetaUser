@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { UstawieniaComponent } from './ustawienia.component';
+import { LiniaKomendComponent } from './linia-komend.component';
 
-describe('UstawieniaComponent', () => {
-  let component: UstawieniaComponent;
-  let fixture: ComponentFixture<UstawieniaComponent>;
+describe('LiniaKomendComponent', () => {
+  let component: LiniaKomendComponent;
+  let fixture: ComponentFixture<LiniaKomendComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UstawieniaComponent ]
+      declarations: [ LiniaKomendComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UstawieniaComponent);
+    fixture = TestBed.createComponent(LiniaKomendComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

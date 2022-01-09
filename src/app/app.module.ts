@@ -18,32 +18,26 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { InformacjeComponent } from './informacje/informacje.component';
 import { NawigacjaComponent } from './nawigacja/nawigacja.component';
 import { DialogComponent } from './dialog/dialog.component';
-import { UstawieniaComponent } from './ustawienia/ustawienia.component';
-import { UstawieniaCzasStartuComponent } from './ustawienia-czas-startu/ustawienia-czas-startu.component';
-import { UstawieniaCzasNaDedaluComponent } from './ustawienia-czas-na-dedalu/ustawienia-czas-na-dedalu.component';
-import { UstawieniaStartLarpaComponent } from './ustawienia-start-larpa/ustawienia-start-larpa.component';
-import { UzytkownicyComponent } from './uzytkownicy/uzytkownicy.component';
 import { WiadomosciComponent } from './wiadomosci/wiadomosci.component';
 import { NotatkiComponent } from './notatki/notatki.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DialogMiniComponent } from './dialog-mini/dialog-mini.component';
 import { TestyComponent } from './testy/testy.component';
+import { KlawiaturaComponent } from './klawiatura/klawiatura.component';
+import { LiniaKomendComponent } from './linia-komend/linia-komend.component';
 
 @NgModule({
-  declarations: [													
+  declarations: [															
     AppComponent,
       InformacjeComponent,
       NawigacjaComponent,
-      UstawieniaComponent,
-      UstawieniaCzasStartuComponent,
-      UstawieniaCzasNaDedaluComponent,
-      UstawieniaStartLarpaComponent,
-      UzytkownicyComponent,
       WiadomosciComponent,
       NotatkiComponent,
       DialogComponent,
       DialogMiniComponent,
-      TestyComponent
+      TestyComponent,
+      KlawiaturaComponent,
+      LiniaKomendComponent
    ],
   imports: [
     BrowserModule,

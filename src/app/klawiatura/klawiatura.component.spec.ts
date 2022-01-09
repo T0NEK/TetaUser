@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { UstawieniaCzasStartuComponent } from './ustawienia-czas-startu.component';
+import { KlawiaturaComponent } from './klawiatura.component';
 
-describe('UstawieniaCzasStartuComponent', () => {
-  let component: UstawieniaCzasStartuComponent;
-  let fixture: ComponentFixture<UstawieniaCzasStartuComponent>;
+describe('KlawiaturaComponent', () => {
+  let component: KlawiaturaComponent;
+  let fixture: ComponentFixture<KlawiaturaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UstawieniaCzasStartuComponent ]
+      declarations: [ KlawiaturaComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UstawieniaCzasStartuComponent);
+    fixture = TestBed.createComponent(KlawiaturaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

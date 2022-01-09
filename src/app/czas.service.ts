@@ -33,27 +33,32 @@ export class CzasService implements OnDestroy
   sprawdzSQL(licznik : number)
   {
     if (licznik == 0) 
-    { this.funkcje.addLiniaKomunikatu('Sprawdzono porty, brak komunikacji z MySql', 'red'); }
+    { this.funkcje.addLiniaKomunikatu('Sprawdzono połączenie, brak komunikacji', 'red'); }
     else
     {
       if (this.komunikacja.getURL() == 'error') 
         {
-          this.funkcje.addLiniaKomunikatu('Sprawdzam połączenie z MySql', 'rgb(199, 100, 43)');
+          this.funkcje.addLiniaKomunikatu('Sprawdzam połączenie', 'rgb(199, 100, 43)');
           setTimeout(()=> { this.sprawdzSQL(--licznik) },1000)
         }    
       else
       {
-        this.funkcje.addLiniaKomunikatu('Połączenie z MySql: OK', '');
+        this.funkcje.addLiniaKomunikatu('Połączenie: OK', '');
         this.odczytaj_startstop(10);
 //        this.taktujCzas();
         this.odczytaj_czas_startu(10);
         this.odczytaj_czas_dedala(10);
-        this.osoby.wczytajOsoby(5);
+//        this.osoby.wczytajOsoby(5);
       }  
     }
   }
 /* (end) START */  
 
+
+/* (start) Pętla główna sprawdzająca stan */
+private petla_glowna_id: any;
+
+/* (end) Pętla główna sprawdzająca stan */
 
 
 /* (start) czas rzeczywisty Dedala */

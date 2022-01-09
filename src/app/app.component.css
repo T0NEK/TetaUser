@@ -2,6 +2,10 @@
 {
     font-size: 18px;
 }
+.nawigacja
+{
+    display: block;
+}
 .informacje
 {
     display: block;
@@ -11,7 +15,11 @@
     overflow-x: hidden; 
     border-bottom: 2px solid rgb(57, 71, 255);
 }
-.nawigacja
+.klawiatura
+{
+    display: block;
+}
+.linia-komend
 {
     display: block;
 }

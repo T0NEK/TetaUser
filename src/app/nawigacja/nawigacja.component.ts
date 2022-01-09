@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NawigacjaComponent implements OnInit {
 
-  active: any = 3;
+  active: any = 1;
   
   constructor() 
   {
