@@ -13,6 +13,6 @@
     display: block;
     height: var(--dialogmin);
     max-height: var(--dialogmin);
-    border-bottom: 2px solid  deeppink;   
-    border-top: 2px solid  deeppink;     
+    border-bottom: 2px solid  rgb(00, 123, 255);   
+    border-top: 2px solid  rgb(00, 123, 255);     
   }  

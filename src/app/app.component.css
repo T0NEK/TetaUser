@@ -13,7 +13,7 @@
     max-height: var(--informacje);
     overflow-y: hidden;
     overflow-x: hidden; 
-    border-bottom: 2px solid rgb(57, 71, 255);
+    border-bottom: 2px solid rgb(00, 123, 255)
 }
 .klawiatura
 {

@@ -32,4 +32,14 @@ addLiniaKomunikatu(linia: string, kolor: string)
   this.LiniaKomunikatu.next(wiersz);
 }
 /* (end) dodanie lini komunikatu */ 
+
+/* (start) fokus lini dialogu */
+private LiniaDialogu = new Subject<any>();
+LiniaDialogu$ = this.LiniaDialogu.asObservable();
+fokusLiniaDialogu(linia: string)
+{
+  this.LiniaDialogu.next(linia);
+}
+/* (end) fokus lini dialogu */
+
 }

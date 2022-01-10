@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,16 @@ import { Component } from '@angular/core';
 export class AppComponent 
 {
   title = 'TetaAdmin';
+
+  constructor(private funkcje: FunkcjeWspolneService)
+  {
+
+  }
+
+  onClick(kto: string)
+  {
+    //console.log(kto);
+    this.funkcje.fokusLiniaDialogu(kto)
+
+  }
 }

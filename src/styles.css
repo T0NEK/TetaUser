@@ -12,8 +12,8 @@ html, body
     overflow-x: hidden;
     
     --informacje: 32px;
-    --dialogmax: 780px;
-    --dialogmin: 168px;
+    --dialogmax: 500px;
+    --dialogmin: 100px;
     --stopka: 20px;
     
     --status: 26px;

@@ -44,10 +44,11 @@ export class CzasService implements OnDestroy
       else
       {
         this.funkcje.addLiniaKomunikatu('Połączenie: OK', '');
-        this.odczytaj_startstop(10);
+        this.funkcje.fokusLiniaDialogu('ok')
+//        this.odczytaj_startstop(10);
 //        this.taktujCzas();
-        this.odczytaj_czas_startu(10);
-        this.odczytaj_czas_dedala(10);
+//        this.odczytaj_czas_startu(10);
+//        this.odczytaj_czas_dedala(10);
 //        this.osoby.wczytajOsoby(5);
       }  
     }

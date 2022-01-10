@@ -53,6 +53,13 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     */
   }
   
+  onClick(kto: string)
+  {
+    //console.log(kto);
+    this.funkcje.fokusLiniaDialogu(kto)
+
+  }
+
   Przewijaj()
   {
     let count = this.VSVDialog.getDataLength();

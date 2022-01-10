@@ -1,0 +1,25 @@
+:host
+    {
+        color: lightgreen;
+        cursor: crosshair;
+    }
+.example-full-width 
+    {
+        width: 100%;
+        color: chartreuse;
+        padding: 5px;
+        font-size: 24px;
+    }
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline
+{
+    background-color: rgb(00, 123, 255);
+}
+::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple 
+    {
+        background-color: rgb(00, 123, 255);
+    }
+::ng-deep .mat-input-element
+    {
+        caret-color: chartreuse;    
+    }
