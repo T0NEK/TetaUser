@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { KomunikacjaService } from './komunikacja.service';
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { OsobyService } from './osoby.service';
+import { Sprawdz } from './definicje'
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,16 @@ import { OsobyService } from './osoby.service';
 export class CzasService implements OnDestroy
 {
 
+  private tablica_sprawdzajaca: Sprawdz = 
+        { 
+          stanSQL: false,
+          stanStart: false,
+        }; 
+
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService) 
   {
-  //console.log('czas con'); 
-  this.sprawdzSQL(5);  
+  //console.log('czas con');
+  this.sprawdzSQL(5);
   }
   
   
@@ -28,6 +35,31 @@ export class CzasService implements OnDestroy
     if (this.czas_uplyw_dedala_id) { clearInterval(this.czas_uplyw_dedala_id); }
     
   }
+
+
+/* (start) Pętla główna sprawdzająca stan */
+private petla_glowna_id: any;
+
+
+PetlaStart()
+{
+  
+  this.odczytaj_startstop();   
+  this.petla_glowna_id = setTimeout(()=>
+  {
+    if (this.tablica_sprawdzajaca.stanSQL && this.tablica_sprawdzajaca.stanStart)
+      {
+        this.funkcje.addLiniaKomunikatu('Start all OK', '');  
+      }
+    if (this.tablica_sprawdzajaca) 
+    {
+      this.funkcje.addLiniaKomunikatu('Łączę z systemem', '');
+    }
+     
+  },1000);
+}
+/* (end) Pętla główna sprawdzająca stan */
+
 
 /* (start) START */
   sprawdzSQL(licznik : number)
@@ -43,23 +75,22 @@ export class CzasService implements OnDestroy
         }    
       else
       {
+        this.tablica_sprawdzajaca.stanSQL = true;
         this.funkcje.addLiniaKomunikatu('Połączenie: OK', '');
-        this.funkcje.fokusLiniaDialogu('ok')
-//        this.odczytaj_startstop(10);
+        this.PetlaStart(); 
+  
+        
+//        
 //        this.taktujCzas();
-//        this.odczytaj_czas_startu(10);
-//        this.odczytaj_czas_dedala(10);
-//        this.osoby.wczytajOsoby(5);
+        this.odczytaj_czas_startu(10);
+        this.odczytaj_czas_dedala(10);
+        this.osoby.wczytajOsoby(5);
       }  
     }
   }
 /* (end) START */  
 
 
-/* (start) Pętla główna sprawdzająca stan */
-private petla_glowna_id: any;
-
-/* (end) Pętla główna sprawdzająca stan */
 
 
 /* (start) czas rzeczywisty Dedala */
@@ -352,16 +383,8 @@ changeStartStop(stan: any)
 
 private OdczytajStartStop = new Subject<any>();
 OdczytajStartStop$ = this.OdczytajStartStop.asObservable()
-private odczytaj_startstop(licznik : number)
+private odczytaj_startstop()
   {
-    if (licznik == 0) 
-    {
-      this.changeStartStop('STOP');
-      this.OdczytajStartStop.next('STOP')
-      this.funkcje.addLiniaKomunikatu('NIE UDAŁO SIĘ ODCZYTAĆ "stanu akcji = stop" ','red');
-    }
-    else
-    {
     this.http.get(this.komunikacja.getURL() + 'stan/').subscribe( 
       data =>  {
                 let wynik = JSON.parse(JSON.stringify(data));
@@ -369,35 +392,38 @@ private odczytaj_startstop(licznik : number)
                 {
                   if (wynik.stan == 'START')
                   {
-                    this.funkcje.addLiniaKomunikatu('Parametry po Restarcie Aplikacji: "stan akcji": START','red')
-                    this.czas_rzeczywisty_start = wynik.czas;
-                    this.funkcje.addLiniaKomunikatu('Parametry po Restarcie Aplikacji: "czas startu akcji": ' + wynik.czas ,'red')
-                    this.changeStartStop(wynik.stan);
-                    this.OdczytajStartStop.next(wynik.stan);
+                    this.tablica_sprawdzajaca.stanStart = true;  
+                    //this.funkcje.addLiniaKomunikatu('Odczytano czas pokładowy Dedala','')
+                    //this.czas_rzeczywisty_start = wynik.czas;
+                    //this.funkcje.addLiniaKomunikatu('Parametry po Restarcie Aplikacji: "czas startu akcji": ' + wynik.czas ,'red')
+                    //this.changeStartStop(wynik.stan);
+                    //this.OdczytajStartStop.next(wynik.stan);
                   }
                   else
                   {
-                    this.changeStartStop(wynik.stan);
-                    this.OdczytajStartStop.next(wynik.stan);
-                    this.funkcje.addLiniaKomunikatu('Odczytano "stan akcji": STOP','')  
+                    this.tablica_sprawdzajaca.stanStart = false;
+                    //this.changeStartStop(wynik.stan);
+                    //this.OdczytajStartStop.next(wynik.stan);
+                    //this.funkcje.addLiniaKomunikatu('Odczytano "stan akcji": STOP','')  
                   }
                 }
                 else
                 {
-                  this.changeStartStop('STOP');
-                  this.OdczytajStartStop.next('STOP');
-                  this.funkcje.addLiniaKomunikatu('Błąd odczytu "stan akcji = STOP" - ponawiam: ' + licznik,'rgb(199, 100, 43)');
-                  setTimeout(() => {this.odczytaj_startstop(--licznik)}, 1000)  
+                  this.tablica_sprawdzajaca.stanStart = false;
+                  //this.changeStartStop('STOP');
+                  //this.OdczytajStartStop.next('STOP');
+                  //this.funkcje.addLiniaKomunikatu('Błąd odczytu "stan akcji = STOP" - ponawiam: ' + licznik,'rgb(199, 100, 43)');
+                  setTimeout(() => {this.odczytaj_startstop()}, 1000)  
                 }
                },
       error => {
-                this.changeStartStop('STOP');
-                this.OdczytajStartStop.next('STOP');
-                this.funkcje.addLiniaKomunikatu('Błąd połączenia "stan akcji = STOP" - ponawiam: ' + licznik,'rgb(199, 100, 43)');
-                setTimeout(() => {this.odczytaj_startstop(--licznik)}, 1000)
+                this.tablica_sprawdzajaca.stanStart = false;
+                //this.changeStartStop('STOP');
+                //this.OdczytajStartStop.next('STOP');
+                //this.funkcje.addLiniaKomunikatu('Błąd połączenia "stan akcji = STOP" - ponawiam: ' + licznik,'rgb(199, 100, 43)');
+                setTimeout(() => {this.odczytaj_startstop()}, 1000)
                }
                )      
-    }
   }
 
   zapisz_startstop(licznik : number, stan: string, czas: string, czasD: string)

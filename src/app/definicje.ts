@@ -16,3 +16,10 @@ export interface Osoby
    blokada: boolean;
    hannah: boolean;
   }
+
+  export interface Sprawdz
+  {
+      stanSQL?: boolean;
+      stanStart?: boolean;
+     
+  }
