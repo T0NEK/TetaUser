@@ -51,9 +51,10 @@ PetlaStart()
       {
         this.funkcje.addLiniaKomunikatu('Start all OK', '');  
       }
-    if (this.tablica_sprawdzajaca) 
+    if (this.tablica_sprawdzajaca.stanSQL) 
     {
       this.funkcje.addLiniaKomunikatu('Łączę z systemem', '');
+      this.komunikacja.rejestruj(5,'2022-01-13 22:33')
     }
      
   },1000);
@@ -82,9 +83,9 @@ PetlaStart()
         
 //        
 //        this.taktujCzas();
-        this.odczytaj_czas_startu(10);
-        this.odczytaj_czas_dedala(10);
-        this.osoby.wczytajOsoby(5);
+//        this.odczytaj_czas_startu(10);
+//        this.odczytaj_czas_dedala(10);
+//        this.osoby.wczytajOsoby(5);
       }  
     }
   }
