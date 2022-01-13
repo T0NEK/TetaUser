@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
@@ -9,17 +9,22 @@ import { OsobyService } from './osoby.service';
 @Injectable({
   providedIn: 'root'
 })
+
+
+
+
 export class CzasService implements OnDestroy
 {
 
+    
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService) 
   {
   //console.log('czas con'); 
   this.sprawdzSQL(5);  
   }
   
+
   
- 
   ngOnDestroy() 
   {
     if (this.czas_rzeczywisty_Dedala_id) { clearInterval(this.czas_rzeczywisty_Dedala_id); }
@@ -29,6 +34,7 @@ export class CzasService implements OnDestroy
     
   }
 
+  
 /* (start) START */
   sprawdzSQL(licznik : number)
   {
