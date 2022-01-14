@@ -24,8 +24,7 @@ export class CzasService implements OnDestroy
   this.sprawdzSQL(5);
   }
   
-
-  
+ 
   ngOnDestroy() 
   {
     if (this.czas_rzeczywisty_Dedala_id) { clearInterval(this.czas_rzeczywisty_Dedala_id); }
@@ -37,7 +36,9 @@ export class CzasService implements OnDestroy
 
   
 /* (start) START */
-  sprawdzSQL(licznik : number)
+
+
+sprawdzSQL(licznik : number)
   {
     if (licznik == 0) 
     { this.funkcje.addLiniaKomunikatu('Sprawdzono połączenie, brak komunikacji', 'red'); }
@@ -52,9 +53,8 @@ export class CzasService implements OnDestroy
       {
         this.tablica_sprawdzajaca.stanSQL = true;
         this.funkcje.addLiniaKomunikatu('Połączenie: OK', '');
+        this.odczytaj_startstop(10);   
         this.PetlaStart(); 
-  
-        
 //        
 //        this.taktujCzas();
 //        this.odczytaj_czas_startu(10);
@@ -65,8 +65,32 @@ export class CzasService implements OnDestroy
   }
 /* (end) START */  
 
+/* (start) Pętla główna sprawdzająca stan */
+private petla_glowna_id: any;
+private tablica_sprawdzajaca: Sprawdz = 
+{ 
+  stanSQL: false,
+  stanStart: false,
+}; 
+PetlaStart()
+{
+  
+ 
+  this.petla_glowna_id = setTimeout(()=>
+  {
+    if (this.tablica_sprawdzajaca.stanSQL && this.tablica_sprawdzajaca.stanStart)
+      {
+        this.funkcje.addLiniaKomunikatu('Start all OK', '');  
+      }
+    if (this.tablica_sprawdzajaca.stanSQL) 
+    {
+      this.funkcje.addLiniaKomunikatu('Łączę z systemem', '');
+      this.komunikacja.rejestruj(5, moment().format('YYYY-MM-DD HH:mm:ss'))
+    }
 
-
+  },1000);
+}
+/* (end) Pętla główna sprawdzająca stan */
 
 /* (start) czas rzeczywisty Dedala */
 private czas_dedala_ofset: any;
@@ -324,14 +348,12 @@ setStart()
       this.czas_rzeczywisty_start =  (moment()).format('YYYY-MM-DD HH:mm:ss');
       this.czas_rzeczywisty_end = '';
       this.funkcje.addLiniaKomunikatu('Użyto [START] czas','green');
-      this.zapisz_startstop(5, 'START', this.czas_rzeczywisty_start, this.getCzasDedala()); 
       }
 
 setStop()
       { 
       this.czas_rzeczywisty_end =  (moment()).format('YYYY-MM-DD HH:mm:ss');
       this.funkcje.addLiniaKomunikatu('Użyto [STOP] czas','red'); 
-      this.zapisz_startstop(5, 'STOP', this.czas_rzeczywisty_end, this.getCzasDedala());
       }
 
 private GetStartStop = new Subject();
@@ -356,10 +378,16 @@ changeStartStop(stan: any)
   } 
 }
 
-private OdczytajStartStop = new Subject<any>();
-OdczytajStartStop$ = this.OdczytajStartStop.asObservable()
-private odczytaj_startstop()
+//private OdczytajStartStop = new Subject<any>();
+//OdczytajStartStop$ = this.OdczytajStartStop.asObservable()
+private odczytaj_startstop(licznik : number)
   {
+    if (licznik == 0) 
+    {
+      this.tablica_sprawdzajaca.stanStart = false;
+    }
+    else
+    {
     this.http.get(this.komunikacja.getURL() + 'stan/').subscribe( 
       data =>  {
                 let wynik = JSON.parse(JSON.stringify(data));
@@ -388,7 +416,7 @@ private odczytaj_startstop()
                   //this.changeStartStop('STOP');
                   //this.OdczytajStartStop.next('STOP');
                   //this.funkcje.addLiniaKomunikatu('Błąd odczytu "stan akcji = STOP" - ponawiam: ' + licznik,'rgb(199, 100, 43)');
-                  setTimeout(() => {this.odczytaj_startstop()}, 1000)  
+                  setTimeout(() => {this.odczytaj_startstop(--licznik)}, 1000)  
                 }
                },
       error => {
@@ -396,49 +424,15 @@ private odczytaj_startstop()
                 //this.changeStartStop('STOP');
                 //this.OdczytajStartStop.next('STOP');
                 //this.funkcje.addLiniaKomunikatu('Błąd połączenia "stan akcji = STOP" - ponawiam: ' + licznik,'rgb(199, 100, 43)');
-                setTimeout(() => {this.odczytaj_startstop()}, 1000)
+                setTimeout(() => {this.odczytaj_startstop(--licznik)}, 1000)
                }
                )      
   }
+}
 
-  zapisz_startstop(licznik : number, stan: string, czas: string, czasD: string)
-  {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin':'*',
-        'content-type': 'application/json',
-        Authorization: 'my-auth-token'
-      })
-    };
-    
-    var dane = JSON.stringify({ "stan": stan, "czas": czas, "zmiana": moment().format('YYYY-MM-DD HH:mm:ss'),"czasD" : czasD })  
-    //console.log(dane)
-   if (licznik == 0) 
-    { this.funkcje.addLiniaKomunikatu('NIE UDAŁO SIĘ ZAPISAĆ "stan akcji" ','red'); }
-    else
-    {
-    this.http.post(this.komunikacja.getURL() + 'stan/', dane, httpOptions).subscribe( 
-      data =>  {
-                let wynik = JSON.parse(JSON.stringify(data));
-                if (wynik.wynik == true) 
-                 {
-                  this.changeStartStop(wynik.stan);
-                  this.funkcje.addLiniaKomunikatu('Zapisano "stan akcji"','') 
-                 } 
-                 else
-                 {
-                  this.funkcje.addLiniaKomunikatu('Błąd zapisu "stan akcji" - ponawiam: ' + licznik,'rgb(199, 100, 43)'); 
-                   setTimeout(() => {this.zapisz_startstop(--licznik, stan, czas, czasD)}, 1500)             
-                 }        
-               },
-      error => { 
-        //console.log(error)
-                this.funkcje.addLiniaKomunikatu('Błąd połączenia "stan akcji" - ponawiam: ' + licznik,'rgb(199, 100, 43)'); 
-                setTimeout(() => {this.zapisz_startstop(--licznik, stan, czas, czasD)}, 1500);
-               }
-               )      
-    }
-  }  
+
+
+  
 /* (end) start/stop akcji na Dedalu */
 
 

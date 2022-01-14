@@ -31,10 +31,10 @@ private sprawdz_port(port: string)
     data =>  {
               this.httpURL = port;
               let wynik = JSON.parse(JSON.stringify(data));
-              console.log(wynik.wynik, '    ', wynik.host)
+              console.log(wynik)
              },
     error => {
-
+              console.log(error)
              }         
              )      
 }
