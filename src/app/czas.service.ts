@@ -57,9 +57,9 @@ export class CzasService implements OnDestroy
         
 //        
 //        this.taktujCzas();
-        this.odczytaj_czas_startu(10);
-        this.odczytaj_czas_dedala(10);
-        this.osoby.wczytajOsoby(5);
+//        this.odczytaj_czas_startu(10);
+//        this.odczytaj_czas_dedala(10);
+//        this.osoby.wczytajOsoby(5);
       }  
     }
   }
