@@ -20,6 +20,8 @@ export interface Osoby
   export interface Sprawdz
   {
       stanSQL?: boolean;
-      stanStart?: boolean;
-     
+      stanAkcji?: boolean;
+      stanRejestracja?: boolean;
+      stanCzasStartuDedal?: boolean;
+      stanCzasDedala?: boolean;
   }

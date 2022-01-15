@@ -26,12 +26,12 @@ export class InformacjeComponent implements OnInit, OnDestroy {
   {
     //console.log(' constr informacje')
     
-    this.czas_startu_subscribe_i = czasy.GetCzasStartuNew$.subscribe ( data => { this.czas_startu = data; } );
+    this.czas_startu_subscribe_i = czasy.czasStartuDedal$.subscribe ( data => { this.czas_startu = data; } );
     this.czas_startu_akcji_subscribe_i = czasy.czasRzeczywistyDedala$.subscribe ( data => { this.czas_na_dedalu = data; } );
     this.uplyw_dedala_subscribe_i = czasy.czasDedalaUplyw$.subscribe ( data => { this.czas_od_startu_uplyw = data; } );
 
            
-    this.funkcje.addLiniaKomunikatu('uruchomiono moduł','');
+    
     //this.funkcje.addLiniaKomunikatu('uruchomiono czas rzeczywisty','');
   }
 

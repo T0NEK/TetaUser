@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 
 @Injectable({ providedIn: 'root'})
@@ -7,41 +8,67 @@ import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 
 export class KomunikacjaService 
 {
-  private httpURL_80 = 'http://localhost:80/TetaPhp/Admin/';
-  private httpURL_8080 = 'http://localhost:8080/TetaPhp/Admin/';
-  private httpURL_8080_1 = 'http://192.168.60.25:8080/TetaPhp/Admin/';
-  private httpURL: any;
   
-  constructor(private http: HttpClient,private funkcje: FunkcjeWspolneService) 
+constructor(private http: HttpClient,private funkcje: FunkcjeWspolneService) 
   {
-    //console.log('komunikacja con');
-    this.httpURL = 'error';
-    this.sprawdz_port(this.httpURL_80);
-    this.sprawdz_port(this.httpURL_8080);
-    this.sprawdz_port(this.httpURL_8080_1);
+    //console.log('komunikacja con', );
   }
 
 
+StartKomunikacja()
+  {
+    this.sprawdz_port(0,this.httpURLdane);
+  }
+
 /* (start) port serwera sql */
+private httpURLdane = [
+  'http://localhost:80/TetaPhp/Admin/',
+  'http://192.168.60.25:8080/TetaPhp/Admin/',
+  'http://localhost:8080/TetaPhp/Admin/'
+  ];
+private httpURL= '';
+
 getURL(){ return this.httpURL;}
 
-private sprawdz_port(port: string)
+private sprawdz_port(licznik: number, porty: any)
 {
-  this.http.get(port + 'conect/').subscribe( 
+  //console.log(this.httpURLdane.length)
+  //console.log(porty.length, '                ',licznik, '    ', porty[licznik])
+  if (licznik < porty.length)
+  {
+  this.http.get(porty[licznik] + 'conect/').subscribe( 
     data =>  {
-              this.httpURL = port;
-              let wynik = JSON.parse(JSON.stringify(data));
-              console.log(wynik)
+      //console.log('data', data)
+              this.httpURL = porty[licznik];
+              //let wynik = JSON.parse(JSON.stringify(data));
+              if (this.hostid == '')
+              {
+              this.rejestruj(5)  
+              }
              },
     error => {
-              console.log(error)
+     //console.log('error', error)
+              this.sprawdz_port(++licznik,porty)
              }         
              )      
+  }           
+  else
+  {
+    this.httpURL = 'error'
+  }
 }
 /* (end) port serwera sql */
 
 /* (start) rejestracja stanowiska */
-rejestruj(licznik: number, czas: string)
+private host = '';
+private hostid = '';
+private czas_dedala_ofset_korekta: any;
+
+getHost(){ return this.host;}
+getHostId(){ return this.hostid;}
+getOfsetKorekta(){ return this.czas_dedala_ofset_korekta;}
+
+rejestruj(licznik: number)
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -51,35 +78,34 @@ rejestruj(licznik: number, czas: string)
     })
   };
   
-  var data = JSON.stringify({ "czas": czas})  
-
+var data = JSON.stringify({ "czas": moment().format('YYYY-MM-DD HH:mm:ss')})  
+  
  if (licznik == 0) 
   { 
-    this.funkcje.addLiniaKomunikatu('NIE UDAŁO SIĘ ZAREJESTROWAĆ ','red'); 
+    this.hostid = 'error';
   }
   else
   {
   this.http.post(this.getURL() + 'rejestracja/', data, httpOptions).subscribe( 
     data =>  {
             let wynik = JSON.parse(JSON.stringify(data));
-            console.log(wynik)
             if (wynik.wynik == true) 
             {
-              //this.changeCzasDedala( wynik.czas );
-              this.funkcje.addLiniaKomunikatu('Zapisano "nowa data na Dedalu" - ' + wynik.token ,'') 
+              this.host = wynik.host;
+              this.hostid = wynik.hostid;  
+              this.czas_dedala_ofset_korekta = moment(wynik.czasserwera,"YYYY-MM-DD HH:mm:ss").diff(moment(wynik.czas,"YYYY-MM-DD HH:mm:ss"),'milliseconds',true)
+              //console.log('wynik ', wynik, '         ofset', this.czas_dedala_ofset_korekta)
             }
             else
             {
-              this.funkcje.addLiniaKomunikatu('Błąd zapisu "nowa data na Dedalu" - ponawiam: ' + licznik,'rgb(199, 100, 43)'); 
-              setTimeout(() => {this.rejestruj(--licznik, czas)}, 1000) 
+              setTimeout(() => {this.rejestruj(--licznik)}, 1000) 
             }
               },
     error => { 
-              this.funkcje.addLiniaKomunikatu('Błąd połączenia "nowa data na Dedalu" - ponawiam: ' + licznik,'rgb(199, 100, 43)'); 
-              setTimeout(() => {this.rejestruj(--licznik,czas)}, 1000) 
+              setTimeout(() => {this.rejestruj(--licznik)}, 1000) 
              }
              )      
   }
 }
-/* (end) rejestracja stanowiska */
 }
+/* (end) rejestracja stanowiska */
