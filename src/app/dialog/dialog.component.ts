@@ -54,10 +54,10 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
   onClick(kto: string)
-  {
-    //console.log(kto);
-    this.funkcje.fokusLiniaDialogu(kto)
-
+  {// dla przewijaj
+  //  console.log(kto);
+    this.funkcje.fokusLiniaDialogu(kto);
+    this.funkcje.blokadaLiniaDialogu(false,"jesteś wolny")
   }
 
   Przewijaj()

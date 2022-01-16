@@ -19,6 +19,6 @@ export class AppComponent
   {
     //console.log(kto);
     this.funkcje.fokusLiniaDialogu(kto)
-
+    this.funkcje.blokadaLiniaDialogu(true, "to ja");
   }
 }

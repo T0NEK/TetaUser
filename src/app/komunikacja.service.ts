@@ -17,7 +17,11 @@ constructor(private http: HttpClient,private funkcje: FunkcjeWspolneService)
 
 StartKomunikacja()
   {
-    this.sprawdz_port(0,this.httpURLdane);
+    for (let index = 0; index < this.httpURLdane.length; index++) 
+    {
+      this.sprawdz_port(this.httpURLdane[index]);  
+    }  
+    
   }
 
 /* (start) port serwera sql */
@@ -30,33 +34,15 @@ private httpURL= '';
 
 getURL(){ return this.httpURL;}
 
-private sprawdz_port(licznik: number, porty: any)
+private sprawdz_port(port: any)
 {
-  //console.log(this.httpURLdane.length)
-  //console.log(porty.length, '                ',licznik, '    ', porty[licznik])
-  if (licznik < porty.length)
-  {
-  this.http.get(porty[licznik] + 'conect/').subscribe( 
+  this.http.get(port + 'conect/').subscribe( 
     data =>  {
-      //console.log('data', data)
-              this.httpURL = porty[licznik];
-              //let wynik = JSON.parse(JSON.stringify(data));
-              if (this.hostid == '')
-              {
-              this.rejestruj(5)  
-              }
+              this.httpURL = port;
              },
-    error => {
-     //console.log('error', error)
-              this.sprawdz_port(++licznik,porty)
-             }         
+    error => {   }         
              )      
-  }           
-  else
-  {
-    this.httpURL = 'error'
-  }
-}
+}           
 /* (end) port serwera sql */
 
 /* (start) rejestracja stanowiska */
@@ -68,7 +54,7 @@ getHost(){ return this.host;}
 getHostId(){ return this.hostid;}
 getOfsetKorekta(){ return this.czas_dedala_ofset_korekta;}
 
-rejestruj(licznik: number)
+rejestruj()
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -80,12 +66,6 @@ rejestruj(licznik: number)
   
 var data = JSON.stringify({ "czas": moment().format('YYYY-MM-DD HH:mm:ss')})  
   
- if (licznik == 0) 
-  { 
-    this.hostid = 'error';
-  }
-  else
-  {
   this.http.post(this.getURL() + 'rejestracja/', data, httpOptions).subscribe( 
     data =>  {
             let wynik = JSON.parse(JSON.stringify(data));
@@ -94,18 +74,16 @@ var data = JSON.stringify({ "czas": moment().format('YYYY-MM-DD HH:mm:ss')})
               this.host = wynik.host;
               this.hostid = wynik.hostid;  
               this.czas_dedala_ofset_korekta = moment(wynik.czasserwera,"YYYY-MM-DD HH:mm:ss").diff(moment(wynik.czas,"YYYY-MM-DD HH:mm:ss"),'milliseconds',true)
-              //console.log('wynik ', wynik, '         ofset', this.czas_dedala_ofset_korekta)
             }
             else
             {
-              setTimeout(() => {this.rejestruj(--licznik)}, 1000) 
+              setTimeout(() => {this.rejestruj()}, 1000) 
             }
               },
     error => { 
-              setTimeout(() => {this.rejestruj(--licznik)}, 1000) 
+              setTimeout(() => {this.rejestruj()}, 1000) 
              }
              )      
-  }
 }
 }
 /* (end) rejestracja stanowiska */

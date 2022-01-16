@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { of, Subscription } from 'rxjs';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 
@@ -7,31 +7,36 @@ import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
   templateUrl: './linia-komend.component.html',
   styleUrls: ['./linia-komend.component.css']
 })
-export class LiniaKomendComponent implements OnInit {
+export class LiniaKomendComponent implements OnDestroy {
 
 liniaPolecen : String;
 @ViewChild('liniaInput') liniaInput!: ElementRef;
 private fokus_subscribe_lk = new Subscription();
+private blokada_subscribe_lk = new Subscription();
 
 constructor(private funkcje: FunkcjeWspolneService)
   {
       this.liniaPolecen = 'przetważam, czekaj';
+
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
           ( data => 
             { 
-              this.liniaPolecen = data;
-              const  element = this.liniaInput.nativeElement; 
-              //console.log('kto: ',data, '   element: ',element);
-              if(element) { element.focus()}
+              this.liniaInput.nativeElement.focus()
             } 
           );
 
-    
+      this.blokada_subscribe_lk = funkcje.LiniaDialoguBlokada$.subscribe 
+          ( data => 
+            {
+              this.liniaInput.nativeElement.disabled = data.stan;
+              this.liniaInput.nativeElement.value = data.komunikat;
+            } );    
   }
 
-  ngOnInit() 
+  ngOnDestroy()
   {
-    
+    this.fokus_subscribe_lk.unsubscribe();    
+    this.blokada_subscribe_lk.unsubscribe();    
   }
 
 }

@@ -23,3 +23,16 @@
     {
         caret-color: chartreuse;    
     }
+
+input:disabled
+    {
+        color: silver;
+        animation-name: mrugaj;
+        animation: mrugaj 1000ms linear infinite;
+    }
+@keyframes mrugaj
+    {
+        0% { color: silver; }
+        50% { color: black; }
+        100% { color: silver; }
+    }    

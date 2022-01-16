@@ -42,4 +42,14 @@ fokusLiniaDialogu(linia: string)
 }
 /* (end) fokus lini dialogu */
 
+/* (start) fokus lini dialogu */
+private LiniaDialoguBlokada = new Subject<any>();
+LiniaDialoguBlokada$ = this.LiniaDialoguBlokada.asObservable();
+blokadaLiniaDialogu(stan: boolean, komunikat: string)
+{
+  this.LiniaDialoguBlokada.next({"stan": stan,"komunikat": komunikat});
+}
+/* (end) fokus lini dialogu */
+
+
 }
