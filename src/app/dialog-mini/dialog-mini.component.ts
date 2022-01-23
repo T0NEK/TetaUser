@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Wiersze } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-dialog-mini',
@@ -14,10 +15,13 @@ export class DialogMiniComponent implements OnInit {
   private tablicazawartoscisubscribe = new Subscription();
   tablicazawartosci: Wiersze [] = [];  
   @ViewChild('scrollViewportUstawienia') VSVUstawienia!: CdkVirtualScrollViewport;
+  height: any;
 
-  constructor(private funkcje: FunkcjeWspolneService,private changeDetectorRef: ChangeDetectorRef)
+
+  constructor(private all: AppComponent, private funkcje: FunkcjeWspolneService,private changeDetectorRef: ChangeDetectorRef)
   {
-    this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
+    this.height = all.wysokoscDialogMin + 'px';
+       this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
         this.tablicazawartosci = [...this.tablicazawartosci, data]; 

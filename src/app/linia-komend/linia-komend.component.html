@@ -1,3 +1,10 @@
-<mat-form-field class="example-full-width">
-  <input matInput ngModel #liniaInput>
-</mat-form-field>
+<div class="linia-komend">
+  <div class="obok">
+  <input matInput ngModel #liniaInput autofocus (keyup)="Zmiana($event)"  [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px'}">
+  </div>
+  <div *ngIf="!blokada" class="obok ikona">
+    <button *ngIf="linia" matSuffix mat-icon-button aria-label="Clear" (click)="ClearLinia()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

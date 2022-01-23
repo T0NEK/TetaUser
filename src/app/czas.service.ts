@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import * as moment from 'moment';
@@ -17,6 +17,9 @@ import { Sprawdz } from './definicje'
 export class CzasService implements OnDestroy
 {
   private aktualizacja_czasu_subscribe_c = new Subscription();
+  private czas500 = 50;
+  private czas1000 = 100;
+  
     
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService) 
   {
@@ -26,9 +29,10 @@ export class CzasService implements OnDestroy
       this.funkcje.addLiniaKomunikatu('Łączę z serwerem', '');
       setTimeout(() => {
         this.komunikacja.StartKomunikacja();
+        this.funkcje.ZablokujLinieDialogu('');
         this.PetlaStart(this.licznikBlad);  
-        }, 500);
-      }, 500);
+        }, this.czas500);
+      }, this.czas500);
 
   /* (start) Komunikaty z odczytu bazy */
   this.aktualizacja_czasu_subscribe_c = this.OdczytajCzasDedala$.subscribe 
@@ -80,13 +84,15 @@ PetlaStart(licznik: number)
               this.funkcje.addLiniaKomunikatu('Start', 'rgb(199, 100, 43)');
               //this.taktujUplyw();
               this.taktujCzasDedala();  
-              this.taktujDedalaUplyw();
+              this.taktujDedalaUplyw();          
+              this.osoby.wczytajOsoby();
+              this.funkcje.OdblokujLinieDialogu();
             }
           }
           else
           {// odczyt stanu akcji
           this.stanAkcji();  
-          setTimeout(()=> { this.PetlaStart(licznik) },1000)
+          setTimeout(()=> { this.PetlaStart(licznik) }, this.czas1000)
           }
         }
         else
@@ -107,11 +113,11 @@ PetlaStart(licznik: number)
           {
               if ((this.getCzasDedala() == 'error') || (this.getCzasStartuDedal() == 'error')) 
               {
-                setTimeout(()=> { this.PetlaStart(--licznik) },1000)      
+                setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
               }  
               else 
               {// czasy ok
-              setTimeout(()=> {this.PetlaStart(this.licznikBlad) },1000) 
+              setTimeout(()=> {this.PetlaStart(this.licznikBlad) }, this.czas1000) 
               }    
           }
         }
@@ -129,7 +135,7 @@ PetlaStart(licznik: number)
           if (this.komunikacja.getHostId() == '')
           {
             this.funkcje.addLiniaKomunikatu('Ponawiam rejestrację terminala w systemie', 'rgb(199, 100, 43)');
-            setTimeout(()=> { this.PetlaStart(--licznik) },1000)      
+            setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
           }
           else
           {
@@ -141,9 +147,9 @@ PetlaStart(licznik: number)
               this.tablica_sprawdzajaca.stanRejestracja = true  
               this.odczytaj_czas_startu_dedal();
               this.odczytaj_czas_dedala();
-              setTimeout(()=> { this.PetlaStart(this.licznikBlad) },500); 
-              }, 500);
-            }, 500);
+              setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500); 
+              }, this.czas500);
+            }, this.czas500);
             
           }
         }
@@ -171,8 +177,8 @@ PetlaStart(licznik: number)
                         this.funkcje.addLiniaKomunikatu('Rejestruję terminal w systemie', '');
                         this.tablica_sprawdzajaca.stanSQL = true;
                         this.komunikacja.rejestruj();
-                        setTimeout(()=> { this.PetlaStart(this.licznikBlad) },500);          
-                      }, 500);                      
+                        setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500);          
+                      }, this.czas500);                      
         }
       }  
     }
@@ -198,21 +204,21 @@ private odczytaj_czas_startu_dedal()
                   this.czas_startu_dedal = wynik.czasnew
                   this.czasStartuDedal.next(this.czas_startu_dedal);
                   this.tablica_sprawdzajaca.stanCzasStartuDedal = true;
-                  setTimeout(() => {this.odczytaj_czas_startu_dedal()}, 1000)
+                  setTimeout(() => {this.odczytaj_czas_startu_dedal()}, this.czas1000)
               }
               else
               {
                 this.czas_startu_dedal = 'error';
                 this.tablica_sprawdzajaca.stanCzasStartuDedal = false;
                 this.czasStartuDedal.next(this.czas_startu_dedal);
-                setTimeout(() => {this.odczytaj_czas_startu_dedal()}, 1000)
+                setTimeout(() => {this.odczytaj_czas_startu_dedal()}, this.czas1000)
               }
               },
     error => {
       this.czas_startu_dedal = 'error';
       this.tablica_sprawdzajaca.stanCzasStartuDedal = false;
       this.czasStartuDedal.next(this.czas_startu_dedal);
-      setTimeout(() => {this.odczytaj_czas_startu_dedal()}, 1000)
+      setTimeout(() => {this.odczytaj_czas_startu_dedal()}, this.czas1000)
              }
              )      
 }
@@ -242,20 +248,20 @@ private odczytaj_czas_dedala()
             this.OdczytajCzasDedala.next( this.czas_dedala );
             this.tablica_sprawdzajaca.stanCzasDedala = true;  
           }
-          setTimeout(() => {this.odczytaj_czas_dedala()}, 1000)      
+          setTimeout(() => {this.odczytaj_czas_dedala()}, this.czas1000)      
         }
         else
         {
           this.czas_dedala = 'error';
           this.tablica_sprawdzajaca.stanCzasDedala = false;
-          setTimeout(() => {this.odczytaj_czas_dedala()}, 1000)
+          setTimeout(() => {this.odczytaj_czas_dedala()}, this.czas1000)
         }
                         
                },
       error => {
                 this.czas_dedala = 'error';
                 this.tablica_sprawdzajaca.stanCzasDedala = false;
-                setTimeout(() => {this.odczytaj_czas_dedala()}, 1000)
+                setTimeout(() => {this.odczytaj_czas_dedala()}, this.czas1000)
                }
                )      
   }
@@ -290,17 +296,17 @@ stanAkcji()
                     this.tablica_sprawdzajaca.stanAkcji = true;
                     this.stan_akcji = 'STOP'
                   }
-                setTimeout(() => {this.stanAkcji()}, 1000)             
+                setTimeout(() => {this.stanAkcji()}, this.czas1000)             
                 }
                 else
                 {
                   this.tablica_sprawdzajaca.stanAkcji = false;
-                  setTimeout(() => {this.stanAkcji()}, 1000)           
+                  setTimeout(() => {this.stanAkcji()}, this.czas1000)           
                 }
                },
       error => {
                 this.tablica_sprawdzajaca.stanAkcji = false;
-                setTimeout(() => {this.stanAkcji()}, 1000)           
+                setTimeout(() => {this.stanAkcji()}, this.czas1000)           
                }
                )      
 }
@@ -317,7 +323,7 @@ taktujCzasDedala() {
       {    
        this.czas_dedala = moment(moment().add(this.czas_dedala_ofset,'milliseconds')).format('YYYY-MM-DD HH:mm:ss');
        this.czasRzeczywistyDedala.next(this.czas_dedala);
-      }, 1000); 
+      }, this.czas1000); 
       
     }
 
@@ -339,7 +345,7 @@ taktujDedalaUplyw()
   this.czas_uplyw_dedala_id = setInterval(() => 
     {
       this.czasDedalaUplyw.next(this.formatUplyw(this.getCzasStartuDedal(), this.getCzasDedala()))
-    },1000);
+    }, this.czas1000);
   }
 
 zatrzymajDedalaUplyw()
@@ -438,7 +444,7 @@ changeStartStop(stan: any)
       {
 
         this.czasRzeczywistyUplyw.next(this.formatUplyw(this.czas_rzeczywisty_start,(moment()).format('YYYY-MM-DD HH:mm:ss')))
-      },1000);
+      }, this.czas1000);
     }
 
   zatrzymajUplyw()

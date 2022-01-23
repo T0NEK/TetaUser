@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AppComponent } from '../app.component';
 import { CzasService } from '../czas.service';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 
@@ -21,11 +22,12 @@ export class InformacjeComponent implements OnInit, OnDestroy {
   czas_na_dedalu: any;
   czas_od_startu_uplyw: any;
   czas_startu: any;
+  height: any
   
-  constructor(private czasy: CzasService, private funkcje: FunkcjeWspolneService) 
+  constructor(private all: AppComponent, private czasy: CzasService, private funkcje: FunkcjeWspolneService) 
   {
     //console.log(' constr informacje')
-    
+    this.height = all.wysokoscInfo;
     this.czas_startu_subscribe_i = czasy.czasStartuDedal$.subscribe ( data => { this.czas_startu = data; } );
     this.czas_startu_akcji_subscribe_i = czasy.czasRzeczywistyDedala$.subscribe ( data => { this.czas_na_dedalu = data; } );
     this.uplyw_dedala_subscribe_i = czasy.czasDedalaUplyw$.subscribe ( data => { this.czas_od_startu_uplyw = data; } );

@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { CzasService } from '../czas.service';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service'; 
 import { Wiersze } from '../definicje';
+import { AppComponent } from '../app.component';
 
 
 @Component({
@@ -20,15 +21,19 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   VSVDialog!: CdkVirtualScrollViewport;
   private zakladkasubscribe = new Subscription();
   checked = true;
+  height: any;
+  
 
     
   //@Input() : any;
   //@Output() raport = new EventEmitter<string>();
   
-  constructor(private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef) 
+  constructor(private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
   {
-
+    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-100) + 'px';
+    console.log (all.wysokoscAll,'    ',all.wysokoscInfo,'    ',all.wysokoscKlw,'    ',all.wysokoscLinia,'    ',all.wysokoscDialogMin,'    ',all.wysokoscPrzewijaj)
     //console.log('konstruktor dialog')
+    //console.log(this.VSVDialog._totalContentHeight);
     this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
@@ -55,9 +60,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   
   onClick(kto: string)
   {// dla przewijaj
-  //  console.log(kto);
-    this.funkcje.fokusLiniaDialogu(kto);
-    this.funkcje.blokadaLiniaDialogu(false,"jesteś wolny")
+      this.funkcje.fokusLiniaDialogu();
   }
 
   Przewijaj()

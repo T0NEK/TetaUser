@@ -1,0 +1,37 @@
+:host
+{
+    --odstep: 2px;  
+    --wysokosc_przycisk: 34px;
+    --szerokosc_przycisk: 34px;
+    padding: 10px;
+}
+.cyfra
+{
+  width: var(--szerokosc_przycisk);
+  height: var(--wysokosc_przycisk);  
+  min-height: var(--wysokosc_przycisk);  
+  margin: var(--odstep);
+}
+.szeroki
+{
+  min-width: calc(2 * var(--szerokosc_przycisk) + 2 * var(--odstep));
+  height: var(--wysokosc_przycisk);  
+  min-height: var(--wysokosc_przycisk);  
+  margin: var(--odstep);
+  border: 1px solid white;
+}
+.spacja
+{
+  min-width: calc(2 * var(--szerokosc_przycisk) + 2 * var(--odstep));
+  height: var(--wysokosc_przycisk);  
+  min-height: var(--wysokosc_przycisk);  
+  margin: var(--odstep);
+}
+.icon
+{
+   font-size: 18px;
+}
+.obok
+{
+  display: inline-block;
+}

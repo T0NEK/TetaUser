@@ -25,9 +25,11 @@ import { DialogMiniComponent } from './dialog-mini/dialog-mini.component';
 import { TestyComponent } from './testy/testy.component';
 import { KlawiaturaComponent } from './klawiatura/klawiatura.component';
 import { LiniaKomendComponent } from './linia-komend/linia-komend.component';
+import { ZalogowaniUzytkownicyComponent } from './zalogowani-uzytkownicy/zalogowani-uzytkownicy.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [															
+  declarations: [																
     AppComponent,
       InformacjeComponent,
       NawigacjaComponent,
@@ -37,7 +39,8 @@ import { LiniaKomendComponent } from './linia-komend/linia-komend.component';
       DialogMiniComponent,
       TestyComponent,
       KlawiaturaComponent,
-      LiniaKomendComponent
+      LiniaKomendComponent,
+      ZalogowaniUzytkownicyComponent
    ],
   imports: [
     BrowserModule,
@@ -55,7 +58,8 @@ import { LiniaKomendComponent } from './linia-komend/linia-komend.component';
     MatCardModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatIconModule
     ],
   providers: [],
   bootstrap: [AppComponent]

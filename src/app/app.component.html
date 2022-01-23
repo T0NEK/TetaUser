@@ -1,11 +1,26 @@
-<app-informacje class="informacje" (click)="onClick('informacje')">
-</app-informacje>
+<div>
+    <app-informacje class="informacje"  [ngStyle]="{'height': wysokoscInfo +'px', 'max-height': wysokoscInfo +'px'}">
+    </app-informacje>
+</div>
+<div class="row">
+<div class="col-10" >
+    <app-nawigacja class="nawigacja" [ngStyle]="{'height': wysokoscNawigacja +'px', 'max-height': wysokoscNawigacja +'px'}" >
+    </app-nawigacja>
+</div>
+<div class="col-2">
+    <app-zalogowani-uzytkownicy [ngStyle]="{'height': wysokoscNawigacja +'px', 'max-height': wysokoscNawigacja +'px'}">
 
-<app-nawigacja class="nawigacja" (click)="onClick('nawigacja')">
-</app-nawigacja>
+    </app-zalogowani-uzytkownicy>    
+</div>
+</div>
+<div >
+    <app-dialog-mini [ngStyle]="{'height': wysokoscDialogMin +'px', 'max-height': wysokoscDialogMin +'px'}">
 
-<app-klawiatura class="klawiatura" (click)="onClick('klawiatura')">
-</app-klawiatura>
+    </app-dialog-mini>
 
-<app-linia-komend class="linia-komend" (click)="onClick('linia-komend')">
-</app-linia-komend>
+    <app-klawiatura class="klawiatura" [ngStyle]="{'height': wysokoscKlw +'px', 'max-height': wysokoscKlw +'px'}">
+    </app-klawiatura>
+
+    <app-linia-komend class="linia-komend"  [ngStyle]="{'height': wysokoscLinia +'px', 'max-height': wysokoscLinia +'px'}">
+    </app-linia-komend>
+</div>

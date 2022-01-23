@@ -5,10 +5,8 @@
 }
 .example-viewport
   {
-    height: calc( var(--dialogmax) - var(--status));
     width: 100%;
     max-width: 100%;
-    
   }
 .przewijaj
   {

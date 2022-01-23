@@ -1,6 +1,8 @@
 :host
 {
     font-size: 18px;
+    color: lightgreen;
+    cursor: crosshair;
 }
 .nawigacja
 {
@@ -9,8 +11,6 @@
 .informacje
 {
     display: block;
-    height: var(--informacje);
-    max-height: var(--informacje);
     overflow-y: hidden;
     overflow-x: hidden; 
     border-bottom: 2px solid rgb(00, 123, 255)
@@ -22,4 +22,8 @@
 .linia-komend
 {
     display: block;
+}
+.obok
+{
+  display: inline-block;
 }
