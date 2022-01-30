@@ -20,7 +20,7 @@ export class ZalogowaniUzytkownicyComponent implements OnDestroy {
 constructor(private all: AppComponent, private osoby: OsobyService) 
   {
     this.height = all.wysokoscNawigacja;
-    console.log(this.height)
+    //console.log(this.height)
     this.osobysubscribe = osoby.OdczytajOsoby$.subscribe
     ( data => { this.tablicaosoby = data; } )
    //this.gosciesubscribe = osoby.OdczytajGoscie$.subscribe

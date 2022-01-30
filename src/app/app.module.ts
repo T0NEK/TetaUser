@@ -27,6 +27,7 @@ import { KlawiaturaComponent } from './klawiatura/klawiatura.component';
 import { LiniaKomendComponent } from './linia-komend/linia-komend.component';
 import { ZalogowaniUzytkownicyComponent } from './zalogowani-uzytkownicy/zalogowani-uzytkownicy.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [																
@@ -59,7 +60,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

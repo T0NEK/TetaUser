@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { HttpClient} from '@angular/common/http';
 import { KomunikacjaService } from './komunikacja.service';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { FunkcjeWspolneService } from './funkcje-wspolne.service';
+
 
 @Injectable({ providedIn: 'root'})
 
 export class OsobyService 
 {
     
-constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient)
+constructor(private komunikacja: KomunikacjaService, private http: HttpClient)
 {
-    console.log('osoby con');
-    //this.odczytaj_osoby(5);
+  //  console.log('osoby con');
 }
 
 /* (start) osoby*/

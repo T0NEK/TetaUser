@@ -4,6 +4,16 @@
     color: lightgreen;
     cursor: crosshair;
 }
+.modal-body
+{
+    background: black;
+    color: blueviolet;
+    text-align: center;
+}
+mat-spinner
+{
+    margin: auto;
+}
 .nawigacja
 {
     display: block;

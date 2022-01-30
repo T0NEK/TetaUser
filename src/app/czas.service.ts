@@ -1,35 +1,36 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, Inject, LOCALE_ID, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import * as moment from 'moment';
 import { KomunikacjaService } from './komunikacja.service';
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { OsobyService } from './osoby.service';
-import { Sprawdz } from './definicje'
+import { Sprawdz } from './definicje';
+import { PoleceniaService } from './polecenia.service';
+import { PetlaService } from './petla.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 
-
-
 export class CzasService implements OnDestroy
 {
   private aktualizacja_czasu_subscribe_c = new Subscription();
+  private zalogowany_subscribe_c = new Subscription();
   private czas500 = 50;
   private czas1000 = 100;
   
     
-  constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService) 
+  constructor(private petla: PetlaService, private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService) 
   {
   //console.log('czas con');
-  this.funkcje.addLiniaKomunikatu('Uruchomiono terminal ','');
+  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Uruchomiono terminal ','');
   setTimeout(() => {
-      this.funkcje.addLiniaKomunikatu('Łączę z serwerem', '');
+      this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Łączę z serwerem', '');
       setTimeout(() => {
         this.komunikacja.StartKomunikacja();
-        this.funkcje.ZablokujLinieDialogu('');
+        this.funkcje.ZablokujAll('');
         this.PetlaStart(this.licznikBlad);  
         }, this.czas500);
       }, this.czas500);
@@ -37,10 +38,36 @@ export class CzasService implements OnDestroy
   /* (start) Komunikaty z odczytu bazy */
   this.aktualizacja_czasu_subscribe_c = this.OdczytajCzasDedala$.subscribe 
           ( data => {
-            this.funkcje.addLiniaKomunikatu('Zsynchronizowano czas','');
+            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Zsynchronizowano czas','');
             } );
 
   /* (end) Komunikaty z odczytu bazy*/
+
+  this.zalogowany_subscribe_c = komunikacja.logowanieUsera$.subscribe 
+  ( data => 
+    { 
+     //console.log(data)   
+      if (data.wynik == true)
+      {
+          if (data.stan == true)
+          {
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,data.imie + ' ' + data.nazwisko + ' - ' + data.error,'');
+              this.funkcje.zalogujOsoba(data);
+              this.ZmianyPoLogowaniu();
+          }    
+          else
+          {
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,data.error,'');
+          }
+      }
+      else
+      {
+          this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,data.error,'');
+      }
+
+    } 
+  );
+
   }
   
  
@@ -50,7 +77,17 @@ export class CzasService implements OnDestroy
     //if (this.czas_rzeczywisty_start_id) { clearInterval(this.czas_rzeczywisty_start_id); }
     if (this.czas_uplyw_dedala_id) { clearInterval(this.czas_uplyw_dedala_id); }
     this.aktualizacja_czasu_subscribe_c.unsubscribe();
+    this.zalogowany_subscribe_c.unsubscribe();
   }
+
+ZmianyPoLogowaniu()
+{
+   this.tablica_sprawdzajaca.stanRejestracja = false;
+   this.tablica_sprawdzajaca.stanPolecenia = false;
+   this.tablica_sprawdzajaca.stanDzialania = false; 
+   this.PetlaStart(5);
+}
+
 
   /* (start) Pętla startowa sprawdzająca stan */
 private licznikBlad = 5;
@@ -61,7 +98,11 @@ private tablica_sprawdzajaca: Sprawdz =
   stanRejestracja: false,
   stanCzasStartuDedal: false,
   stanCzasDedala: false,
+  stanPolecenia: false,
+  stanDzialania: false
 }; 
+
+
 PetlaStart(licznik: number)
 {
  // console.log('licznik= ', licznik, '   pętla  ', this.tablica_sprawdzajaca )
@@ -70,87 +111,148 @@ PetlaStart(licznik: number)
     {
       if (this.tablica_sprawdzajaca.stanRejestracja)
       {
-        if (this.tablica_sprawdzajaca.stanCzasDedala && this.tablica_sprawdzajaca.stanCzasStartuDedal) 
-        {
-          if (this.tablica_sprawdzajaca.stanAkcji)
-          {
-            if (this.getStanAkcji() == 'STOP')
-            {
-              this.funkcje.addLiniaKomunikatu('Oczekuję na start', 'rgb(199, 100, 43)');
-              setTimeout(()=> { this.PetlaStart(this.licznikBlad) },2000)
-            }
+        if (this.tablica_sprawdzajaca.stanPolecenia)
+        {        
+            if (this.tablica_sprawdzajaca.stanDzialania)
+            {        
+                      if (this.tablica_sprawdzajaca.stanCzasDedala && this.tablica_sprawdzajaca.stanCzasStartuDedal) 
+                      {
+                              if (this.tablica_sprawdzajaca.stanAkcji)
+                              {
+                                if (this.getStanAkcji() == 'STOP')
+                                {
+                                  //this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Oczekuję na start', 'rgb(199, 100, 43)');
+                                  //this.all.openCzekaj();
+                                  setTimeout(()=> { this.PetlaStart(this.licznikBlad) },2000)
+                                }
+                                else
+                                {
+                                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Gotowy', '');
+                                  //this.taktujUplyw();
+                                  this.taktujCzasDedala();  
+                                  this.taktujDedalaUplyw();          
+                                  this.osoby.wczytajOsoby();
+                                  //pętla !!
+                                  this.funkcje.OdblokujAll('');
+                                }
+                              }
+                              else
+                              {// odczyt stanu akcji
+                              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Czekaj', '');
+                              this.stanAkcji();  
+                              setTimeout(()=> { this.PetlaStart(licznik) }, this.czas1000)
+                              }
+                      }
+                      else
+                      {// odczyt czasów startu i bierzący
+                        if (licznik == 0)
+                        {
+                          if (this.getCzasDedala() == 'error') {
+                            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd odczytu czas d', 'rgb(199, 100, 43)');
+                            }
+                          if (this.getCzasStartuDedal() == 'error') {
+                            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd odczytu czas s', 'rgb(199, 100, 43)');
+                            }  
+                            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd krytyczny - terminal stop', 'red');
+                            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wezwij MG', 'red');
+                        }
+                        else
+                        {
+                            if ((this.getCzasDedala() == 'error') || (this.getCzasStartuDedal() == 'error')) 
+                            {
+                              setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
+                            }  
+                            else 
+                            {// czasy ok
+                            setTimeout(()=> {this.PetlaStart(this.licznikBlad) }, this.czas1000) 
+                            this.polecenia.WczytajPolecenia(this.funkcje.getZalogowany().zalogowany);
+                            }    
+                        }
+                      }
+            }  
             else
-            {
-              this.funkcje.addLiniaKomunikatu('Start', 'rgb(199, 100, 43)');
-              //this.taktujUplyw();
-              this.taktujCzasDedala();  
-              this.taktujDedalaUplyw();          
-              this.osoby.wczytajOsoby();
-              this.funkcje.OdblokujLinieDialogu();
-            }
-          }
-          else
-          {// odczyt stanu akcji
-          this.stanAkcji();  
-          setTimeout(()=> { this.PetlaStart(licznik) }, this.czas1000)
-          }
-        }
+            {//odczyt dostepnych działań
+              if (licznik == 0)
+              {
+                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd odczytu danych dla poleceń', 'rgb(199, 100, 43)');
+                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd krytyczny - terminal stop', 'red');
+                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wezwij MG', 'red');
+              }
+              else
+              {
+                  if (this.polecenia.getDzialania().length == 0) 
+                  {
+                    this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Ponawiam odczyt danych dla poleceń', 'rgb(199, 100, 43)');
+                    setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
+                  }  
+                  else 
+                  {// działania ok
+                    this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wczytano dane dla poleceń', '');
+                    setTimeout(() => {
+                      this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Synchronizuję czas', '');  
+                      setTimeout(() => {
+                      this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Odczytuję dane', '');
+                      this.tablica_sprawdzajaca.stanDzialania = true  
+                      this.odczytaj_czas_startu_dedal();
+                      this.odczytaj_czas_dedala();
+                      setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500); 
+                      }, this.czas500);
+                    }, this.czas500);}    
+              }
+            }          
+        }  
         else
-        {// odczyt czasów startu i bierzący
-
+        {//odczyt dostepnych poleceń
           if (licznik == 0)
           {
-            if (this.getCzasDedala() == 'error') {
-              this.funkcje.addLiniaKomunikatu('Błąd odczytu czas d', 'rgb(199, 100, 43)');
-              }
-            if (this.getCzasStartuDedal() == 'error') {
-              this.funkcje.addLiniaKomunikatu('Błąd odczytu czas s', 'rgb(199, 100, 43)');
-              }  
-              this.funkcje.addLiniaKomunikatu('Błąd krytyczny - terminal stop', 'red');
-              this.funkcje.addLiniaKomunikatu('Wezwij MG', 'red');
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd odczytu dostępnych poleceń', 'rgb(199, 100, 43)');
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd krytyczny - terminal stop', 'red');
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wezwij MG', 'red');
           }
           else
           {
-              if ((this.getCzasDedala() == 'error') || (this.getCzasStartuDedal() == 'error')) 
+              if (this.polecenia.getPolecenia().length == 0) 
               {
+                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Ponawiam odczyt dostępnych poleceń', 'rgb(199, 100, 43)');
                 setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
               }  
               else 
-              {// czasy ok
-              setTimeout(()=> {this.PetlaStart(this.licznikBlad) }, this.czas1000) 
-              }    
-          }
+              {// polecenia ok
+                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wczytano polecenia', '');
+                setTimeout(() => {
+                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Odczytuję dane dla poleceń', '');
+                  this.tablica_sprawdzajaca.stanPolecenia = true  
+                  this.polecenia.WczytajDzialania(this.funkcje.getZalogowany().zalogowany);
+                  setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500); 
+                  }, this.czas500);
+              }
+          }   
         }
       }
       else
       {// rejestracja stanowiska i odczyt korekty czasu
         if (licznik == 0)
         {
-          this.funkcje.addLiniaKomunikatu('Błąd rejestracji terminala - odmowa dostepu', 'red');
-          this.funkcje.addLiniaKomunikatu('Błąd krytyczny - terminal stop', 'red');
-          this.funkcje.addLiniaKomunikatu('Wezwij MG', 'red');
+          this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd rejestracji terminala - odmowa dostepu', 'red');
+          this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd krytyczny - terminal stop', 'red');
+          this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wezwij MG', 'red');
         }
         else
         {
           if (this.komunikacja.getHostId() == '')
           {
-            this.funkcje.addLiniaKomunikatu('Ponawiam rejestrację terminala w systemie', 'rgb(199, 100, 43)');
+            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Ponawiam rejestrację terminala w systemie', 'rgb(199, 100, 43)');
             setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
           }
           else
           {
-            this.funkcje.addLiniaKomunikatu('Zarejestrowano terminal w systemie', '');
+            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Zarejestrowano terminal w systemie', '');
             setTimeout(() => {
-              this.funkcje.addLiniaKomunikatu('Synchronizuję czas', '');  
-              setTimeout(() => {
-              this.funkcje.addLiniaKomunikatu('Odczytuję dane', '');
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Odczytuję dostępne polecenia', '');
               this.tablica_sprawdzajaca.stanRejestracja = true  
-              this.odczytaj_czas_startu_dedal();
-              this.odczytaj_czas_dedala();
+              this.polecenia.WczytajPolecenia(this.funkcje.getZalogowany().zalogowany);
               setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500); 
               }, this.czas500);
-            }, this.czas500);
-            
           }
         }
       }
@@ -159,22 +261,22 @@ PetlaStart(licznik: number)
     { //sprawdzenie połączenia z MySql
       if (licznik == 0)
       {
-        this.funkcje.addLiniaKomunikatu('Sprawdzono połączenie z serwerem - brak komunikacji', 'red');
-        this.funkcje.addLiniaKomunikatu('Błąd krytyczny - terminal stop', 'red');
-        this.funkcje.addLiniaKomunikatu('Wezwij MG', 'red');
+        this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Sprawdzono połączenie z serwerem - brak komunikacji', 'red');
+        this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Błąd krytyczny - terminal stop', 'red');
+        this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Wezwij MG', 'red');
       }
       else 
       {
         if (this.komunikacja.getURL() == '')
         {
-          this.funkcje.addLiniaKomunikatu('Ponawiam połączenie z serwerem', 'rgb(199, 100, 43)');
+          this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Ponawiam połączenie z serwerem', 'rgb(199, 100, 43)');
           setTimeout(()=> { this.PetlaStart(--licznik) },1500)          
         }
         else
         {
-          this.funkcje.addLiniaKomunikatu('Uzyskano połączenie z serwerem', '');
+          this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Uzyskano połączenie z serwerem', '');
           setTimeout(() => {
-                        this.funkcje.addLiniaKomunikatu('Rejestruję terminal w systemie', '');
+                        this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Rejestruję terminal w systemie', '');
                         this.tablica_sprawdzajaca.stanSQL = true;
                         this.komunikacja.rejestruj();
                         setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500);          
@@ -397,13 +499,13 @@ setStart()
       { 
       this.czas_rzeczywisty_start =  (moment()).format('YYYY-MM-DD HH:mm:ss');
       //this.czas_rzeczywisty_end = '';
-      this.funkcje.addLiniaKomunikatu('Użyto [START] czas','green');
+      this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Użyto [START] czas','green');
       }
 
 setStop()
       { 
       //this.czas_rzeczywisty_end =  (moment()).format('YYYY-MM-DD HH:mm:ss');
-      this.funkcje.addLiniaKomunikatu('Użyto [STOP] czas','red'); 
+      this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Użyto [STOP] czas','red'); 
       }
 
 private GetStartStop = new Subject();

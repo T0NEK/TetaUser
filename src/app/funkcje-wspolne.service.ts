@@ -1,19 +1,48 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { Wiersze } from './definicje';
+import { Wiersze, Zalogowany } from './definicje';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
+
+
+
 export class FunkcjeWspolneService {
+
+public dedal = 'dadal';
+private osoba: Zalogowany;
 
 constructor()
  {
-   console.log('con fun wsp');
+  // console.log('con fun wsp');
   this.poprawne = this.poprawne.concat(this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
+  this.osoba = this.wylogujOsoba();
  }
 
+/* (start) funkcje zalogowanego */ 
+
+getZalogowany()
+{
+  return this.osoba
+}
+
+
+wylogujOsoba(): Zalogowany
+{
+  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor':'white'} 
+}
+
+zalogujOsoba(data : any)
+{
+  this.osoba.zalogowany = data.zalogowany;
+  this.osoba.imie = data.imie;
+  this.osoba.nazwisko = data.nazwisko;
+  this.osoba.funkcja = data.funkcja;
+  this.osoba.rodzaj = data.rodzaj;
+  this.osoba.kolor = 'rgb(230, 255, 0)';
+}
+
+/* (end) funkcje zalogowanego */ 
 
 /* (start) dodanie lini komunikatu */
 private linieDialogu: Wiersze[] = [];
@@ -26,9 +55,9 @@ addLinieDialogu(linia: any)
 
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();
-addLiniaKomunikatu(linia: string, kolor: string)
+addLiniaKomunikatu(name: string, linia: string, kolor: string, klasa: string = 'tekst')
 {
-  let wiersz = {'data':(moment()).format('YYYY-MM-DD HH:mm:ss'), 'name': 'dedal', 'kolor': kolor, 'tekst': linia}
+  let wiersz = {'data':(moment()).format('YYYY-MM-DD HH:mm:ss'), 'name': name, 'kolor': kolor, 'tekst': linia, 'klasa': klasa}
   this.addLinieDialogu(wiersz)
   this.LiniaKomunikatu.next(wiersz);
 }
@@ -37,31 +66,71 @@ addLiniaKomunikatu(linia: string, kolor: string)
 /* (start) fokus lini dialogu */
 private LiniaDialogu = new Subject<any>();
 LiniaDialogu$ = this.LiniaDialogu.asObservable();
-fokusLiniaDialogu()
+fokusLiniaDialogu(tekst: string)
 {
-  this.LiniaDialogu.next();
+  this.LiniaDialogu.next(tekst);
 }
 /* (end) fokus lini dialogu */
 
-/* (start) fokus lini dialogu */
-ZablokujLinieDialogu(komunikat: string)
+/* (start) blokada lini dialogu */
+ZablokujAll(komunikat: string)
 {
-  if (komunikat == '') { komunikat = 'przetwarzam, czekaj' }
-  this.blokadaLiniaDialogu(true,komunikat)
+  this.ZablokujLinieDialogu(komunikat, true)  
 }
 
-OdblokujLinieDialogu()
+OdblokujAll(komunikat: string)
 {
-  this.blokadaLiniaDialogu(false,'')
+  this.OdblokujLinieDialogu(komunikat, false)  
+  this.UstawStanPolecenia({"czas": 500, "komunikat": "", "dzialania": "","nastepny":"brak"})
+}
+
+
+ZablokujLinieDialogu(komunikat: string, blokada: boolean = false)
+{
+  if (komunikat == '') { komunikat = 'przetwarzam, czekaj' }
+  this.blokadaLiniaDialogu(true, komunikat, blokada)
+}
+
+OdblokujLinieDialogu(komunikat: string, blokada: boolean = false)
+{
+  this.blokadaLiniaDialogu(false, komunikat, blokada)
 }
 
 private LiniaDialoguBlokada = new Subject<any>();
 LiniaDialoguBlokada$ = this.LiniaDialoguBlokada.asObservable();
-private blokadaLiniaDialogu(stan: boolean, komunikat: string)
+private blokadaLiniaDialogu(stan: boolean, komunikat: string, blokada: boolean)
 {
-  this.LiniaDialoguBlokada.next({"stan": stan,"komunikat": komunikat});
+  this.LiniaDialoguBlokada.next({"stan": stan, "komunikat": komunikat, "blokada": blokada});
 }
-/* (end) fokus lini dialogu */
+/* (end) blokada lini dialogu */
+
+
+/* (start) stan polecen lini dialogu */
+UstawStanPolecenia(stan: any)
+{
+  this.blokadaLiniaStanPolecen(stan)
+}
+
+private LiniaDialoguStanPolecen = new Subject<any>();
+LiniaDialoguStanPolecen$ = this.LiniaDialoguStanPolecen.asObservable();
+private blokadaLiniaStanPolecen(stan: any)
+{
+  this.LiniaDialoguStanPolecen.next(stan);
+}
+
+Password(stan: string)
+{  this.blokadaLiniaStanHaslo(stan) }
+
+private LiniaDialoguStanHaslo = new Subject<any>();
+LiniaDialoguStanHaslo$ = this.LiniaDialoguStanHaslo.asObservable();
+private blokadaLiniaStanHaslo(stan: string)
+{
+  this.LiniaDialoguStanHaslo.next(stan);
+}
+/* (end) stan polecen lini dialogu */
+
+
+
 
 /* (start) dodanie znaku lini dialogu */
 private LiniaDialoguAddChar = new Subject<any>();

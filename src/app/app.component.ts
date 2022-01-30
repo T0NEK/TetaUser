@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 
 @Component({
@@ -13,9 +15,9 @@ import { FunkcjeWspolneService } from './funkcje-wspolne.service';
   //  "(window:keypress)":"onKeyDown($event)"
   }  
 })
-export class AppComponent 
+export class AppComponent implements OnDestroy
 {
-  title = 'TetaAdmin';
+  title = 'TetaUser';
   public wysokoscAll: any;
   public wysokoscInfo = 32;
   public wysokoscNawigacja: any;
@@ -26,34 +28,78 @@ export class AppComponent
   public szerokoscAll: any;
   public szerokoscInput: any;
   public szerokoscClear = 40;
+  @ViewChild('content') content!: ElementRef;
   
-  
+  private blokada_subscribe_app = new Subscription();
+  private modalCzekaj: any;
 
 
-constructor(private funkcje: FunkcjeWspolneService, private window: Window)
+constructor(config: NgbModalConfig, private modalService: NgbModal, private funkcje: FunkcjeWspolneService, private window: Window)
   {
   //  console.log(window.innerWidth)
   //  console.log(window.outerWidth)
-    console.log(window.innerHeight)
-    console.log(window.outerHeight)
+  //  console.log(window.innerHeight)
+  //  console.log(window.outerHeight)
     this.wysokoscAll = window.innerHeight;
     this.szerokoscAll = window.innerWidth
     this.wysokoscNawigacja = (this.wysokoscAll - this.wysokoscInfo - this.wysokoscKlw - this.wysokoscLinia - this.wysokoscDialogMin - this.wysokoscPrzewijaj);
-    console.log(this.wysokoscNawigacja);
+  //  console.log(this.wysokoscNawigacja);
     this.szerokoscInput = this.szerokoscAll - this.szerokoscClear;
+
+    config.backdrop = 'static';
+    config.keyboard = false;
+    config.centered = true;
+    config.backdropClass = 'light-blue-backdrop';
+  
+    this.blokada_subscribe_app = funkcje.LiniaDialoguBlokada$.subscribe 
+    ( data => 
+      {
+//              console.log('blokuj',data);
+        if (data.blokada)
+        {
+          this.openCzekaj()
+        }
+        else
+        {
+          this.closeCzekaj()
+        }
+        
+      } );    
   }
+
+ngOnDestroy()
+{
+  this.blokada_subscribe_app.unsubscribe()    
+}  
+
+openCzekaj() 
+{
+ this.modalCzekaj = this.modalService.open(this.content);
+}
+
+closeCzekaj()
+{
+this.modalCzekaj.close()
+}  
+
 
 onClick(kto: any)
   {
     //console.log(kto);
-    this.funkcje.fokusLiniaDialogu()
+    //console.log(kto.target);
+    //console.log('>',kto.target.innerText,'<');
+    //console.log(kto.target.className);
+    if ( kto.target.className == 'liniakomend')
+    { this.funkcje.fokusLiniaDialogu(kto.target.innerText) }
+    else
+    { this.funkcje.fokusLiniaDialogu('') }
   }
 
 onKeyDown(kto: KeyboardEvent)
 {
-  console.log(kto.key);
-  console.log(kto.altKey);
-  console.log(kto.shiftKey);
+  //console.log(kto.key);
+  //console.log(kto.altKey);
+  //console.log(kto.shiftKey);
   console.log(kto);
   //this.funkcje.LiniaDialoguChar(kto.key.charCodeAt(0))
 }
