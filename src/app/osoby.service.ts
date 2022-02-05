@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient} from '@angular/common/http';
 import { KomunikacjaService } from './komunikacja.service';
+import { Osoby } from './definicje';
 
 
 @Injectable({ providedIn: 'root'})
@@ -30,7 +31,7 @@ private odczytaj_osoby()
         let wynik = JSON.parse(JSON.stringify(data));    
         if (wynik.wynik == true) 
         {
-          let osoby = Array();  
+          let osoby = Array<Osoby>();  
             for (let index = 0; index < wynik.osoby.length; index++) {
                 if (wynik.osoby[index].zalogowany)
                 {osoby = [...osoby, (wynik.osoby[index])];}

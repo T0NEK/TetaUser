@@ -30,7 +30,7 @@ szerokoscInput: any;
 constructor(private polecenia: PoleceniaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
     console.log('con linia kom')
-      this.stanpolecenia = {"nazwa": "", "czas": 500, "komunikat": "", "dzialanie": "bad", "nastepny": "brak"}
+      this.stanpolecenia = {"nazwa": "", "czas": 500, "komunikat": "", "dzialanie": "bad", "autoryzacja": 0, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll;     
 
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
@@ -72,11 +72,13 @@ constructor(private polecenia: PoleceniaService, private funkcje: FunkcjeWspolne
       this.stan_polecen_subscribe_lk = funkcje.LiniaDialoguStanPolecen$.subscribe 
             ( data => 
               { 
-                this.stanpolecenia.nazwa = (typeof data.nastepny === 'string' ? data.nastepny : 'brak');
+                this.stanpolecenia.nazwa = (typeof data.nastepnyTrue === 'string' ? data.nastepnyTrue : 'brak');
                 this.stanpolecenia.czas = (typeof data.czas === 'string' ? data.czas : ' ');
                 this.stanpolecenia.komunikat = (typeof data.komunikat === 'string' ? data.komunikat : ' ');
                 this.stanpolecenia.dzialanie = (typeof data.dzialanie === 'string' ? data.dzialanie : ' ');
-                this.stanpolecenia.nastepny = (typeof data.nastepny === 'string' ? data.nastepny : 'brak');
+                this.stanpolecenia.autoryzacja = (typeof data.dzialanie === 'number' ? data.autoryzacja : 0);
+                this.stanpolecenia.nastepnyTrue = (typeof data.nastepnyTrue === 'string' ? data.nastepnyTrue : 'brak');
+                this.stanpolecenia.nastepnyFalse = (typeof data.nastepnyFalse === 'string' ? data.nastepnyFalse : 'brak');
                 this.liniaInput.nativeElement.focus();
               } 
             );
@@ -278,14 +280,14 @@ WybranoEnter(linia: string)
     this.funkcje.addLiniaKomunikatu(this.funkcje.getZalogowany().imie,linia,this.funkcje.getZalogowany().kolor);
     this.DodajHistorie(linia);  
   }
-  console.log('linia: ',linia)
-  console.log('stanpolecenia: ',this.stanpolecenia)
-  if (( this.stanpolecenia.nastepny == 'brak')||( this.stanpolecenia.nastepny == 'bad'))
+  //console.log('linia: ',linia)
+  //console.log('stanpolecenia: ',this.stanpolecenia)
+  if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
   {
     polecenie = this.polecenia.sprawdzPolecenie(linia);
     //console.log('polecenie 1: ', polecenie)
     setTimeout(() => {
-            this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,polecenie.komunikat,'');
+            //this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,polecenie.komunikat,'');
             this.polecenia.poleceniaWykonaj(polecenie.dzialanie);
             this.funkcje.OdblokujLinieDialogu('');
             //this.funkcje.UstawStanPolecenia('');
@@ -296,9 +298,9 @@ WybranoEnter(linia: string)
     //polecenie = this.polecenia.sprawdzDzialania(poleceniestan);
     //console.log('polecenie 21: ', poleceniestan)
     //console.log('polecenie 22: ', polecenie)
-    //polecenie = this.polecenia.sprawdzDzialania(this.stanpolecenia.nastepny);
+    //polecenie = this.polecenia.sprawdzDzialania(this.stanpolecenia.nastepnyTrue);
     setTimeout(() => {
-      this.polecenia.poleceniaWykonaj(this.stanpolecenia.nastepny,linia);
+      this.polecenia.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
       this.funkcje.UstawStanPolecenia('');
       this.funkcje.OdblokujLinieDialogu('');
     }, 300)//polecenie.czas);

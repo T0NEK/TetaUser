@@ -7,7 +7,6 @@ import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { OsobyService } from './osoby.service';
 import { Sprawdz } from './definicje';
 import { PoleceniaService } from './polecenia.service';
-import { PetlaService } from './petla.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +21,7 @@ export class CzasService implements OnDestroy
   private czas1000 = 100;
   
     
-  constructor(private petla: PetlaService, private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService) 
+  constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService) 
   {
   //console.log('czas con');
   this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,'Uruchomiono terminal ','');

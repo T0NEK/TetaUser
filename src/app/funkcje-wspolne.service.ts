@@ -17,6 +17,7 @@ constructor()
   // console.log('con fun wsp');
   this.poprawne = this.poprawne.concat(this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
   this.osoba = this.wylogujOsoba();
+  this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'autoryzacja': 2, 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor':'rgb(230, 255, 0)'})
  }
 
 /* (start) funkcje zalogowanego */ 
@@ -29,7 +30,7 @@ getZalogowany()
 
 wylogujOsoba(): Zalogowany
 {
-  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor':'white'} 
+  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'autoryzacja': 0, 'funkcja': '', 'rodzaj': '','kolor':'white'} 
 }
 
 zalogujOsoba(data : any)
@@ -37,9 +38,10 @@ zalogujOsoba(data : any)
   this.osoba.zalogowany = data.zalogowany;
   this.osoba.imie = data.imie;
   this.osoba.nazwisko = data.nazwisko;
+  this.osoba.autoryzacja = data.autoryzacja;
   this.osoba.funkcja = data.funkcja;
   this.osoba.rodzaj = data.rodzaj;
-  this.osoba.kolor = 'rgb(230, 255, 0)';
+  this.osoba.kolor = (data.zalogowany == 0 ? 'white' : 'rgb(230, 255, 0)');
 }
 
 /* (end) funkcje zalogowanego */ 

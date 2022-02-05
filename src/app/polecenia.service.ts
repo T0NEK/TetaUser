@@ -1,89 +1,172 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { KomunikacjaService } from './komunikacja.service';
 import { Polecenia } from './definicje'
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
-import { AppComponent } from './app.component';
+import { ModulyService } from './moduly.service';
 
 @Injectable({ providedIn: 'root'})
-export class PoleceniaService {
 
-constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient)
+export class PoleceniaService implements OnDestroy 
 {
-    //console.log('con polecenia')
-}
 
+private modulysubscribe_p = new Subscription();
 private polecenia: Polecenia[] = [];  
 private dzialania: Polecenia[] = [];  
 private bufordane = Array();
 
 
+constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private moduly: ModulyService)
+{
+    //console.log('con polecenia')
+  this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
+    ( data => { this.poleceniaWykonaj(data) } )
+}
+
+
+ngOnDestroy()
+  {
+   if(this.modulysubscribe_p) { this.modulysubscribe_p.unsubscribe()}   
+  }
+
 poleceniaWykonaj(polecenie: string, tekst: string = '')
 {
  // console.log('działanie ',polecenie)
  // console.log('tekst: ',tekst)
-  let dowykonania = this.sprawdzDzialania(polecenie)
-//  console.log('polecenie: ',dowykonania)
-  switch (dowykonania.dzialanie) {
-    case 'wyswietlpolecenia': setTimeout(() => { 
-                                                this.polecenieWyswietl(dowykonania);
-                                               }, dowykonania.czas);
-          break;
-    case 'wyswietlkomunikat': this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,'');
-                              this.poleceniaWykonaj(dowykonania.nastepny);   
-          break;
-    case 'wyswietlpytanie': setTimeout(() => {
-                                                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,''); 
-                                                this.funkcje.UstawStanPolecenia(dowykonania)
-                                             }, dowykonania.czas);
-          break;
-    case 'zapiszdane': this.bufordane = [];
-                       this.bufordane = [...this.bufordane,tekst];
-                       setTimeout(() => 
-                       {
-                         this.poleceniaWykonaj(dowykonania.nastepny)
-                       }, dowykonania.czas);
-          break;                                   
-    case 'dodajdane':  this.bufordane = [...this.bufordane,tekst];
-                        setTimeout(() => 
-                        {
-                          this.poleceniaWykonaj(dowykonania.nastepny)
-                        }, dowykonania.czas);
-          break;   
-    case 'password': this.funkcje.Password(dowykonania.komunikat);
-                     this.poleceniaWykonaj(dowykonania.nastepny);   
-          break;
-    case 'logowanie': this.komunikacja.Zaloguj(this.bufordane);
-                      this.poleceniaWykonaj(dowykonania.nastepny);         
-          break;  
-    case 'wyloguj': 
-          break;              
-    case 'bad': 
-                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,'');
-          break;      
-  default:
-          break;
+  if (polecenie != 'end')
+ {
+    let dowykonania = this.sprawdzDzialania(polecenie) 
+    console.log('polecenie: ',dowykonania)
+    switch (dowykonania.dzialanie) {
+      case 'komunikat': setTimeout(() => {
+                                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,'');
+                                this.poleceniaWykonaj(dowykonania.nastepnyTrue);   
+                              }, dowykonania.czas);
+            break;
+      case 'dane': setTimeout(() => {
+                                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,''); 
+                                this.funkcje.UstawStanPolecenia(dowykonania)
+                              }, dowykonania.czas);
+            break;
+      case 'warunek': setTimeout(() => {
+                                let wynik = this.sprawdzWarunek(dowykonania);
+                                this.poleceniaWykonaj(wynik);   
+                              }, dowykonania.czas);                                
+            break;      
+      case 'wczytaj': setTimeout(() => { 
+                                this.Wczytaj(dowykonania);
+                                }, dowykonania.czas);
+            break;
+      case 'linie': setTimeout(() => {  
+                                this.Lista(dowykonania)    
+                              //  this.polecenieWyswietl(dowykonania);
+                                }, dowykonania.czas);
+            break;
+      case 'zapiszdane': this.bufordane = [];
+                         this.bufordane = [...this.bufordane,tekst];
+                         setTimeout(() => 
+                         {
+                           this.poleceniaWykonaj(dowykonania.nastepnyTrue)
+                         }, dowykonania.czas);
+            break;                                   
+      case 'dodajdane':  this.bufordane = [...this.bufordane,tekst];
+                          setTimeout(() => 
+                          {
+                            this.poleceniaWykonaj(dowykonania.nastepnyTrue)
+                          }, dowykonania.czas);
+            break;   
+      case 'password': this.funkcje.Password(dowykonania.komunikat);
+                       this.poleceniaWykonaj(dowykonania.nastepnyTrue);   
+            break;
+      case 'logowanie': this.bufordane = [...this.bufordane,0];
+                        this.komunikacja.Zaloguj(this.bufordane);
+                        this.poleceniaWykonaj(dowykonania.nastepnyTrue);         
+            break;  
+      case 'wylogowanie': this.bufordane = ['', '', this.funkcje.getZalogowany().zalogowany];
+                          this.komunikacja.Zaloguj(this.bufordane);
+                          this.poleceniaWykonaj(dowykonania.nastepnyTrue);         
+            break;              
+      case 'bad': 
+                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,'');
+            break;  
+    default:
+            break;
+    }
+ }
+}
+
+
+sprawdzWarunek(warunek: Polecenia): string
+{
+  let wynik: string;
+  //console.log( 'warunek',warunek )
+  //console.log( 'zalogowany',this.funkcje.getZalogowany() )
+  switch (warunek.komunikat) {
+    case 'autoryzacja': if ( this.funkcje.getZalogowany().autoryzacja < warunek.autoryzacja )
+                        { wynik = warunek.nastepnyFalse }
+                        else
+                        { wynik = warunek.nastepnyTrue}
+      
+      break;
+  
+    default:
+      wynik = 'bad';
+      break;
+  }
+return wynik;
+}
+
+
+
+Lista(dowykonania: any)
+{
+  //console.log(dowykonania)
+  switch (dowykonania.komunikat) 
+  {
+    case 'polecenia': this.wyswietlLista(0, this.polecenia, dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
+    case 'moduly': this.wyswietlLista(0, this.moduly.getModuly(), dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
+  }
+  
+}
+
+Wczytaj(dowykonania: any)
+{
+  console.log(dowykonania)
+  switch (dowykonania.komunikat) 
+  {
+    case 'polecenia': this.WczytajPolecenia(this.funkcje.getZalogowany().zalogowany); break;
+    case 'dzialania': this.WczytajDzialania(this.funkcje.getZalogowany().zalogowany); break;
+    case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
   }
 }
 
-/* (start) pomoc */
-polecenieWyswietl(polecenie: any)
-{
-   for (let index = 0; index < this.polecenia.length; index++)
-    {
-      setTimeout(() => 
-      {
-        this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,this.polecenia[index].nazwa,'rgb(00, 123, 255)','liniakomend');
-      }, polecenie.czas * index);
-    }        
-      setTimeout(() => 
-      {
-        this.poleceniaWykonaj(polecenie.nastepny)
-      }, polecenie.czas * this.polecenia.length);
-}
 
+
+wyswietlLista(licznik: number, lista: any, polecenie: any, kolor: string, rodzaj: string)
+{
+  console.log('licznik ',licznik)
+  console.log('lista ',lista)
+  console.log('polecenie ',polecenie)
+  console.log('zalogowany ',this.funkcje.getZalogowany())
+  setTimeout(() => 
+  {
+    if (licznik < lista.length)
+    {
+      if (lista[licznik].autoryzacja <= this.funkcje.getZalogowany().autoryzacja)
+       { this.funkcje.addLiniaKomunikatu(this.funkcje.dedal, lista[licznik].nazwa + (typeof lista[licznik].symbol == 'string' ? ' ['+lista[licznik].symbol+']' : '' ), kolor, rodzaj); }
+      this.wyswietlLista(++licznik, lista, polecenie, kolor, rodzaj)
+    }
+    else
+    {
+      //console.log('i next')
+      this.poleceniaWykonaj(polecenie.nastepnyTrue)
+    }
+  }, polecenie.czas);
+}
 /* (end) pomoc */
+
+
 
 
 
@@ -91,7 +174,7 @@ polecenieWyswietl(polecenie: any)
 getPolecenia (){ return this.polecenia; }
 sprawdzPolecenie(polecenie: string)
 {
-  let wynik = <Polecenia> {"nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "nastepny": "brak"}
+  let wynik = <Polecenia> {"nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "autoryzacja": 0, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
   for (let index = 0; index < this.polecenia.length; index++) 
   {
     if ( this.polecenia[index].nazwa == polecenie )
@@ -100,8 +183,10 @@ sprawdzPolecenie(polecenie: string)
                 "czas": this.polecenia[index].czas,
                 "komunikat": this.polecenia[index].komunikat, 
                 "dzialanie": this.polecenia[index].dzialanie,
-                "nastepny": this.polecenia[index].nastepny
-               } 
+                "autoryzacja": this.polecenia[index].autoryzacja,
+                "nastepnyTrue": this.polecenia[index].nastepnyTrue,
+                "nastepnyFalse": this.polecenia[index].nastepnyFalse
+         } 
        //this.poleceniePomoc();        
        break;        
     }       
@@ -142,10 +227,12 @@ var data = JSON.stringify({ "stan": stan})
                       "czas": wynik.polecenia[index].czas, 
                       "komunikat": wynik.polecenia[index].komunikat, 
                       "dzialanie": wynik.polecenia[index].dzialanie,
-                      "nastepny": wynik.polecenia[index].nastepny
+                      "autoryzacja": wynik.polecenia[index].autoryzacja,
+                      "nastepnyTrue": wynik.polecenia[index].nastepnyTrue,
+                      "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]
               }  
-              //console.log(this.polecenia)
+            //  console.log(this.polecenia)
             }
             else
             {
@@ -165,7 +252,7 @@ getDzialania (){ return this.dzialania; }
 
 sprawdzDzialania(dzialanie: string)
 {
-  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "komunikat": "Wystąpił jakiś błąd","dzialanie":"komunikat", "nastepny": "bad"}
+  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "komunikat": "Wystąpił błąd wykonania", "dzialanie":"komunikat", "autoryzacja": 0, "nastepnyTrue": "end", "nastepnyFalse": "end"}
   for (let index = 0; index < this.dzialania.length; index++) 
   {
     //console.log(this.dzialania[index].nazwa,' == ',dzialanie)
@@ -176,7 +263,9 @@ sprawdzDzialania(dzialanie: string)
                 "czas": this.dzialania[index].czas,
                 "komunikat": this.dzialania[index].komunikat, 
                 "dzialanie": this.dzialania[index].dzialanie,
-                "nastepny": this.dzialania[index].nastepny
+                "autoryzacja": this.dzialania[index].autoryzacja,
+                "nastepnyTrue": this.dzialania[index].nastepnyTrue,
+                "nastepnyFalse": this.dzialania[index].nastepnyFalse
                } 
        break;        
     }       
@@ -186,7 +275,7 @@ return wynik
 
 WczytajDzialania(stan: number)
 {
-    this.dzialania = [];
+    this.dzialania = [{"nazwa": "bad", "czas": 2000, "komunikat": "Nieznane polecenie", "dzialanie":"komunikat", "autoryzacja": 0, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
     this.odczytaj_dzialania(stan);
 }
 
@@ -218,7 +307,9 @@ var data = JSON.stringify({ "stan": stan})
                       "czas": wynik.polecenia[index].czas, 
                       "komunikat": wynik.polecenia[index].komunikat, 
                       "dzialanie": wynik.polecenia[index].dzialanie,
-                      "nastepny": wynik.polecenia[index].nastepny,
+                      "autoryzacja": wynik.polecenia[index].autoryzacja,
+                      "nastepnyTrue": wynik.polecenia[index].nastepnyTrue,
+                      "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]
               } 
               //console.log(this.dzialania) 

@@ -107,9 +107,9 @@ private loguj(licznik: number, parametry: any)
     })
   };
   
-var data = JSON.stringify({ "login": parametry[0], "pass": parametry[1], "zalogowany": 0})  
+var data = JSON.stringify({ "login": parametry[0], "pass": parametry[1], "zalogowany": parametry[2]})  
 
-//console.log('loguje ',parametry )
+console.log('loguje ',parametry )
 if (licznik == 0) 
 { this.logowanieUsera.next( { "wynik":false, "stan":false, "error":"Problem z logowaniem" } ) }
 else
@@ -137,54 +137,4 @@ else
 }             
 }
 /* (end) logowanie */
-
-/* (start) wylogowanie */
-Wyloguj(parametry: number)
-{
-  this.wyloguj(5,parametry)
-}
-
-//private wylogowanieUsera = new Subject<any>();
-//wylogowanieUsera$ = this.wylogowanieUsera.asObservable()
-private wyloguj(licznik: number, parametry: any)
-{
-  const httpOptions = {
-    headers: new HttpHeaders({
-      'Access-Control-Allow-Origin':'*',
-      'content-type': 'application/json',
-      Authorization: 'my-auth-token'
-    })
-  };
-  
-var data = JSON.stringify({ "login": '', "pass": '', "zalogowany": parametry})  
-
-//console.log('loguje ',parametry )
-if (licznik == 0) 
-{ this.logowanieUsera.next( { "wynik":false, "stan":false, "error":"Problem z logowaniem" } ) }
-else
-{
-  this.http.post(this.getURL() + 'logowanie/', data, httpOptions).subscribe( 
-    data =>  {
-            let wynik = JSON.parse(JSON.stringify(data));
-            //console.log('logowanie ',wynik)
-            //console.log(wynik.error)
-            if (wynik.wynik == true) 
-            {
-              this.logowanieUsera.next(wynik)
-            }
-            else
-            {
-              setTimeout(() => {this.wyloguj(--licznik, parametry)}, 1000) 
-            }
-              },
-    error => {
-      //let wynik = JSON.parse(JSON.stringify(error.error));
-      //console.log('logowanie error ',error) 
-              setTimeout(() => {this.wyloguj(--licznik, parametry)}, 1000) 
-             }
-             )      
-}             
-}
-/* (end) wylogowanie */
-
 }

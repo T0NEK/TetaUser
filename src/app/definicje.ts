@@ -15,7 +15,7 @@ export interface Osoby
       funkcja: string;
       zalogowany: boolean;
       blokada: boolean;
-      hannah: boolean;
+      osoby: boolean;
   }
 
   export interface Sprawdz
@@ -34,8 +34,10 @@ export interface Osoby
       nazwa: string;
       czas: number;
       dzialanie: string;
+      autoryzacja: number;
       komunikat: string;
-      nastepny: string;
+      nastepnyTrue: string;
+      nastepnyFalse: string;
   }
 
   export interface Zalogowany
@@ -43,7 +45,19 @@ export interface Osoby
       zalogowany: number;
       imie: string;
       nazwisko: string;
+      autoryzacja: number;
       funkcja: string;
       rodzaj: string;
       kolor: string;
+  }
+
+  export interface Modul
+  {
+    id: number;  
+    nazwa :string;
+    symbol: string;
+    producent: string;
+    autoryzacja: number;
+    opis: string;
+    czas: number;
   }
