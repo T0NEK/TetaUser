@@ -30,7 +30,7 @@ getZalogowany()
 
 wylogujOsoba(): Zalogowany
 {
-  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'autoryzacja': 0, 'funkcja': '', 'rodzaj': '','kolor':'white'} 
+  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'autoryzacja': false, 'funkcja': '', 'rodzaj': '','kolor':'white'} 
 }
 
 zalogujOsoba(data : any)
@@ -57,9 +57,11 @@ addLinieDialogu(linia: any)
 
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();
-addLiniaKomunikatu(name: string, linia: string, kolor: string, klasa: string = 'tekst')
+addLiniaKomunikatu(name: string, linia: string, kolor: string, klasa: string = 'tekst', linia2: string = '', kolor2: string = '', klasa2: string = 'tekst')
 {
-  let wiersz = {'data':(moment()).format('YYYY-MM-DD HH:mm:ss'), 'name': name, 'kolor': kolor, 'tekst': linia, 'klasa': klasa}
+  if (!(typeof klasa === 'string')) { klasa = 'tekst';}
+  if (!(typeof klasa2 === 'string')) { klasa2 = 'tekst'}
+  let wiersz = {'data':(moment()).format('YYYY-MM-DD HH:mm:ss'), 'name': name, 'kolor': kolor, 'tekst': linia, 'klasa': klasa, 'kolor2': kolor2, 'tekst2': linia2, 'klasa2': klasa2}
   this.addLinieDialogu(wiersz)
   this.LiniaKomunikatu.next(wiersz);
 }

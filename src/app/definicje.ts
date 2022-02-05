@@ -5,6 +5,9 @@ export interface Wiersze
       kolor: string;
       tekst: string;
       klasa: string;
+      kolor2: string;
+      tekst2: string;
+      klasa2: string;
    }
 
 export interface Osoby
@@ -34,7 +37,8 @@ export interface Osoby
       nazwa: string;
       czas: number;
       dzialanie: string;
-      autoryzacja: number;
+      autoryzacja: boolean;
+      polecenie: boolean;
       komunikat: string;
       nastepnyTrue: string;
       nastepnyFalse: string;
@@ -45,7 +49,7 @@ export interface Osoby
       zalogowany: number;
       imie: string;
       nazwisko: string;
-      autoryzacja: number;
+      autoryzacja: boolean;
       funkcja: string;
       rodzaj: string;
       kolor: string;
@@ -57,7 +61,8 @@ export interface Osoby
     nazwa :string;
     symbol: string;
     producent: string;
-    autoryzacja: number;
+    autoryzacja: boolean;
+    polecenie: boolean;
     opis: string;
     czas: number;
   }

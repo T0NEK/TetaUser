@@ -33,6 +33,7 @@ sprawdzModuly(polecenie: string)
                 "symbol": this.moduly[index].symbol, 
                 "producent": this.moduly[index].producent,
                 "autoryzacja": this.moduly[index].autoryzacja,
+                "polecenie": this.moduly[index].polecenie,
                 "opis": this.moduly[index].opis,
                 "id": this.moduly[index].id,
          } 
@@ -82,6 +83,7 @@ if (licznik > 0 )
                         "symbol": wynik.moduly[index].symbol, 
                         "producent": wynik.moduly[index].producent,
                         "autoryzacja": wynik.moduly[index].autoryzacja,
+                        "polecenie": wynik.moduly[index].polecenie,
                         "opis": wynik.moduly[index].opis,
                         "id": wynik.moduly[index].id
                         }]

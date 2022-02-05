@@ -1,6 +1,6 @@
 <div [ngStyle]="{'height': height}">
   <cdk-virtual-scroll-viewport #scrollViewportDialog appendOnly itemSize="24" minBufferPx="200" maxBufferPx="400" class="example-viewport" [ngStyle]="{'height': height}" autosize>
-    <div *cdkVirtualFor="let item of tablicazawartosci"  class="example-item"  >{{item.data}}<span>,&nbsp;{{item.name}}&nbsp;>&nbsp;</span><span [style.color]="item.kolor" [class]="item.klasa">{{item.tekst}}</span></div>
+    <div *cdkVirtualFor="let item of tablicazawartosci"  class="example-item"  >{{item.data}}<span>,&nbsp;{{item.name}}&nbsp;>&nbsp;</span><span [style.color]="item.kolor" [class]="item.klasa">{{item.tekst}}</span><span [style.color]="item.kolor2" [class]="item.klasa2">{{item.tekst2}}</span></div>
   </cdk-virtual-scroll-viewport>
 
  <div class="przewijaj"> 

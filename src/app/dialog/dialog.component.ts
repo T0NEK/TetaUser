@@ -43,19 +43,6 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }
       }
     );   
-    /* 
-    this.zakladkasubscribe = czasy.PrzelaczZakladka$.subscribe
-    ( data =>
-      {
-        if (data == 10) {
-               let count = this.VSVDialog.getDataLength();
-               changeDetectorRef.detectChanges();
-               console.log(this.checked)
-               if (this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }
-              }
-      }
-    );
-    */
   }
   
   onClick(kto: string)

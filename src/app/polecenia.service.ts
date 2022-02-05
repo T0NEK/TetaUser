@@ -94,6 +94,10 @@ poleceniaWykonaj(polecenie: string, tekst: string = '')
             break;
     }
  }
+ else
+ {
+  this.funkcje.OdblokujLinieDialogu('');
+ }
 }
 
 
@@ -124,8 +128,9 @@ Lista(dowykonania: any)
   //console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
-    case 'polecenia': this.wyswietlLista(0, this.polecenia, dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
-    case 'moduly': this.wyswietlLista(0, this.moduly.getModuly(), dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
+    case 'polecenia': this.wyswietlLista(0, false, this.polecenia, dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
+    case 'polecenia_all': this.wyswietlLista(0, true, this.polecenia, dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
+    case 'moduly': this.wyswietlLista(0, false, this.moduly.getModuly(), dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
   }
   
 }
@@ -143,7 +148,7 @@ Wczytaj(dowykonania: any)
 
 
 
-wyswietlLista(licznik: number, lista: any, polecenie: any, kolor: string, rodzaj: string)
+wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, kolor: string, rodzaj: string)
 {
   console.log('licznik ',licznik)
   console.log('lista ',lista)
@@ -153,9 +158,9 @@ wyswietlLista(licznik: number, lista: any, polecenie: any, kolor: string, rodzaj
   {
     if (licznik < lista.length)
     {
-      if (lista[licznik].autoryzacja <= this.funkcje.getZalogowany().autoryzacja)
-       { this.funkcje.addLiniaKomunikatu(this.funkcje.dedal, lista[licznik].nazwa + (typeof lista[licznik].symbol == 'string' ? ' ['+lista[licznik].symbol+']' : '' ), kolor, rodzaj); }
-      this.wyswietlLista(++licznik, lista, polecenie, kolor, rodzaj)
+      if (((lista[licznik].autoryzacja == wszystkie)||(wszystkie))&&(lista[licznik].polecenie))
+       { this.funkcje.addLiniaKomunikatu(this.funkcje.dedal, lista[licznik].nazwa, kolor, rodzaj, (typeof lista[licznik].symbol === 'string' ? ' ['+lista[licznik].symbol+']' : '' )), kolor, rodzaj }
+      this.wyswietlLista(++licznik, wszystkie, lista, polecenie, kolor, rodzaj)
     }
     else
     {
@@ -174,7 +179,7 @@ wyswietlLista(licznik: number, lista: any, polecenie: any, kolor: string, rodzaj
 getPolecenia (){ return this.polecenia; }
 sprawdzPolecenie(polecenie: string)
 {
-  let wynik = <Polecenia> {"nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "autoryzacja": 0, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
+  let wynik = <Polecenia> {"nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
   for (let index = 0; index < this.polecenia.length; index++) 
   {
     if ( this.polecenia[index].nazwa == polecenie )
@@ -184,6 +189,7 @@ sprawdzPolecenie(polecenie: string)
                 "komunikat": this.polecenia[index].komunikat, 
                 "dzialanie": this.polecenia[index].dzialanie,
                 "autoryzacja": this.polecenia[index].autoryzacja,
+                "polecenie": this.polecenia[index].polecenie,
                 "nastepnyTrue": this.polecenia[index].nastepnyTrue,
                 "nastepnyFalse": this.polecenia[index].nastepnyFalse
          } 
@@ -228,6 +234,7 @@ var data = JSON.stringify({ "stan": stan})
                       "komunikat": wynik.polecenia[index].komunikat, 
                       "dzialanie": wynik.polecenia[index].dzialanie,
                       "autoryzacja": wynik.polecenia[index].autoryzacja,
+                      "polecenie": wynik.polecenia[index].polecenie,
                       "nastepnyTrue": wynik.polecenia[index].nastepnyTrue,
                       "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]
@@ -252,7 +259,7 @@ getDzialania (){ return this.dzialania; }
 
 sprawdzDzialania(dzialanie: string)
 {
-  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "komunikat": "Wystąpił błąd wykonania", "dzialanie":"komunikat", "autoryzacja": 0, "nastepnyTrue": "end", "nastepnyFalse": "end"}
+  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "komunikat": "Wystąpił błąd wykonania", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}
   for (let index = 0; index < this.dzialania.length; index++) 
   {
     //console.log(this.dzialania[index].nazwa,' == ',dzialanie)
@@ -264,6 +271,7 @@ sprawdzDzialania(dzialanie: string)
                 "komunikat": this.dzialania[index].komunikat, 
                 "dzialanie": this.dzialania[index].dzialanie,
                 "autoryzacja": this.dzialania[index].autoryzacja,
+                "polecenie": this.dzialania[index].polecenie,
                 "nastepnyTrue": this.dzialania[index].nastepnyTrue,
                 "nastepnyFalse": this.dzialania[index].nastepnyFalse
                } 
@@ -275,7 +283,7 @@ return wynik
 
 WczytajDzialania(stan: number)
 {
-    this.dzialania = [{"nazwa": "bad", "czas": 2000, "komunikat": "Nieznane polecenie", "dzialanie":"komunikat", "autoryzacja": 0, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
+    this.dzialania = [{"nazwa": "bad", "czas": 2000, "komunikat": "Nieznane polecenie", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
     this.odczytaj_dzialania(stan);
 }
 
@@ -308,6 +316,7 @@ var data = JSON.stringify({ "stan": stan})
                       "komunikat": wynik.polecenia[index].komunikat, 
                       "dzialanie": wynik.polecenia[index].dzialanie,
                       "autoryzacja": wynik.polecenia[index].autoryzacja,
+                      "polecenie": wynik.polecenia[index].polecenie,
                       "nastepnyTrue": wynik.polecenia[index].nastepnyTrue,
                       "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]

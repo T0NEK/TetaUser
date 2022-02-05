@@ -50,7 +50,7 @@ export class CzasService implements OnDestroy
       {
           if (data.stan == true)
           {
-              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,data.imie + ' ' + data.nazwisko + ' - ' + data.error,'');
+              this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,data.imie + ' ' + data.nazwisko + ' ' + data.error,'');
               this.funkcje.zalogujOsoba(data);
               this.ZmianyPoLogowaniu();
           }    

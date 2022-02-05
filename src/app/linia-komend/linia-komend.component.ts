@@ -30,7 +30,7 @@ szerokoscInput: any;
 constructor(private polecenia: PoleceniaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
     console.log('con linia kom')
-      this.stanpolecenia = {"nazwa": "", "czas": 500, "komunikat": "", "dzialanie": "bad", "autoryzacja": 0, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
+      this.stanpolecenia = {"nazwa": "", "czas": 500, "komunikat": "", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll;     
 
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
@@ -280,30 +280,21 @@ WybranoEnter(linia: string)
     this.funkcje.addLiniaKomunikatu(this.funkcje.getZalogowany().imie,linia,this.funkcje.getZalogowany().kolor);
     this.DodajHistorie(linia);  
   }
-  //console.log('linia: ',linia)
-  //console.log('stanpolecenia: ',this.stanpolecenia)
   if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
   {
     polecenie = this.polecenia.sprawdzPolecenie(linia);
-    //console.log('polecenie 1: ', polecenie)
     setTimeout(() => {
-            //this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,polecenie.komunikat,'');
             this.polecenia.poleceniaWykonaj(polecenie.dzialanie);
-            this.funkcje.OdblokujLinieDialogu('');
-            //this.funkcje.UstawStanPolecenia('');
+   //         this.funkcje.OdblokujLinieDialogu('');
     }, polecenie.czas);
   }
   else
   {
-    //polecenie = this.polecenia.sprawdzDzialania(poleceniestan);
-    //console.log('polecenie 21: ', poleceniestan)
-    //console.log('polecenie 22: ', polecenie)
-    //polecenie = this.polecenia.sprawdzDzialania(this.stanpolecenia.nastepnyTrue);
     setTimeout(() => {
       this.polecenia.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
       this.funkcje.UstawStanPolecenia('');
-      this.funkcje.OdblokujLinieDialogu('');
-    }, 300)//polecenie.czas);
+   //   this.funkcje.OdblokujLinieDialogu('');
+    }, this.stanpolecenia.czas);
   }   
   
 }
