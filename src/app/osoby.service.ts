@@ -12,7 +12,7 @@ export class OsobyService
     
 constructor(private komunikacja: KomunikacjaService, private http: HttpClient)
 {
-  //  console.log('osoby con');
+  //console.log('osoby con');
 }
 
 /* (start) osoby*/

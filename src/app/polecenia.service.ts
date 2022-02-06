@@ -1,178 +1,22 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Polecenia } from './definicje';
 import { KomunikacjaService } from './komunikacja.service';
-import { Polecenia } from './definicje'
-import { FunkcjeWspolneService } from './funkcje-wspolne.service';
-import { ModulyService } from './moduly.service';
 
-@Injectable({ providedIn: 'root'})
+@Injectable({
+  providedIn: 'root'
+})
 
-export class PoleceniaService implements OnDestroy 
+export class PoleceniaService {
+
+  private dzialania: Polecenia[] = [];  
+  private polecenia: Polecenia[] = [];  
+
+constructor(private http: HttpClient, private komunikacja: KomunikacjaService)
 {
 
-private modulysubscribe_p = new Subscription();
-private polecenia: Polecenia[] = [];  
-private dzialania: Polecenia[] = [];  
-private bufordane = Array();
-
-
-constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private moduly: ModulyService)
-{
-    //console.log('con polecenia')
-  this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
-    ( data => { this.poleceniaWykonaj(data) } )
 }
-
-
-ngOnDestroy()
-  {
-   if(this.modulysubscribe_p) { this.modulysubscribe_p.unsubscribe()}   
-  }
-
-poleceniaWykonaj(polecenie: string, tekst: string = '')
-{
- // console.log('działanie ',polecenie)
- // console.log('tekst: ',tekst)
-  if (polecenie != 'end')
- {
-    let dowykonania = this.sprawdzDzialania(polecenie) 
-    console.log('polecenie: ',dowykonania)
-    switch (dowykonania.dzialanie) {
-      case 'komunikat': setTimeout(() => {
-                                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,'');
-                                this.poleceniaWykonaj(dowykonania.nastepnyTrue);   
-                              }, dowykonania.czas);
-            break;
-      case 'dane': setTimeout(() => {
-                                this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,''); 
-                                this.funkcje.UstawStanPolecenia(dowykonania)
-                              }, dowykonania.czas);
-            break;
-      case 'warunek': setTimeout(() => {
-                                let wynik = this.sprawdzWarunek(dowykonania);
-                                this.poleceniaWykonaj(wynik);   
-                              }, dowykonania.czas);                                
-            break;      
-      case 'wczytaj': setTimeout(() => { 
-                                this.Wczytaj(dowykonania);
-                                }, dowykonania.czas);
-            break;
-      case 'linie': setTimeout(() => {  
-                                this.Lista(dowykonania)    
-                              //  this.polecenieWyswietl(dowykonania);
-                                }, dowykonania.czas);
-            break;
-      case 'zapiszdane': this.bufordane = [];
-                         this.bufordane = [...this.bufordane,tekst];
-                         setTimeout(() => 
-                         {
-                           this.poleceniaWykonaj(dowykonania.nastepnyTrue)
-                         }, dowykonania.czas);
-            break;                                   
-      case 'dodajdane':  this.bufordane = [...this.bufordane,tekst];
-                          setTimeout(() => 
-                          {
-                            this.poleceniaWykonaj(dowykonania.nastepnyTrue)
-                          }, dowykonania.czas);
-            break;   
-      case 'password': this.funkcje.Password(dowykonania.komunikat);
-                       this.poleceniaWykonaj(dowykonania.nastepnyTrue);   
-            break;
-      case 'logowanie': this.bufordane = [...this.bufordane,0];
-                        this.komunikacja.Zaloguj(this.bufordane);
-                        this.poleceniaWykonaj(dowykonania.nastepnyTrue);         
-            break;  
-      case 'wylogowanie': this.bufordane = ['', '', this.funkcje.getZalogowany().zalogowany];
-                          this.komunikacja.Zaloguj(this.bufordane);
-                          this.poleceniaWykonaj(dowykonania.nastepnyTrue);         
-            break;              
-      case 'bad': 
-                  this.funkcje.addLiniaKomunikatu(this.funkcje.dedal,dowykonania.komunikat,'');
-            break;  
-    default:
-            break;
-    }
- }
- else
- {
-  this.funkcje.OdblokujLinieDialogu('');
- }
-}
-
-
-sprawdzWarunek(warunek: Polecenia): string
-{
-  let wynik: string;
-  //console.log( 'warunek',warunek )
-  //console.log( 'zalogowany',this.funkcje.getZalogowany() )
-  switch (warunek.komunikat) {
-    case 'autoryzacja': if ( this.funkcje.getZalogowany().autoryzacja < warunek.autoryzacja )
-                        { wynik = warunek.nastepnyFalse }
-                        else
-                        { wynik = warunek.nastepnyTrue}
-      
-      break;
-  
-    default:
-      wynik = 'bad';
-      break;
-  }
-return wynik;
-}
-
-
-
-Lista(dowykonania: any)
-{
-  //console.log(dowykonania)
-  switch (dowykonania.komunikat) 
-  {
-    case 'polecenia': this.wyswietlLista(0, false, this.polecenia, dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
-    case 'polecenia_all': this.wyswietlLista(0, true, this.polecenia, dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
-    case 'moduly': this.wyswietlLista(0, false, this.moduly.getModuly(), dowykonania, 'rgb(00, 123, 255)', 'liniakomend'); break;
-  }
-  
-}
-
-Wczytaj(dowykonania: any)
-{
-  console.log(dowykonania)
-  switch (dowykonania.komunikat) 
-  {
-    case 'polecenia': this.WczytajPolecenia(this.funkcje.getZalogowany().zalogowany); break;
-    case 'dzialania': this.WczytajDzialania(this.funkcje.getZalogowany().zalogowany); break;
-    case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
-  }
-}
-
-
-
-wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, kolor: string, rodzaj: string)
-{
-  console.log('licznik ',licznik)
-  console.log('lista ',lista)
-  console.log('polecenie ',polecenie)
-  console.log('zalogowany ',this.funkcje.getZalogowany())
-  setTimeout(() => 
-  {
-    if (licznik < lista.length)
-    {
-      if (((lista[licznik].autoryzacja == wszystkie)||(wszystkie))&&(lista[licznik].polecenie))
-       { this.funkcje.addLiniaKomunikatu(this.funkcje.dedal, lista[licznik].nazwa, kolor, rodzaj, (typeof lista[licznik].symbol === 'string' ? ' ['+lista[licznik].symbol+']' : '' )), kolor, rodzaj }
-      this.wyswietlLista(++licznik, wszystkie, lista, polecenie, kolor, rodzaj)
-    }
-    else
-    {
-      //console.log('i next')
-      this.poleceniaWykonaj(polecenie.nastepnyTrue)
-    }
-  }, polecenie.czas);
-}
-/* (end) pomoc */
-
-
-
 
 
 /* (start) polecenia*/
@@ -239,7 +83,7 @@ var data = JSON.stringify({ "stan": stan})
                       "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]
               }  
-            //  console.log(this.polecenia)
+            //console.log(this.polecenia)
             }
             else
             {
@@ -251,7 +95,6 @@ var data = JSON.stringify({ "stan": stan})
              }
              )      
 }
-/* (end) polecenia*/
 
 
 /* (start) działania*/
@@ -307,7 +150,7 @@ var data = JSON.stringify({ "stan": stan})
             let wynik = JSON.parse(JSON.stringify(data));
             if (wynik.wynik == true) 
             {
-             // console.log('wynik ',wynik)  
+             //console.log('wynik ',wynik)  
               for (let index = 0; index < wynik.polecenia.length; index++) 
               {
               this.dzialania = [...this.dzialania, {

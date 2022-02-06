@@ -1,13 +1,25 @@
+export interface Nazwa
+  {
+    prefix: string;
+    nazwa1: string;
+    separator: string;
+    nazwa2: string;
+    sufix: string;
+    rodzaj: string;
+    kolor: string;  
+  }
+  
 export interface Wiersze 
    {
       data: string;
       name: string;
-      kolor: string;
-      tekst: string;
-      klasa: string;
-      kolor2: string;
-      tekst2: string;
-      klasa2: string;
+      prefix: string;
+      dane1: Nazwa;
+      separator1: string;
+      dane2: Nazwa;
+      separator2: string;
+      dane3: Nazwa;
+      sufix: string;
    }
 
 export interface Osoby
@@ -21,7 +33,7 @@ export interface Osoby
       osoby: boolean;
   }
 
-  export interface Sprawdz
+export interface Sprawdz
   {
       stanSQL: boolean;
       stanAkcji: boolean;
@@ -32,7 +44,7 @@ export interface Osoby
       stanDzialania: boolean;
   }
 
-  export interface Polecenia
+export interface Polecenia
   {
       nazwa: string;
       czas: number;
@@ -44,7 +56,7 @@ export interface Osoby
       nastepnyFalse: string;
   }
 
-  export interface Zalogowany
+export interface Zalogowany
   {
       zalogowany: number;
       imie: string;
@@ -55,14 +67,24 @@ export interface Osoby
       kolor: string;
   }
 
-  export interface Modul
+export interface Modul
   {
     id: number;  
     nazwa :string;
     symbol: string;
     producent: string;
-    autoryzacja: boolean;
-    polecenie: boolean;
     opis: string;
-    czas: number;
   }
+
+export interface Notatka
+  {
+    id: number;  
+    tytul :string;
+    wlasciciel: boolean;
+    wlascicielText: string;
+    stan: boolean;
+    stanText: string;
+    czasU: string;
+    czasA: string;
+  }
+  

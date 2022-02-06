@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { Wiersze, Zalogowany } from './definicje';
+import { Nazwa, Wiersze, Zalogowany } from './definicje';
 
 @Injectable({ providedIn: 'root' })
 
@@ -14,7 +14,8 @@ private osoba: Zalogowany;
 
 constructor()
  {
-  // console.log('con fun wsp');
+  //console.log('con fun wsp');
+  this.dane0 = {"prefix": "", "nazwa1": "", "separator":"", "nazwa2": "", "sufix": "", "kolor": "", "rodzaj": ""};
   this.poprawne = this.poprawne.concat(this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
   this.osoba = this.wylogujOsoba();
   this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'autoryzacja': 2, 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor':'rgb(230, 255, 0)'})
@@ -48,22 +49,81 @@ zalogujOsoba(data : any)
 
 /* (start) dodanie lini komunikatu */
 private linieDialogu: Wiersze[] = [];
+private dane0: Nazwa;
   
-getLinieDialogu() { return this.linieDialogu }
+getLinieDialogu() { return this.linieDialogu; }
+getDane0() { return this.dane0; }
 addLinieDialogu(linia: any) 
   {
    this.linieDialogu = [...this.linieDialogu, linia];   
   }
 
+addLiniaKomunikatuPolecenia(name: string, blad: string)
+  {
+    this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":blad, "separator":"", "nazwa2": "", "sufix": "", "kolor": this.getZalogowany().kolor, "rodzaj":"liniakomend"} , "");
+  }
+  
+
+addLiniaKomunikatuKolor(name: string, blad: string, kolor: string)
+  {
+    this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":blad, "separator":"", "nazwa2": "", "sufix": "", "kolor": kolor, "rodzaj":""} , "");
+  }
+  
+
+addLiniaKomunikatuInfo(name: string, blad: string)
+{
+  this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":blad, "separator":"", "nazwa2": "", "sufix": "", "kolor": "", "rodzaj":""} , "");
+}
+
+addLiniaKomunikatuAlert(name: string, blad: string)
+{
+  this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":blad, "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(199, 100, 43)", "rodzaj":""} , "");
+}
+
+
+addLiniaKomunikatuKrytyczny(name: string, blad: string)
+{
+  this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":blad, "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(199, 100, 43)", "rodzaj":""} , "");
+  this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":'Błąd krytyczny - terminal stop', "separator":"", "nazwa2": "", "sufix": "", "kolor": "red", "rodzaj":""} , "");
+  this.addLiniaKomunikatuD1(name, "", {"prefix": "", "nazwa1":'Wezwij MG', "separator":"", "nazwa2": "", "sufix": "", "kolor": "red", "rodzaj":""} , "");
+}
+
+addLiniaKomunikatuD1(name: string, prefix: string, dane1: Nazwa, sufix: string) 
+{
+  this.addLiniaKomunikatu
+          (  
+            name, 
+            prefix,
+            dane1,
+            "", 
+            this.dane0,
+            "", 
+            this.dane0,  
+            sufix
+        )
+}
+  
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();
-addLiniaKomunikatu(name: string, linia: string, kolor: string, klasa: string = 'tekst', linia2: string = '', kolor2: string = '', klasa2: string = 'tekst')
+addLiniaKomunikatu(name: string, prefix: string, dane1: Nazwa, separator1: string, dane2: Nazwa, separator2: string, dane3: Nazwa, sufix: string)
 {
-  if (!(typeof klasa === 'string')) { klasa = 'tekst';}
-  if (!(typeof klasa2 === 'string')) { klasa2 = 'tekst'}
-  let wiersz = {'data':(moment()).format('YYYY-MM-DD HH:mm:ss'), 'name': name, 'kolor': kolor, 'tekst': linia, 'klasa': klasa, 'kolor2': kolor2, 'tekst2': linia2, 'klasa2': klasa2}
+  //console.log('dane1 f ',dane1)
+  //console.log('dane2 f ',dane2)
+  if (!(typeof dane1.rodzaj === 'string')) { dane1.rodzaj = 'tekst';}
+  if (!(typeof dane2.rodzaj === 'string')) { dane2.rodzaj = 'tekst'}
+  let wiersz:  Wiersze = {'data':(moment()).format('YYYY-MM-DD HH:mm:ss'), 
+                          'name': name,
+                          'prefix': prefix,
+                          'dane1': dane1,
+                          'separator1': separator1,
+                          'dane2': dane2,
+                          'separator2': separator2,
+                          'dane3': dane3,
+                          'sufix': sufix
+                         }
   this.addLinieDialogu(wiersz)
   this.LiniaKomunikatu.next(wiersz);
+  //console.log(wiersz)
 }
 /* (end) dodanie lini komunikatu */ 
 

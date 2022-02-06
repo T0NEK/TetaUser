@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
 import { Polecenia } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
+import { PetlaService } from '../petla.service';
 import { PoleceniaService } from '../polecenia.service';
 
 @Component({
@@ -27,9 +28,9 @@ private stanpolecenia: Polecenia;
 private pozycja = 0;
 szerokoscInput: any;
 
-constructor(private polecenia: PoleceniaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
+constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
-    console.log('con linia kom')
+    //console.log('con linia kom')
       this.stanpolecenia = {"nazwa": "", "czas": 500, "komunikat": "", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll;     
 
@@ -48,7 +49,7 @@ constructor(private polecenia: PoleceniaService, private funkcje: FunkcjeWspolne
       this.blokada_subscribe_lk = funkcje.LiniaDialoguBlokada$.subscribe 
           ( data => 
             {
-//              console.log('blokuj',data);
+//('blokuj',data);
               this.blokada = data.stan;
               this.liniaInput.nativeElement.disabled = data.stan;
               if (data.stan)
@@ -273,25 +274,25 @@ WybranoEnter(linia: string)
   if (this.haslo)
   {
     let ciag = '*';
-    this.funkcje.addLiniaKomunikatu(this.funkcje.getZalogowany().imie, ciag.repeat(linia.length),this.funkcje.getZalogowany().kolor);
+    this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getZalogowany().imie, ciag.repeat(linia.length));
   }
   else
   {
-    this.funkcje.addLiniaKomunikatu(this.funkcje.getZalogowany().imie,linia,this.funkcje.getZalogowany().kolor);
+    this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getZalogowany().imie,linia);
     this.DodajHistorie(linia);  
   }
   if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
   {
     polecenie = this.polecenia.sprawdzPolecenie(linia);
     setTimeout(() => {
-            this.polecenia.poleceniaWykonaj(polecenie.dzialanie);
+            this.petla.poleceniaWykonaj(polecenie.dzialanie);
    //         this.funkcje.OdblokujLinieDialogu('');
     }, polecenie.czas);
   }
   else
   {
     setTimeout(() => {
-      this.polecenia.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
+      this.petla.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
       this.funkcje.UstawStanPolecenia('');
    //   this.funkcje.OdblokujLinieDialogu('');
     }, this.stanpolecenia.czas);
@@ -346,7 +347,7 @@ DodajZnak(znak: any)
                         break;
     }
     //console.log('linia ', linia,'       ', this.pozycja)
-   // console.log('linia ', this.linia,'       ', this.liniablokada)
+    //console.log('linia ', this.linia,'       ', this.liniablokada)
     return linia
   }
 

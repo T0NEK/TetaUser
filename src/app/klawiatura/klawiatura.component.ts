@@ -22,7 +22,7 @@ export class KlawiaturaComponent implements OnDestroy {
   klw22: any;
   klw22caps: any;
   zwloka_czas: any;
-  zwloka = 500;
+  zwloka = 250;
   //@Output() bufor = new EventEmitter<string>();
  
   constructor(private funkcje: FunkcjeWspolneService)
@@ -43,24 +43,24 @@ export class KlawiaturaComponent implements OnDestroy {
     
   }
 
-  onNext(event: any)
+  onNext(zwloka: number, event: any)
   {
-    if (this.zwloka_czas) { clearInterval(this.zwloka_czas)}
+    if (this.zwloka_czas) { clearInterval(this.zwloka_czas); }
     this.zwloka_czas = setInterval(() => 
     {
       this.onAdd(event); 
-      this.onNext(event);
-    }, this.zwloka);
+      this.onNext( (zwloka > 50 ? zwloka * 0.8 : 50),event);
+    }, zwloka);
   }
 
-  onFunNext(event: any)
+  onFunNext(zwloka: number, event: any)
   {
     if (this.zwloka_czas) { clearInterval(this.zwloka_czas)}
     this.zwloka_czas = setInterval(() => 
     {
       this.funkcje.LiniaDialoguChar(event)
-      this.onFunNext(event);
-    }, this.zwloka);
+      this.onFunNext((zwloka > 50 ? zwloka * 0.8 : 50), event);
+    }, zwloka);
   }
 
   onStop()

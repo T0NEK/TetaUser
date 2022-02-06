@@ -23,17 +23,14 @@ getModulyStan() { return this.modulyStan; }
 
 sprawdzModuly(polecenie: string)
 {
-  let wynik = <Modul> {"nazwa": '', "czas": 2000, "symbol": "", "producent": "", "opis": "", "id": 0}
+  let wynik = <Modul> {"nazwa": '', "symbol": "", "producent": "", "opis": "", "id": 0}
   for (let index = 0; index < this.moduly.length; index++) 
   {
     if ( this.moduly[index].nazwa == polecenie )
     {
        wynik = {"nazwa": this.moduly[index].nazwa,
-                "czas": this.moduly[index].czas,
                 "symbol": this.moduly[index].symbol, 
                 "producent": this.moduly[index].producent,
-                "autoryzacja": this.moduly[index].autoryzacja,
-                "polecenie": this.moduly[index].polecenie,
                 "opis": this.moduly[index].opis,
                 "id": this.moduly[index].id,
          } 
@@ -79,18 +76,15 @@ if (licznik > 0 )
                   
                       this.moduly = [...this.moduly, {
                         "nazwa": wynik.moduly[index].nazwa, 
-                        "czas": wynik.moduly[index].czas, 
                         "symbol": wynik.moduly[index].symbol, 
                         "producent": wynik.moduly[index].producent,
-                        "autoryzacja": wynik.moduly[index].autoryzacja,
-                        "polecenie": wynik.moduly[index].polecenie,
                         "opis": wynik.moduly[index].opis,
                         "id": wynik.moduly[index].id
                         }]
                 }  
                 this.modulyStan = true;
                 this.OdczytajModuly.next(dowykonania.nastepnyTrue)
-          //      console.log(this.moduly)
+          //console.log(this.moduly)
               }
               else
               {
