@@ -233,4 +233,16 @@ if ( typeof znak === 'number')
 }
 /* (end) sprawdzenie dopuszczalnych znaków lini dialogu */
 
+
+/* (start) fokus lini dialogu */
+private PoleNotatki = new Subject<any>();
+PoleNotatki$ = this.PoleNotatki.asObservable();
+fokusPoleNotatki()
+{
+  this.PoleNotatki.next();
+}
+/* (end) fokus lini dialogu */
+
+
+
 }

@@ -85,12 +85,17 @@ this.modalCzekaj.close()
 
 onClick(kto: any)
   {
-    //console.log(kto);
+    //console.log('app   ',kto);
     //console.log(kto.target);
     //console.log('>',kto.target.innerText,'<');
-    //console.log(kto.target.className);
-    if ( kto.target.className == 'liniakomend')
+    console.log(kto.target.className);
+    console.log(kto.target.classList);
+    
+
+    if ( kto.target.classList.contains('liniakomend') )
     { this.funkcje.fokusLiniaDialogu(kto.target.innerText) }
+    else if ( kto.target.classList.contains('notatki') )
+    { this.funkcje.fokusPoleNotatki() }
     else
     { this.funkcje.fokusLiniaDialogu('') }
   }

@@ -2,4 +2,11 @@
 {
     color: lightgreen;
     cursor: crosshair;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+.notatki
+{
+    width: 100%;
+}  

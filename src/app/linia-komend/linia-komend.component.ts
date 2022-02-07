@@ -41,6 +41,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
               //console.log('data ',data)
               if (typeof data === 'string')
               {
+              data = data.substring(0, this.maxLenght - this.linia.length);  
               this.linia = this.linia.substring(0, this.pozycja) + data + this.linia.substring(this.pozycja);
               this.liniaInput.nativeElement.value = this.linia;
               this.pozycja = this.pozycja + data.length;
@@ -59,7 +60,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
           ( data => 
             {
 //('blokuj',data);
-console.log('data ', data)
+//console.log('data ', data)
               this.blokada = data.stan;
               this.liniaInput.nativeElement.disabled = data.stan;
               if (data.stan)
@@ -107,10 +108,6 @@ console.log('data ', data)
       this.add_subscribe_lk = funkcje.LiniaDialoguAddChar$.subscribe 
           ( data => 
             { 
-              //console.log('dodaj  ',data,'     blokada',this.blokada);
-              let linia = this.linia;
-              let pozycja = this.pozycja;
-                  
               let nowyznak = this.DodajZnak(data);
               if (this.blokada)
               {
@@ -118,8 +115,6 @@ console.log('data ', data)
               }
               else
               {
-                console.log('nowyznak  ',nowyznak,'     nowyznak.length',nowyznak.length);
-                console.log('pozycja ',this.pozycja)
                 if (nowyznak.length <= this.maxLenght)
                 {
                 this.linia = nowyznak;
@@ -129,10 +124,7 @@ console.log('data ', data)
                 }
                 else
                 {
-                  this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
-                  console.log('odblokuj ',pozycja)
-                  setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia, pozycja) }, 600);
-                  //this.liniaInput.nativeElement.value = this.linia;  
+                  this.ZaDlugiTekst(this.linia, this.pozycja) 
                 }
               }
             this.liniaInput.nativeElement.focus();  
@@ -149,39 +141,17 @@ console.log('data ', data)
     this.add_subscribe_lk.unsubscribe();    
   }
 
-  Dlugosc1(event: any)
+  ZaDlugiTekst(linia: string, pozycja: number)
   {
-    
-    console.log('linia1',this.linia) 
-    console.log('długosc1',this.linia.length) 
-  }
-
-  Dlugosc(event: any)
-  {
-    
-    console.log('linia',this.linia) 
-    console.log('długosc',this.linia.length) 
-    /*
-    let linia = this.linia;
-    let pozycja = this.pozycja;
-              
-    if (linia.length >= this.maxLenght)
-    {
     this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
-    setTimeout(() => { 
-                  this.funkcje.OdblokujLinieDialogu(linia, pozycja) 
-                     }, 600);
-    }
-   */ 
+    setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia, pozycja) }, 600);
   }
-
-
+  
   Zmiana(event: any)
   {
-   
+  /* 
     console.log('ZMIANA', event) 
-    console.log('ZMIANA', event.key) 
-  /*
+    console.log('ZMIANA', event.key)
     console.log('pozycje', this.pozycja )
     console.log('pozycjeS', this.liniaInput.nativeElement.selectionStart )
     console.log('pozycjeE', this.liniaInput.nativeElement.selectionEnd )
@@ -228,23 +198,30 @@ console.log('data ', data)
       case 'Enter': this.funkcje.LiniaDialoguChar('&enter'); break;
       case ' ': this.funkcje.LiniaDialoguChar('&space'); break;
       default:
-        if (event.key.length == 1 )
+        if (this.linia.length >= this.maxLenght)
         { 
-          if ( Math.abs(this.liniaInput.nativeElement.selectionStart - this.pozycja) == 1)
-          {
-            this.funkcje.LiniaDialoguChar(event.key.charCodeAt(0)); 
-          }  
-          else
-          {
-          let tekst = this.liniaInput.nativeElement.value.substring(this.pozycja, this.liniaInput.nativeElement.selectionStart);
-          for (let index = 0; index < tekst.length; index++) 
-          {
-            this.funkcje.LiniaDialoguChar(tekst[index].charCodeAt(0));
-          }  
-          }          
+          this.ZaDlugiTekst(this.linia, this.pozycja) 
         }
         else
-        { this.DodajString(event.key) }
+        {        
+          if (event.key.length == 1 )
+            { 
+              if ( Math.abs(this.liniaInput.nativeElement.selectionStart - this.pozycja) == 1)
+              {
+                this.funkcje.LiniaDialoguChar(event.key.charCodeAt(0)); 
+              }  
+              else
+              {
+              let tekst = this.liniaInput.nativeElement.value.substring(this.pozycja, this.liniaInput.nativeElement.selectionStart);
+              for (let index = 0; index < tekst.length; index++) 
+              {
+                this.funkcje.LiniaDialoguChar(tekst[index].charCodeAt(0));
+              }  
+              }          
+            }
+            else
+            { this.DodajString(event.key) }
+        }
       break;
     }
  // this.liniaInput.nativeElement.selectionStart = this.pozycja;

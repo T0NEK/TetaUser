@@ -17,8 +17,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private tablicazawartoscisubscribe = new Subscription();
   tablicazawartosci: Wiersze[] = [];  
-  @ViewChild('scrollViewportDialog')
-  VSVDialog!: CdkVirtualScrollViewport;
+  @ViewChild('scrollViewportDialog') VSVDialog!: CdkVirtualScrollViewport;
   private zakladkasubscribe = new Subscription();
   checked = true;
   height: any;
