@@ -27,6 +27,7 @@ blokada = true;
 private stanpolecenia: Polecenia;
 private pozycja = 0;
 szerokoscInput: any;
+maxLenght = 20;
 
 constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
@@ -37,11 +38,19 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
           ( data => 
             { 
-              this.linia = this.linia + (typeof data === 'string' ? data : '');
+              //console.log('data ',data)
+              if (typeof data === 'string')
+              {
+              this.linia = this.linia.substring(0, this.pozycja) + data + this.linia.substring(this.pozycja);
               this.liniaInput.nativeElement.value = this.linia;
-              this.pozycja = this.linia.length; 
-              (this.pozycja == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
+              this.pozycja = this.pozycja + data.length;
+              }
+              //this.linia = this.linia + (typeof data === 'string' ? data : '');
+              //this.liniaInput.nativeElement.value = this.linia;
+              //this.pozycja = this.linia.length; 
+              (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
               //this.WartoscLinia(this.linia + (typeof data === 'string' ? data : ''),true)
+              this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja); 
               this.liniaInput.nativeElement.focus();
             } 
           );
@@ -50,23 +59,25 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
           ( data => 
             {
 //('blokuj',data);
+console.log('data ', data)
               this.blokada = data.stan;
               this.liniaInput.nativeElement.disabled = data.stan;
               if (data.stan)
               {
                 this.linia = data.komunikat;
                 this.liniaInput.nativeElement.value = data.komunikat;
-                this.pozycja = data.komunikat.length;
+                this.pozycja = data.pozycja;
                 this.szerokoscInput = all.szerokoscAll;
-                }
+              }
               else
               {
                 this.linia = data.komunikat;
                 this.liniaInput.nativeElement.value = data.komunikat;
-                this.pozycja = data.komunikat.length;
+                this.pozycja = data.pozycja;
                 //this.WartoscLinia(data.komunikat, true);
                 (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
-                }
+              }
+              this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja);  
               this.liniaInput.nativeElement.focus();
             } );    
 
@@ -97,6 +108,9 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
           ( data => 
             { 
               //console.log('dodaj  ',data,'     blokada',this.blokada);
+              let linia = this.linia;
+              let pozycja = this.pozycja;
+                  
               let nowyznak = this.DodajZnak(data);
               if (this.blokada)
               {
@@ -104,10 +118,22 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
               }
               else
               {
-              this.linia = nowyznak;
-              this.liniaInput.nativeElement.value = nowyznak;
-              (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
-              this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja); 
+                console.log('nowyznak  ',nowyznak,'     nowyznak.length',nowyznak.length);
+                console.log('pozycja ',this.pozycja)
+                if (nowyznak.length <= this.maxLenght)
+                {
+                this.linia = nowyznak;
+                this.liniaInput.nativeElement.value = nowyznak;
+                (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
+                this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja); 
+                }
+                else
+                {
+                  this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
+                  console.log('odblokuj ',pozycja)
+                  setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia, pozycja) }, 600);
+                  //this.liniaInput.nativeElement.value = this.linia;  
+                }
               }
             this.liniaInput.nativeElement.focus();  
             } 
@@ -123,13 +149,39 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
     this.add_subscribe_lk.unsubscribe();    
   }
 
+  Dlugosc1(event: any)
+  {
+    
+    console.log('linia1',this.linia) 
+    console.log('długosc1',this.linia.length) 
+  }
+
+  Dlugosc(event: any)
+  {
+    
+    console.log('linia',this.linia) 
+    console.log('długosc',this.linia.length) 
+    /*
+    let linia = this.linia;
+    let pozycja = this.pozycja;
+              
+    if (linia.length >= this.maxLenght)
+    {
+    this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
+    setTimeout(() => { 
+                  this.funkcje.OdblokujLinieDialogu(linia, pozycja) 
+                     }, 600);
+    }
+   */ 
+  }
 
 
   Zmiana(event: any)
   {
-  /* 
+   
     console.log('ZMIANA', event) 
     console.log('ZMIANA', event.key) 
+  /*
     console.log('pozycje', this.pozycja )
     console.log('pozycjeS', this.liniaInput.nativeElement.selectionStart )
     console.log('pozycjeE', this.liniaInput.nativeElement.selectionEnd )
@@ -253,7 +305,7 @@ PokazHistorie(kierunek: number)
       this.funkcje.ZablokujLinieDialogu('koniec historii')
       this.linie_wskaznik = 0;
       if (this.linie.length > 0) { linia = this.linie[0]; } else { linia = ''}
-      setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia) }, 600);
+      setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia, linia.length) }, 600);
     }
     else if ( this.linie_wskaznik < this.linie.length )  
     {

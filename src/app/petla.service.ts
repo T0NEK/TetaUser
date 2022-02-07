@@ -110,7 +110,7 @@ poleceniaWykonaj(polecenie: string, tekst: string = '')
  }
  else
  {
-  this.funkcje.OdblokujLinieDialogu('');
+  this.funkcje.OdblokujLinieDialogu('',0);
  }
 }
 

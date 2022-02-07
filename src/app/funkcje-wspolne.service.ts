@@ -144,7 +144,7 @@ ZablokujAll(komunikat: string)
 
 OdblokujAll(komunikat: string)
 {
-  this.OdblokujLinieDialogu(komunikat, false)  
+  this.OdblokujLinieDialogu(komunikat, komunikat.length, false)  
   this.UstawStanPolecenia({"czas": 500, "komunikat": "", "dzialania": "","nastepny":"brak"})
 }
 
@@ -152,19 +152,19 @@ OdblokujAll(komunikat: string)
 ZablokujLinieDialogu(komunikat: string, blokada: boolean = false)
 {
   if (komunikat == '') { komunikat = 'przetwarzam, czekaj' }
-  this.blokadaLiniaDialogu(true, komunikat, blokada)
+  this.blokadaLiniaDialogu(true, komunikat, komunikat.length, blokada)
 }
 
-OdblokujLinieDialogu(komunikat: string, blokada: boolean = false)
+OdblokujLinieDialogu(komunikat: string, pozycja: number, blokada: boolean = false)
 {
-  this.blokadaLiniaDialogu(false, komunikat, blokada)
+  this.blokadaLiniaDialogu(false, komunikat, pozycja , blokada)
 }
 
 private LiniaDialoguBlokada = new Subject<any>();
 LiniaDialoguBlokada$ = this.LiniaDialoguBlokada.asObservable();
-private blokadaLiniaDialogu(stan: boolean, komunikat: string, blokada: boolean)
+private blokadaLiniaDialogu(stan: boolean, komunikat: string, pozycja: number, blokada: boolean)
 {
-  this.LiniaDialoguBlokada.next({"stan": stan, "komunikat": komunikat, "blokada": blokada});
+  this.LiniaDialoguBlokada.next({"stan": stan, "komunikat": komunikat, "pozycja": pozycja, "blokada": blokada});
 }
 /* (end) blokada lini dialogu */
 
