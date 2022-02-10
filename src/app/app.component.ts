@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
@@ -11,7 +11,7 @@ import { FunkcjeWspolneService } from './funkcje-wspolne.service';
     { provide: Window, useValue: window }],
   host: {
     "(window:resize)":"onWindowResize($event)",
-    "(click)":"onClick($event)",
+  //  "(click)":"onClick($event)",
   //  "(window:keypress)":"onKeyDown($event)"
   }  
 })
@@ -24,12 +24,13 @@ export class AppComponent implements OnDestroy
   public wysokoscPrzewijaj = 24;
   public wysokoscDialogMin = 120;
   public wysokoscKlw = 100;
-  public wysokoscLinia = 40;
+  public wysokoscLinia = 42;
   public szerokoscAll: any;
   public szerokoscInput: any;
-  public szerokoscClear = 40;
+  public szerokoscClear = 46;
   @ViewChild('content') content!: ElementRef;
-  
+  @HostListener('click',['$event']) onClick1(event: any) { this.onClick(event)}
+  //@HostListener('keydown',['$event']) onClick4(event: any) { this.onKeyup(event) }
   private blokada_subscribe_app = new Subscription();
   private modalCzekaj: any;
 

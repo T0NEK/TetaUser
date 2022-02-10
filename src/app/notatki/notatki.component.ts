@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AppComponent } from '../app.component';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 
 @Component({
@@ -17,10 +18,15 @@ import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 export class NotatkiComponent implements OnDestroy {
 
   @ViewChild('PoleNotatki') PoleNotatki!: ElementRef;
-  private fokus_subscribe_no = new Subscription();
+//  @HostListener('click',['$event']) onClick2(event: any) { this.onClick(event) }
+//  @HostListener('keyup.tab',['$event']) onClick3(event: any) { this.onKeyUp(event) }
+ private fokus_subscribe_no = new Subscription();
+ height: any;
 
-constructor(private funkcje: FunkcjeWspolneService)
+constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent)
   {
+    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-100) + 'px';
+    
     this.fokus_subscribe_no = funkcje.PoleNotatki$.subscribe 
     ( data =>
       { 
@@ -43,6 +49,13 @@ constructor(private funkcje: FunkcjeWspolneService)
     //console.log(kto.target.className);
 }
 
+  onKeyUp(kto: any)
+  {
+    console.log('app2   ',kto);
+    //console.log(kto.target);
+    //console.log('>',kto.target.innerText,'<');
+    //console.log(kto.target.className);
+  }
 
 
 }

@@ -1,4 +1,4 @@
-<mat-form-field appearance="fill">
+<mat-form-field appearance="fill" class="wymiary">
 <mat-label>Textarea</mat-label>
-  <textarea matInput ngModel #PoleNotatki class="notatki">tu będzie notatka</textarea>
+  <textarea matInput ngModel #PoleNotatki rows="5" [ngStyle]="{'height': height}" class="notatki">tu będzie notatka</textarea>
 </mat-form-field>
