@@ -71,6 +71,8 @@ if (licznik > 0 )
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
+                if (wynik.stan == true)
+                {  
                 for (let index = 0; index < wynik.moduly.length; index++) 
                 {
                   
@@ -83,8 +85,14 @@ if (licznik > 0 )
                         }]
                 }  
                 this.modulyStan = true;
-                this.OdczytajModuly.next(dowykonania.nastepnyTrue)
+                this.OdczytajModuly.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
           //console.log(this.moduly)
+                }
+                else
+                {//stan false
+                  this.modulyStan = true;
+                  this.OdczytajModuly.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
+                }
               }
               else
               {
@@ -99,7 +107,7 @@ if (licznik > 0 )
   }
   else
   {
-    this.OdczytajModuly.next(dowykonania.nastepnyFalse)
+    this.OdczytajModuly.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
   }
 }
 

@@ -25,14 +25,15 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
 {
     //console.log('con polecenia')
   
-  this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
-    ( data => { this.poleceniaWykonaj(data) } )
   this.poleceniasubscribe_p = this.polecenia.OdczytajPolecenia$.subscribe
-    ( data => { this.poleceniaWykonaj(data) } )
+    ( data => { this.poleceniaWykonaj(data, '') } )
   this.dzialaniasubscribe_p = this.polecenia.OdczytajDzialania$.subscribe
-    ( data => { this.poleceniaWykonaj(data) } )  
+    ( data => { this.poleceniaWykonaj(data, '') } )  
+  
+  this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
   this.notatkisubscribe_p = this.notatki.OdczytajNotatki$.subscribe
-    ( data => { this.poleceniaWykonaj(data) } )      
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
 }
 
 
@@ -44,7 +45,7 @@ ngOnDestroy()
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
   }
 
-poleceniaWykonaj(polecenie: string, tekst: string = '')
+poleceniaWykonaj(polecenie: string, tekst: string)
 {
  //console.log('działanie ',polecenie)
  //console.log('tekst: ',tekst)
@@ -55,8 +56,13 @@ poleceniaWykonaj(polecenie: string, tekst: string = '')
     switch (dowykonania.dzialanie) {
       case 'komunikat': setTimeout(() => {
                                 this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.komunikat);
-                                this.poleceniaWykonaj(dowykonania.nastepnyTrue);   
+                                this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);   
                               }, dowykonania.czas);
+            break;
+      case 'informacja': setTimeout(() => {
+                                  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, tekst);
+                                  this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);   
+                                }, dowykonania.czas);
             break;
       case 'dane': setTimeout(() => {
                                 this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.komunikat); 
@@ -65,7 +71,7 @@ poleceniaWykonaj(polecenie: string, tekst: string = '')
             break;
       case 'warunek': setTimeout(() => {
                                 let wynik = this.sprawdzWarunek(dowykonania);
-                                this.poleceniaWykonaj(wynik);   
+                                this.poleceniaWykonaj(wynik, tekst);   
                               }, dowykonania.czas);                                
             break;      
       case 'wczytaj': setTimeout(() => { 
@@ -73,7 +79,7 @@ poleceniaWykonaj(polecenie: string, tekst: string = '')
                                 }, dowykonania.czas);
             break;
       case 'linie': setTimeout(() => {  
-                                this.Lista(dowykonania)    
+                                this.Lista(dowykonania, tekst)    
                               //  this.polecenieWyswietl(dowykonania);
                                 }, dowykonania.czas);
             break;
@@ -81,25 +87,25 @@ poleceniaWykonaj(polecenie: string, tekst: string = '')
                          this.bufordane = [...this.bufordane,tekst];
                          setTimeout(() => 
                          {
-                           this.poleceniaWykonaj(dowykonania.nastepnyTrue)
+                           this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst)
                          }, dowykonania.czas);
             break;                                   
       case 'dodajdane':  this.bufordane = [...this.bufordane,tekst];
                           setTimeout(() => 
                           {
-                            this.poleceniaWykonaj(dowykonania.nastepnyTrue)
+                            this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst)
                           }, dowykonania.czas);
             break;   
       case 'password': this.funkcje.Password(dowykonania.komunikat);
-                       this.poleceniaWykonaj(dowykonania.nastepnyTrue);   
+                       this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);   
             break;
       case 'logowanie': this.bufordane = [...this.bufordane,0];
                         this.komunikacja.Zaloguj(this.bufordane);
-                        this.poleceniaWykonaj(dowykonania.nastepnyTrue);         
+                        this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
             break;  
       case 'wylogowanie': this.bufordane = ['', '', this.funkcje.getZalogowany().zalogowany];
                           this.komunikacja.Zaloguj(this.bufordane);
-                          this.poleceniaWykonaj(dowykonania.nastepnyTrue);         
+                          this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
             break;              
       case 'bad': 
                   this.funkcje.addLiniaKomunikatuAlert(this.funkcje.dedal, dowykonania.komunikat);
@@ -127,7 +133,6 @@ sprawdzWarunek(warunek: Polecenia): string
                         { wynik = warunek.nastepnyTrue}
       
       break;
-  
     default:
       wynik = 'bad';
       break;
@@ -137,7 +142,7 @@ return wynik;
 
 
 
-Lista(dowykonania: any)
+Lista(dowykonania: any, tekst: string)
 {
   //console.log(dowykonania)
   switch (dowykonania.komunikat) 
@@ -146,13 +151,15 @@ Lista(dowykonania: any)
                       "",
                       {"prefix": "", "nazwa1": "nazwa", "separator":"", "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": 'liniakomend'}, 
                       "", this.funkcje.getDane0(), "", this.funkcje.getDane0(),
-                      ""); 
+                      "",
+                      tekst); 
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
                       "",
                       {"prefix": "", "nazwa1": "nazwa", "separator":"", "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": 'liniakomend'}, 
                       "", this.funkcje.getDane0(), "", this.funkcje.getDane0(),
-                      ""); 
+                      "", 
+                      tekst); 
           break;
     case 'moduly': this.wyswietlLista(0, false, this.moduly.getModuly(), dowykonania,
                       'Moduł: "',
@@ -160,16 +167,18 @@ Lista(dowykonania: any)
                       '" symbol: [',      
                       {"prefix": "", "nazwa1": "symbol", "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(00, 123, 255)", "rodzaj": "liniakomend"},
                       "]",
-                      this.funkcje.getDane0(), ""); 
+                      this.funkcje.getDane0(), "", 
+                      tekst); 
           break;
     case 'notatki': this.wyswietlLista(0, false, this.notatki.getNotatki(), dowykonania,
                       "id: [",
                       {"prefix": "", "nazwa1": "id", "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(00, 123, 255)", "rodzaj": "liniakomend"},
                       '] tutuł: "',
-                      {"prefix": "", "nazwa1": "tytul" , "separator":"pomoc", "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": ''}, 
+                      {"prefix": "", "nazwa1": "tytul" , "separator":" (autor: ", "nazwa2": "wlascicielText", "sufix": ")", "kolor": 'rgb(00, 123, 255)', "rodzaj": ''}, 
                       '" z dnia:',      
-                      {"prefix": "", "nazwa1": "czasU", "separator":" (", "nazwa2": "stanText", "sufix": ")", "kolor": "rgb(00, 123, 255)", "rodzaj": ""},
-                      ""); 
+                      {"prefix": "", "nazwa1": "czas", "separator":" (", "nazwa2": "stanText", "sufix": ")", "kolor": "rgb(00, 123, 255)", "rodzaj": ""},
+                      "", 
+                      tekst); 
           break;      
   }
   
@@ -187,7 +196,7 @@ Wczytaj(dowykonania: any)
 
 
 
-wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, prefix: string, dane1: Nazwa, separator1: string, dane2: Nazwa, separator2: string, dane3: Nazwa, sufix: string)
+wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, prefix: string, dane1: Nazwa, separator1: string, dane2: Nazwa, separator2: string, dane3: Nazwa, sufix: string, tekst: string)
 {
   
   //console.log('licznik ',licznik)
@@ -235,12 +244,12 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
             sufix
         )
         }
-      this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, dane1, separator1, dane2, separator2, dane3, sufix)
+      this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, dane1, separator1, dane2, separator2, dane3, sufix, tekst)
     }
     else
     {
       //console.log('i next')
-      this.poleceniaWykonaj(polecenie.nastepnyTrue)
+      this.poleceniaWykonaj(polecenie.nastepnyTrue, tekst)
     }
   }, polecenie.czas);
 }

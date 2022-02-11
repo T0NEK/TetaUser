@@ -80,11 +80,8 @@ export interface Notatka
   {
     id: number;  
     tytul :string;
-    wlasciciel: boolean;
     wlascicielText: string;
-    stan: boolean;
     stanText: string;
-    czasU: string;
-    czasA: string;
+    czas: string;
   }
   

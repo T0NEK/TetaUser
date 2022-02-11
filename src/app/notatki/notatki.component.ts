@@ -22,11 +22,14 @@ export class NotatkiComponent implements OnDestroy {
 //  @HostListener('keyup.tab',['$event']) onClick3(event: any) { this.onKeyUp(event) }
  private fokus_subscribe_no = new Subscription();
  height: any;
+ notatkaTytul: string;
+ notatkaStan: any;
 
 constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent)
   {
     this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-100) + 'px';
-    
+    this.notatkaTytul = 'Wczytaj notatkę';
+    this.notatkaStan = {"wczytana": false, "edycja": true};
     this.fokus_subscribe_no = funkcje.PoleNotatki$.subscribe 
     ( data =>
       { 
@@ -41,6 +44,9 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent)
     this.fokus_subscribe_no.unsubscribe();    
   }
 
+
+
+  
   onClick(kto: any)
   {
     console.log('app   ',kto);

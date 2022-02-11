@@ -21,29 +21,6 @@ export class NotatkiService {
   getNotatki() { return this.notatki; }
   getNotatkiStan() { return this.notatkiStan; } 
   
-  sprawdzNotatki(polecenie: string)
-  {
-    let wynik = <Notatka> {"id": 0, "tytul": '', "czasU": "", "czasA": "", "wlasciciel": false, "wlascicielText": 'dedal', "stan": false, "stanText": ''}
-    for (let index = 0; index < this.notatki.length; index++) 
-    {
-      if ( this.notatki[index].tytul == polecenie)
-      {
-         wynik = {"id": this.notatki[index].id,
-                  "czasU": this.notatki[index].czasU,
-                  "czasA": this.notatki[index].czasA,
-                  "tytul": this.notatki[index].tytul, 
-                  "wlasciciel": this.notatki[index].wlasciciel,
-                  "wlascicielText": this.notatki[index].wlascicielText,
-                  "stan": this.notatki[index].stan,
-                  "stanText": this.notatki[index].stanText
-           } 
-         //this.poleceniePomoc();        
-         break;        
-      }       
-    }
-  return wynik  
-  }
-  
   Wczytajnotatki(stan: number, dowykonania: any)
   {
       this.notatkiStan = false;
@@ -74,26 +51,31 @@ export class NotatkiService {
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
+                  if (wynik.stan == true)
+                  {  
                   for (let index = 0; index < wynik.notatki.length; index++) 
                   {
                     
                         this.notatki = [...this.notatki, {
                           "id": wynik.notatki[index].id,
-                          "czasU": wynik.notatki[index].czasU,
-                          "czasA": wynik.notatki[index].czasA,
+                          "czas": wynik.notatki[index].czasU,
                           "tytul": wynik.notatki[index].tytul, 
-                          "wlasciciel": wynik.notatki[index].wlasciciel,
                           "wlascicielText": wynik.notatki[index].wlascicielText,
-                          "stan": wynik.notatki[index].stan,
                           "stanText": wynik.notatki[index].stanText
                           }]
                   }  
                   this.notatkiStan = true;
-                  this.OdczytajNotatki.next(dowykonania.nastepnyTrue)
+                  this.OdczytajNotatki.next({"nastepny": dowykonania.nastepnyTrue, "komunikat": wynik.error})
             //console.log(this.notatki)
+                  }
+                  else
+                  {//stan false
+                    this.notatkiStan = true;
+                    this.OdczytajNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
+                  }
                 }
                 else
-                {
+                {//wynik false
                   setTimeout(() => {this.odczytaj_notatki(licznik, stan, dowykonania)}, 1000) 
                 }
                   },
@@ -105,8 +87,69 @@ export class NotatkiService {
     }
     else
     {
-      this.OdczytajNotatki.next(dowykonania.nastepnyFalse)
+      this.OdczytajNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
     }
   }
+
+
+
+
+
+  private OdczytajNotatkiTresc = new Subject<any>();
+  OdczytajNotatkiTresc$ = this.OdczytajNotatkiTresc.asObservable()
+  private odczytaj_notatki_tresc(licznik: number, stan: number, dowykonania: any)
+  {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin':'*',
+        'content-type': 'application/json',
+        Authorization: 'my-auth-token'
+      })
+    };
+    
+  var data = JSON.stringify({ "stan": stan})  
+  
+  if (licznik > 0 )
+    {
+      --licznik;
+      this.http.post(this.komunikacja.getURL() + 'notatka/', data, httpOptions).subscribe( 
+        data =>  {
+          //console.log(data)
+                let wynik = JSON.parse(JSON.stringify(data));
+                if (wynik.wynik == true) 
+                {
+                  for (let index = 0; index < wynik.notatki.length; index++) 
+                  {
+                    
+                        this.notatki = [...this.notatki, {
+                          "id": wynik.notatki[index].id,
+                          "czas": wynik.notatki[index].czasU,
+                          "tytul": wynik.notatki[index].tytul, 
+                          "wlascicielText": wynik.notatki[index].wlascicielText,
+                          "stanText": wynik.notatki[index].stanText
+                          }]
+                  }  
+                  //this.notatkiStan = true;
+                  this.OdczytajNotatkiTresc.next(dowykonania.nastepnyTrue)
+            //console.log(this.notatki)
+                }
+                else
+                {
+                  setTimeout(() => {this.odczytaj_notatki_tresc(licznik, stan, dowykonania)}, 1000) 
+                }
+                  },
+        error => {
+          //console.log(error)
+                  setTimeout(() => {this.odczytaj_notatki_tresc(licznik, stan, dowykonania)}, 1000) 
+                }
+                )      
+    }
+    else
+    {
+      this.OdczytajNotatkiTresc.next(dowykonania.nastepnyFalse)
+    }
+  }
+
+
 
 }

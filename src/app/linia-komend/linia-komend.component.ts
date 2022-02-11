@@ -27,7 +27,7 @@ blokada = true;
 private stanpolecenia: Polecenia;
 private pozycja = 0;
 szerokoscInput: any;
-maxLenght = 20;
+maxLenght = 60;
 
 constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
@@ -314,7 +314,7 @@ WybranoEnter(linia: string)
   {
     polecenie = this.polecenia.sprawdzPolecenie(linia);
     setTimeout(() => {
-            this.petla.poleceniaWykonaj(polecenie.dzialanie);
+            this.petla.poleceniaWykonaj(polecenie.dzialanie, '');
    //         this.funkcje.OdblokujLinieDialogu('');
     }, polecenie.czas);
   }
