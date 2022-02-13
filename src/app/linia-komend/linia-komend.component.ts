@@ -32,7 +32,7 @@ maxLenght = 60;
 constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
     //console.log('con linia kom')
-      this.stanpolecenia = {"nazwa": "", "czas": 500, "komunikat": "", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
+      this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll;     
 
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
@@ -85,6 +85,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
       this.stan_polecen_subscribe_lk = funkcje.LiniaDialoguStanPolecen$.subscribe 
             ( data => 
               { 
+                //console.log('stan pole',data)
                 this.stanpolecenia.nazwa = (typeof data.nastepnyTrue === 'string' ? data.nastepnyTrue : 'brak');
                 this.stanpolecenia.czas = (typeof data.czas === 'string' ? data.czas : ' ');
                 this.stanpolecenia.komunikat = (typeof data.komunikat === 'string' ? data.komunikat : ' ');
@@ -380,5 +381,4 @@ DodajZnak(znak: any)
     return linia
   }
 
-  
 }

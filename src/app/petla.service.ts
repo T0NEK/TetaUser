@@ -17,6 +17,7 @@ private modulysubscribe_p = new Subscription();
 private poleceniasubscribe_p = new Subscription();
 private dzialaniasubscribe_p = new Subscription();
 private notatkisubscribe_p = new Subscription();
+private notatkitrescsubscribe_p = new Subscription();
 private bufordane = Array();
 
 
@@ -34,6 +35,11 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
   this.notatkisubscribe_p = this.notatki.OdczytajNotatki$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
+  this.notatkitrescsubscribe_p = this.notatki.OdczytajNotatkiTresc$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
+
+
+    
 }
 
 
@@ -43,16 +49,18 @@ ngOnDestroy()
    if(this.poleceniasubscribe_p) { this.modulysubscribe_p.unsubscribe(); }   
    if(this.dzialaniasubscribe_p) { this.modulysubscribe_p.unsubscribe(); }   
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
+   if(this.notatkitrescsubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
   }
 
 poleceniaWykonaj(polecenie: string, tekst: string)
 {
- //console.log('działanie ',polecenie)
- //console.log('tekst: ',tekst)
+ console.log('działanie ',polecenie)
+ console.log('tekst: ',tekst)
+ console.log('bufordane: ',this.bufordane)
   if (polecenie != 'end')
  {
     let dowykonania = this.polecenia.sprawdzDzialania(polecenie) 
-    //console.log('polecenie: ',dowykonania)
+    console.log('polecenie: ',dowykonania)
     switch (dowykonania.dzialanie) {
       case 'komunikat': setTimeout(() => {
                                 this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.komunikat);
@@ -60,13 +68,14 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                               }, dowykonania.czas);
             break;
       case 'informacja': setTimeout(() => {
-                                  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, tekst);
-                                  this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);   
+                                let wynik = this.Informacje(dowykonania, tekst) 
+                                this.poleceniaWykonaj(wynik, tekst);     
                                 }, dowykonania.czas);
             break;
       case 'dane': setTimeout(() => {
                                 this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.komunikat); 
-                                this.funkcje.UstawStanPolecenia(dowykonania)
+                                this.funkcje.UstawStanPolecenia(dowykonania);
+                                this.funkcje.OdblokujLinieDialogu('',0);
                               }, dowykonania.czas);
             break;
       case 'warunek': setTimeout(() => {
@@ -74,10 +83,15 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                                 this.poleceniaWykonaj(wynik, tekst);   
                               }, dowykonania.czas);                                
             break;      
-      case 'wczytaj': setTimeout(() => { 
-                                this.Wczytaj(dowykonania);
+      case 'getset': setTimeout(() => { 
+                                this.GetSet(dowykonania);
                                 }, dowykonania.czas);
             break;
+      case 'wykonaj': setTimeout(() => { 
+                                let wynik =this.Wykonaj(dowykonania);
+                                this.poleceniaWykonaj(wynik, tekst);   
+                                }, dowykonania.czas);
+            break;      
       case 'linie': setTimeout(() => {  
                                 this.Lista(dowykonania, tekst)    
                               //  this.polecenieWyswietl(dowykonania);
@@ -121,21 +135,84 @@ poleceniaWykonaj(polecenie: string, tekst: string)
 }
 
 
+Informacje(dowykonania: Polecenia, tekst: string): string
+{
+  let wynik: string;
+  //console.log( 'warunek',warunek )
+  //console.log( 'zalogowany',this.funkcje.getZalogowany() )
+
+  switch (dowykonania.komunikat) {
+    case 'tekst': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + tekst + dowykonania.sufix);
+                  wynik = dowykonania.nastepnyTrue;   
+          break;
+    case 'bufor1':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.bufordane[0] + dowykonania.sufix);
+                    wynik = dowykonania.nastepnyTrue;
+          break;
+    case 'bufor2':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.bufordane[1] + dowykonania.sufix);
+                    wynik = dowykonania.nastepnyTrue;
+           break;
+    case 'bufor12': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix +this.bufordane[0] + ' ' + this.bufordane[1] + dowykonania.sufix);
+                    wynik = dowykonania.nastepnyTrue;
+          break;
+    case 'notatka': switch (dowykonania.sufix)
+                    {
+                      case 'wlasciciel': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.notatki.getNotatkaWlasciciel() );
+                            wynik = dowykonania.nastepnyTrue;
+                            break;
+                      default: wynik = 'bad'; break;
+                    }
+             
+          break;
+    default: wynik = 'bad'; break;
+  }
+return wynik;
+}
+
+
+Wykonaj(warunek: Polecenia): string
+{
+  let wynik: string;
+  //console.log( 'warunek',warunek )
+  //console.log( 'zalogowany',this.funkcje.getZalogowany() )
+  switch (warunek.komunikat) {
+    case 'edytuj':  switch (warunek.sufix) {
+                            case 'on': this.notatki.setNotatkaEdytujOn(); wynik = warunek.nastepnyTrue;                              
+                                break;
+                            case 'off': this.notatki.setNotatkaEdytujOff(); wynik = warunek.nastepnyTrue;
+                                break                                
+                            default: wynik = 'bad';                              
+                              break;
+                          }
+          break
+    default:
+      wynik = 'bad';
+      break;
+  }
+return wynik;
+}
+
 sprawdzWarunek(warunek: Polecenia): string
 {
   let wynik: string;
   //console.log( 'warunek',warunek )
   //console.log( 'zalogowany',this.funkcje.getZalogowany() )
   switch (warunek.komunikat) {
-    case 'autoryzacja': if ( this.funkcje.getZalogowany().autoryzacja < warunek.autoryzacja )
-                        { wynik = warunek.nastepnyFalse }
-                        else
+    case 'notatka': if ( this.notatki.getNotatkaWczytana() )
                         { wynik = warunek.nastepnyTrue}
-      
-      break;
-    default:
-      wynik = 'bad';
-      break;
+                        else
+                        { wynik = warunek.nastepnyFalse }
+          break
+    case 'edycja': if ( this.notatki.getNotatkaEdycja() )
+                      { wynik = warunek.nastepnyTrue}
+                      else
+                      { wynik = warunek.nastepnyFalse }
+          break
+    case 'edytuj': if ( this.notatki.getNotatkaEdytuj() )
+                      { wynik = warunek.nastepnyTrue}
+                      else
+                      { wynik = warunek.nastepnyFalse }
+          break
+default: wynik = 'bad'; break;
   }
 return wynik;
 }
@@ -172,7 +249,7 @@ Lista(dowykonania: any, tekst: string)
           break;
     case 'notatki': this.wyswietlLista(0, false, this.notatki.getNotatki(), dowykonania,
                       "id: [",
-                      {"prefix": "", "nazwa1": "id", "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(00, 123, 255)", "rodzaj": "liniakomend"},
+                      {"prefix": "", "nazwa1": "identyfikator", "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(00, 123, 255)", "rodzaj": "liniakomend"},
                       '] tutuł: "',
                       {"prefix": "", "nazwa1": "tytul" , "separator":" (autor: ", "nazwa2": "wlascicielText", "sufix": ")", "kolor": 'rgb(00, 123, 255)', "rodzaj": ''}, 
                       '" z dnia:',      
@@ -184,13 +261,22 @@ Lista(dowykonania: any, tekst: string)
   
 }
 
-Wczytaj(dowykonania: any)
+GetSet(dowykonania: any)
 {
  //console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
-    case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
-    case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
+    case 'wczytaj': switch (dowykonania.sufix) {
+          case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
+          case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
+          case 'notatka': this.notatki.WczytajnotatkiTresc(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane[0]); break;                
+          }
+        break;  
+    case 'zapisz': switch (dowykonania.sufix) {
+            case 'notatki': this.notatki.Zapisznotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], dowykonania); break;
+            //case 'notatka': this.notatki.WczytajnotatkiTresc(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane[0]); break;                
+            }
+        break;
   }
 }
 

@@ -51,7 +51,9 @@ export interface Polecenia
       dzialanie: string;
       autoryzacja: boolean;
       polecenie: boolean;
+      prefix: string;
       komunikat: string;
+      sufix: string;
       nastepnyTrue: string;
       nastepnyFalse: string;
   }
@@ -79,9 +81,29 @@ export interface Modul
 export interface Notatka
   {
     id: number;  
+    identyfikator: string;
     tytul :string;
     wlascicielText: string;
     stanText: string;
     czas: string;
   }
-  
+
+export interface Tresc
+  {
+    id: number;  
+    identyfikator: string;
+    tytul :string;
+    wersja: number;
+    edycja: boolean;
+    wlascicielText: string;
+    stan: boolean;
+    stanText: string;
+    czas: string;
+    tresc: string;
+  }
+
+  export interface StanNotatka
+  {
+    wczytana : boolean;
+    edycja: boolean;  
+  }

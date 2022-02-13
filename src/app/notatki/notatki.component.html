@@ -1,4 +1,6 @@
 <mat-form-field appearance="fill" class="wymiary">
 <mat-label>{{notatkaTytul}}</mat-label>
-  <textarea matInput ngModel #PoleNotatki [readonly]="notatkaStan.edycja"  [ngStyle]="{'height': height}" class="notatki">tu będzie notatka</textarea>
+  <textarea matInput ngModel #PoleNotatki spellcheck="false" maxlength="notatkaLenght.max" [readonly]="!notatkaEdycja"  [ngStyle]="{'height': height}" (ngModelChange)="Zmiana()" class="notatki"></textarea>
+<mat-hint align="end">{{notatkaLenght.obecna || 0}}/{{notatkaLenght.max}}</mat-hint>
+
 </mat-form-field>

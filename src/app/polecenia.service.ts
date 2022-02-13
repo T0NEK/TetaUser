@@ -30,7 +30,9 @@ sprawdzPolecenie(polecenie: string)
     {
        wynik = {"nazwa": this.polecenia[index].nazwa,
                 "czas": this.polecenia[index].czas,
+                "prefix": this.polecenia[index].prefix, 
                 "komunikat": this.polecenia[index].komunikat, 
+                "sufix": this.polecenia[index].sufix, 
                 "dzialanie": this.polecenia[index].dzialanie,
                 "autoryzacja": this.polecenia[index].autoryzacja,
                 "polecenie": this.polecenia[index].polecenie,
@@ -75,7 +77,9 @@ var data = JSON.stringify({ "stan": stan})
                     this.polecenia = [...this.polecenia, {
                       "nazwa": wynik.polecenia[index].nazwa, 
                       "czas": wynik.polecenia[index].czas, 
+                      "prefix": wynik.polecenia[index].prefix, 
                       "komunikat": wynik.polecenia[index].komunikat, 
+                      "sufix": wynik.polecenia[index].sufix, 
                       "dzialanie": wynik.polecenia[index].dzialanie,
                       "autoryzacja": wynik.polecenia[index].autoryzacja,
                       "polecenie": wynik.polecenia[index].polecenie,
@@ -102,7 +106,7 @@ getDzialania (){ return this.dzialania; }
 
 sprawdzDzialania(dzialanie: string)
 {
-  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "komunikat": "Wystąpił błąd wykonania", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}
+  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "prefix": "", "komunikat": "Wystąpił błąd wykonania", "sufix": "", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}
   for (let index = 0; index < this.dzialania.length; index++) 
   {
     //console.log(this.dzialania[index].nazwa,' == ',dzialanie)
@@ -111,7 +115,9 @@ sprawdzDzialania(dzialanie: string)
       //console.log('jest')
        wynik = {"nazwa": this.dzialania[index].nazwa,
                 "czas": this.dzialania[index].czas,
+                "prefix": this.dzialania[index].prefix, 
                 "komunikat": this.dzialania[index].komunikat, 
+                "sufix": this.dzialania[index].sufix, 
                 "dzialanie": this.dzialania[index].dzialanie,
                 "autoryzacja": this.dzialania[index].autoryzacja,
                 "polecenie": this.dzialania[index].polecenie,
@@ -126,7 +132,7 @@ return wynik
 
 WczytajDzialania(stan: number)
 {
-    this.dzialania = [{"nazwa": "bad", "czas": 2000, "komunikat": "Nieznane polecenie", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
+    this.dzialania = [{"nazwa": "bad", "czas": 2000, "prefix": "", "komunikat": "Nieznane polecenie", "sufix": "", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
     this.odczytaj_dzialania(stan);
 }
 
@@ -156,7 +162,9 @@ var data = JSON.stringify({ "stan": stan})
               this.dzialania = [...this.dzialania, {
                       "nazwa": wynik.polecenia[index].nazwa, 
                       "czas": wynik.polecenia[index].czas, 
+                      "prefix": wynik.polecenia[index].prefix, 
                       "komunikat": wynik.polecenia[index].komunikat, 
+                      "sufix": wynik.polecenia[index].sufix, 
                       "dzialanie": wynik.polecenia[index].dzialanie,
                       "autoryzacja": wynik.polecenia[index].autoryzacja,
                       "polecenie": wynik.polecenia[index].polecenie,
@@ -164,7 +172,7 @@ var data = JSON.stringify({ "stan": stan})
                       "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]
               } 
-              //console.log(this.dzialania) 
+            //  console.log(this.dzialania) 
             }
             else
             {

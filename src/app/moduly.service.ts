@@ -86,7 +86,7 @@ if (licznik > 0 )
                 }  
                 this.modulyStan = true;
                 this.OdczytajModuly.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
-          //console.log(this.moduly)
+        //console.log(this.moduly)
                 }
                 else
                 {//stan false

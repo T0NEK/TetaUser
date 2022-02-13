@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
+import { Tresc } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
+import { NotatkiService } from '../notatki.service';
 
 @Component({
   selector: 'app-notatki',
@@ -21,20 +23,49 @@ export class NotatkiComponent implements OnDestroy {
 //  @HostListener('click',['$event']) onClick2(event: any) { this.onClick(event) }
 //  @HostListener('keyup.tab',['$event']) onClick3(event: any) { this.onKeyUp(event) }
  private fokus_subscribe_no = new Subscription();
+ private notatkaTresc_subscribe_no = new Subscription();
+ private notatkaEdytuj_subscribe_no = new Subscription();
  height: any;
  notatkaTytul: string;
- notatkaStan: any;
+ notatka: Tresc[] = [];
+ notatkaEdycja: boolean;
+ wersja: number;
+ notatkaLenght: any;
 
-constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent)
+constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, private notatki: NotatkiService)
   {
-    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-100) + 'px';
+    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-150) + 'px';
     this.notatkaTytul = 'Wczytaj notatkę';
-    this.notatkaStan = {"wczytana": false, "edycja": true};
+    this.notatka = [];
+    this.notatkaEdycja = false;
+    this.wersja = 0;
+    this.notatkaLenght = {"obecna": 0, "max": 1024};
+
     this.fokus_subscribe_no = funkcje.PoleNotatki$.subscribe 
     ( data =>
       { 
-        console.log('hello notatki')
         this.PoleNotatki.nativeElement.focus();
+      } 
+    );
+
+    this.notatkaEdytuj_subscribe_no = notatki.NotatkaEdytuj$.subscribe 
+    ( data =>
+      { 
+        this.notatkaEdycja = data;
+        this.PoleNotatki.nativeElement.style.cursor = (data ? 'auto' : 'crosshair');
+        this.PoleNotatki.nativeElement.focus();
+      } 
+    );
+
+
+    this.notatkaTresc_subscribe_no = notatki.OdczytajTresc$.subscribe 
+    ( data =>
+      { 
+        this.notatka = data.notatka;
+        this.wersja = data.wersja;
+        this.notatkaTytul = 'Notatka: ' + this.notatka[this.wersja].tytul + '  (id: ' + this.notatka[this.wersja].identyfikator + ')';
+        this.PoleNotatki.nativeElement.value = this.notatka[this.wersja].tresc;
+        this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
       } 
     );
   }
@@ -42,14 +73,20 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent)
   ngOnDestroy()
   {
     this.fokus_subscribe_no.unsubscribe();    
+    this.notatkaTresc_subscribe_no.unsubscribe();    
+    this.notatkaEdytuj_subscribe_no.unsubscribe();    
   }
 
-
+  Zmiana()
+  {
+    this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
+  }
 
   
   onClick(kto: any)
   {
     console.log('app   ',kto);
+    console.log(this.PoleNotatki.nativeElement.value)
     //console.log(kto.target);
     //console.log('>',kto.target.innerText,'<');
     //console.log(kto.target.className);
