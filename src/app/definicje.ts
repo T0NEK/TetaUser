@@ -84,6 +84,7 @@ export interface Notatka
     identyfikator: string;
     tytul :string;
     wlascicielText: string;
+    stan: boolean;
     stanText: string;
     czas: string;
   }
@@ -91,13 +92,7 @@ export interface Notatka
 export interface Tresc
   {
     id: number;  
-    identyfikator: string;
-    tytul :string;
     wersja: number;
-    edycja: boolean;
-    wlascicielText: string;
-    stan: boolean;
-    stanText: string;
     czas: string;
     tresc: string;
   }
@@ -106,4 +101,7 @@ export interface Tresc
   {
     wczytana : boolean;
     edycja: boolean;  
+    notatka: number;
+    wersja: number;
+    zmiany: boolean;
   }

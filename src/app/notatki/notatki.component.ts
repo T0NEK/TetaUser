@@ -27,18 +27,18 @@ export class NotatkiComponent implements OnDestroy {
  private notatkaEdytuj_subscribe_no = new Subscription();
  height: any;
  notatkaTytul: string;
- notatka: Tresc[] = [];
+ //notatka: Tresc[] = [];
  notatkaEdycja: boolean;
- wersja: number;
+ //wersja: number;
  notatkaLenght: any;
 
 constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, private notatki: NotatkiService)
   {
     this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-150) + 'px';
     this.notatkaTytul = 'Wczytaj notatkę';
-    this.notatka = [];
+    //this.notatka = [];
     this.notatkaEdycja = false;
-    this.wersja = 0;
+    //this.wersja = 0;
     this.notatkaLenght = {"obecna": 0, "max": 1024};
 
     this.fokus_subscribe_no = funkcje.PoleNotatki$.subscribe 
@@ -61,10 +61,10 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
     this.notatkaTresc_subscribe_no = notatki.OdczytajTresc$.subscribe 
     ( data =>
       { 
-        this.notatka = data.notatka;
-        this.wersja = data.wersja;
-        this.notatkaTytul = 'Notatka: ' + this.notatka[this.wersja].tytul + '  (id: ' + this.notatka[this.wersja].identyfikator + ')';
-        this.PoleNotatki.nativeElement.value = this.notatka[this.wersja].tresc;
+        //this.notatka = data.notatka;
+        //this.wersja = data.wersja;
+        this.notatkaTytul = 'Notatka: ' + this.notatki.getNotatki()[this.notatki.getNotatkaWczytanaId()].tytul + '   (id: ' + this.notatki.getNotatki()[this.notatki.getNotatkaWczytanaId()].identyfikator + ' ver: ' + this.notatki.getNotatkaWersja() + ')';
+        this.PoleNotatki.nativeElement.value = this.notatki.getNotatkaTresc();
         this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
       } 
     );
@@ -80,6 +80,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
   Zmiana()
   {
     this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
+    //if (this.PoleNotatki.nativeElement.value == this.notatka)
   }
 
   

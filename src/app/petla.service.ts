@@ -159,6 +159,9 @@ Informacje(dowykonania: Polecenia, tekst: string): string
                       case 'wlasciciel': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.notatki.getNotatkaWlasciciel() );
                             wynik = dowykonania.nastepnyTrue;
                             break;
+                      case 'identyfikator': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.notatki.getNotatkaIdentyfikator() );
+                            wynik = dowykonania.nastepnyTrue;
+                            break;
                       default: wynik = 'bad'; break;
                     }
              
@@ -197,22 +200,22 @@ sprawdzWarunek(warunek: Polecenia): string
   //console.log( 'warunek',warunek )
   //console.log( 'zalogowany',this.funkcje.getZalogowany() )
   switch (warunek.komunikat) {
-    case 'notatka': if ( this.notatki.getNotatkaWczytana() )
+    case 'notatka': if ( this.notatki.getNotatkaCzyWczytana() )
                         { wynik = warunek.nastepnyTrue}
                         else
                         { wynik = warunek.nastepnyFalse }
           break
-    case 'edycja': if ( this.notatki.getNotatkaEdycja() )
+    case 'edycja': if ( this.notatki.getNotatkaCzyEdycja() )
                       { wynik = warunek.nastepnyTrue}
                       else
                       { wynik = warunek.nastepnyFalse }
           break
-    case 'edytuj': if ( this.notatki.getNotatkaEdytuj() )
+    case 'edytuj': if ( this.notatki.getNotatkaMozliwoscEdycji() )
                       { wynik = warunek.nastepnyTrue}
                       else
                       { wynik = warunek.nastepnyFalse }
           break
-default: wynik = 'bad'; break;
+    default: wynik = 'bad'; break;
   }
 return wynik;
 }
