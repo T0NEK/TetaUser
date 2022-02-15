@@ -1,24 +1,27 @@
 export interface Nazwa
   {
     prefix: string;
-    nazwa1: string;
+    text1: string;
     separator: string;
-    nazwa2: string;
+    text2: string;
     sufix: string;
     rodzaj: string;
     kolor: string;  
   }
+  
+export interface Linia
+{
+  prefix: string;
+  text: Nazwa[];
+  sufix: string;
+}
   
 export interface Wiersze 
    {
       data: string;
       name: string;
       prefix: string;
-      dane1: Nazwa;
-      separator1: string;
-      dane2: Nazwa;
-      separator2: string;
-      dane3: Nazwa;
+      linia: Linia[];
       sufix: string;
    }
 

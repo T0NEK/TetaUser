@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KomunikacjaService } from './komunikacja.service';
-import { Nazwa, Polecenia } from './definicje'
+import { Linia, Nazwa, Polecenia } from './definicje'
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { ModulyService } from './moduly.service';
 import { PoleceniaService } from './polecenia.service';
@@ -247,11 +247,10 @@ Lista(dowykonania: any, tekst: string)
   //console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
-    case 'polecenia': this.wyswietlLista( 0, false, this.polecenia.getPolecenia(), dowykonania, 
-                      "",
+/*    case 'polecenia': this.wyswietlLista( 0, false, this.polecenia.getPolecenia(), dowykonania, 
+                      [{"",
                       {"prefix": "", "nazwa1": "nazwa", "separator":"", "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": 'liniakomend'}, 
-                      "", this.funkcje.getDane0(), "", this.funkcje.getDane0(),
-                      "",
+                      ""}],
                       tekst); 
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
@@ -280,7 +279,7 @@ Lista(dowykonania: any, tekst: string)
                       "", 
                       tekst); 
           break;      
-  }
+  */}
   
 }
 
@@ -305,7 +304,7 @@ GetSet(dowykonania: any)
 
 
 
-wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, prefix: string, dane1: Nazwa, separator1: string, dane2: Nazwa, separator2: string, dane3: Nazwa, sufix: string, tekst: string)
+wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, prefix: string, linia: Nazwa[], sufix: string, tekst: string)
 {
   
   //console.log('licznik ',licznik)
@@ -314,46 +313,36 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
   //console.log('zalogowany ',this.funkcje.getZalogowany())
   //console.log('dane1 ',dane1)
   //console.log('dane2 ',dane2)
+/*
   setTimeout(() => 
   {
     if (licznik < lista.length)
     {
       if ( ( ( (typeof lista[licznik].autoryzacja === 'boolean' ? lista[licznik].autoryzacja : false ) == wszystkie) || (wszystkie) ) && ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
        { 
+        let linie: Nazwa [] = [];
+        for (let index = 0; index < linia.length; index++) {
+          const element: Nazwa = 
+                          {
+                            "prefix": linia[index].prefix,
+                            "text1": (linia[index].text1 != '' ? lista[licznik][linia[index].text1] : '' ),
+                            "separator": linia[index].separator, 
+                            "text2": (linia[index].text2 != '' ? lista[licznik][linia[index].text2] : '' ),
+                            "sufix": linia[index].sufix,
+                            "kolor": linia[index].kolor,
+                            "rodzaj": linia[index].rodzaj
+                          };
+          linie = [...linie, element]                          
+        }
         this.funkcje.addLiniaKomunikatu
         (
             this.funkcje.dedal, 
             prefix,
-            { "prefix": dane1.prefix,
-              "nazwa1":(dane1.nazwa1 != '' ? lista[licznik][dane1.nazwa1] : '' ),
-              "separator": dane1.separator, 
-              "nazwa2": (dane1.nazwa2 != '' ? lista[licznik][dane1.nazwa2] : '' ),
-              "sufix": dane1.sufix,
-              "kolor": dane1.kolor,
-              "rodzaj": dane1.rodzaj
-            },
-            separator1, 
-            { "prefix": dane2.prefix,
-              "nazwa1": (dane2.nazwa1 != '' ? lista[licznik][dane2.nazwa1] : '' ),
-              "separator": dane2.separator,
-              "nazwa2": (dane2.nazwa2 != '' ? lista[licznik][dane2.nazwa2] : '' ),
-              "sufix": dane2.sufix,
-              "kolor": dane2.kolor, 
-              "rodzaj": dane2.rodzaj
-            },  
-            separator2, 
-            { "prefix": dane3.prefix,
-              "nazwa1": (dane3.nazwa1 != '' ? lista[licznik][dane3.nazwa1] : '' ),
-              "separator": dane3.separator,
-              "nazwa2": (dane3.nazwa2 != '' ? lista[licznik][dane3.nazwa2] : '' ),
-              "sufix": dane3.sufix,
-              "kolor": dane3.kolor, 
-              "rodzaj": dane3.rodzaj
-            },  
+            linie,
             sufix
         )
         }
-      this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, dane1, separator1, dane2, separator2, dane3, sufix, tekst)
+      this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, linia,  sufix, tekst)
     }
     else
     {
@@ -361,6 +350,7 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
       this.poleceniaWykonaj(polecenie.nastepnyTrue, tekst)
     }
   }, polecenie.czas);
+*/
 }
 /* (end) pomoc */
 }

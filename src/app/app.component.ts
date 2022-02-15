@@ -89,8 +89,8 @@ onClick(kto: any)
     //console.log('app   ',kto);
     //console.log(kto.target);
     //console.log('>',kto.target.innerText,'<');
-    console.log(kto.target.className);
-    console.log(kto.target.classList);
+    //console.log(kto.target.className);
+    //console.log(kto.target.classList);
     
 
     if ( kto.target.classList.contains('liniakomend') )
@@ -106,7 +106,7 @@ onKeyDown(kto: KeyboardEvent)
   //console.log(kto.key);
   //console.log(kto.altKey);
   //console.log(kto.shiftKey);
-  console.log(kto);
+  //console.log(kto);
   //this.funkcje.LiniaDialoguChar(kto.key.charCodeAt(0))
 }
 

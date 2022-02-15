@@ -4,11 +4,13 @@
       {{item.data}}
       <span>,&nbsp;{{item.name}}&nbsp;>&nbsp;</span>
       {{item.prefix}}
-      <span [style.color]="item.dane1.kolor" [class]="item.dane1.rodzaj">{{item.dane1.prefix}}{{item.dane1.nazwa1}}{{item.dane1.separator}}{{item.dane1.nazwa2}}{{item.dane1.sufix}}</span>
-      {{item.separator1}}
-      <span [style.color]="item.dane2.kolor" [class]="item.dane2.rodzaj">{{item.dane2.prefix}}{{item.dane2.nazwa1}}{{item.dane2.separator}}{{item.dane2.nazwa2}}{{item.dane2.sufix}}</span>
-      {{item.separator2}}
-      <span [style.color]="item.dane2.kolor" [class]="item.dane2.rodzaj">{{item.dane3.prefix}}{{item.dane3.nazwa1}}{{item.dane3.separator}}{{item.dane3.nazwa2}}{{item.dane3.sufix}}</span>
+        <span *ngFor="let item of item.linia">
+              {{item.prefix}}
+                <span *ngFor="let item of item.text" [style.color]="item.kolor" [class]="item.rodzaj">
+                  {{item.prefix}}{{item.text1}}{{item.separator}}{{item.text2}}{{item.sufix}}
+                </span>
+              {{item.sufix}}    
+        </span>      
       {{item.sufix}}
     </div>
   </cdk-virtual-scroll-viewport>

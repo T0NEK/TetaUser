@@ -33,8 +33,7 @@ export class CzasService implements OnDestroy
         this.funkcje.ZablokujAll('');
         this.PetlaStart(this.licznikBlad);  
         }, this.czas500);
-      }, this.czas500);
-
+}, this.czas500);
   /* (start) Komunikaty z odczytu bazy */
   this.aktualizacja_czasu_subscribe_c = this.OdczytajCzasDedala$.subscribe 
           ( data => {
