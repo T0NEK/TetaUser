@@ -18,6 +18,7 @@ private poleceniasubscribe_p = new Subscription();
 private dzialaniasubscribe_p = new Subscription();
 private notatkisubscribe_p = new Subscription();
 private notatkitrescsubscribe_p = new Subscription();
+private zapisznotatkisubscribe_p = new Subscription();
 private bufordane = Array();
 
 
@@ -37,8 +38,9 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
   this.notatkitrescsubscribe_p = this.notatki.OdczytajNotatkiTresc$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
-
-
+  this.zapisznotatkisubscribe_p = this.notatki.ZapiszNotatki$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
+  
     
 }
 
@@ -50,6 +52,7 @@ ngOnDestroy()
    if(this.dzialaniasubscribe_p) { this.modulysubscribe_p.unsubscribe(); }   
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
    if(this.notatkitrescsubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
+   if(this.zapisznotatkisubscribe_p) { this.zapisznotatkisubscribe_p.unsubscribe(); }   
   }
 
 poleceniaWykonaj(polecenie: string, tekst: string)
@@ -186,7 +189,7 @@ Wykonaj(warunek: Polecenia): string
                             default: wynik = 'bad';                              
                               break;
                           }
-          break
+          break;
     default:
       wynik = 'bad';
       break;
@@ -196,6 +199,8 @@ return wynik;
 
 sprawdzWarunek(warunek: Polecenia): string
 {
+  const decyzjeT = ['t', 'T'];
+  const decyzjeN = ['n', 'N'];
   let wynik: string;
   //console.log( 'warunek',warunek )
   //console.log( 'zalogowany',this.funkcje.getZalogowany() )
@@ -215,7 +220,22 @@ sprawdzWarunek(warunek: Polecenia): string
                       else
                       { wynik = warunek.nastepnyFalse }
           break
-    default: wynik = 'bad'; break;
+    case 'zmiany': if ( this.notatki.getNotatkaZmiana() )
+                      { wynik = warunek.nastepnyTrue}
+                      else
+                      { wynik = warunek.nastepnyFalse }
+          break          
+    case 'taknieSprawdz': if ( decyzjeT.concat(decyzjeN).indexOf(this.bufordane[0]) != -1 )
+                      { wynik = warunek.nastepnyTrue}
+                      else
+                      { wynik = warunek.nastepnyFalse}
+          break          
+    case 'taknieZdecyduj': if ( decyzjeT.indexOf(this.bufordane[0]) != -1 )
+                      { wynik = warunek.nastepnyTrue}
+                      else
+                      { wynik = warunek.nastepnyFalse}
+          break          
+default: wynik = 'bad'; break;
   }
 return wynik;
 }

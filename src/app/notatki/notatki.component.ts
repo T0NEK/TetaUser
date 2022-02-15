@@ -80,7 +80,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
   Zmiana()
   {
     this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
-    //if (this.PoleNotatki.nativeElement.value == this.notatka)
+    this.notatki.setNotatkaZmiana(this.PoleNotatki.nativeElement.value != this.notatki.getNotatkaTresc());
   }
 
   

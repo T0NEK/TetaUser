@@ -99,9 +99,9 @@ export interface Tresc
 
   export interface StanNotatka
   {
-    wczytana : boolean;
-    edycja: boolean;  
-    notatka: number;
-    wersja: number;
-    zmiany: boolean;
+    wczytana : boolean;   //czy wczytana
+    edycja: boolean;      //cy w edycji 
+    notatka: number;      //id wczytanej notatki  
+    wersja: number;       //wersja wczytanej notatki
+    zmiany: boolean;      //notatka edytoawna - zmieniona treść
   }

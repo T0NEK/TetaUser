@@ -143,19 +143,7 @@ export class NotatkiService {
                 {
                   if (wynik.stan == true)
                   {  
-                  for (let index = 0; index < wynik.notatki.length; index++) 
-                  {
                     
-                        this.notatki = [...this.notatki, {
-                          "id": wynik.notatki[index].id,
-                          "identyfikator": wynik.notatki[index].identyfikator,
-                          "czas": wynik.notatki[index].czas,
-                          "tytul": wynik.notatki[index].tytul, 
-                          "wlascicielText": wynik.notatki[index].wlascicielText,
-                          "stan": wynik.notatki[index].stan,
-                          "stanText": wynik.notatki[index].stanText
-                          }]
-                  }  
                   this.ZapiszNotatki.next({"nastepny": dowykonania.nastepnyTrue, "komunikat": wynik.error})
             //console.log(this.notatki)
                   }
@@ -188,15 +176,17 @@ export class NotatkiService {
 
 /*    TRESC      */
 
-  getNotatkaPozycja(wersja: number)  //pozycja w notatka
+  getNotatkaPozycja(wersja: number)  //pozycja w tabeli wersji notatek
   { let wynik = 0; for (let index = 0; index < this.notatka.length; index++) { if (this.notatka[index].wersja == wersja) { wynik =  index; break; }} return wynik;  }
-  getNotatkaTresc() { return this.notatka[this.getNotatkaPozycja(this.getNotatkaWersja())].tresc; } 
+  getNotatkaTresc() { return this.notatka[this.getNotatkaPozycja(this.getNotatkaWersja())].tresc; } //treść aktualnej wersji notatki
   getNotatkaWlasciciel() { return this.notatki[this.notatkaStan.notatka].wlascicielText; } //właściciel notatki
   getNotatkaIdentyfikator() { return this.notatki[this.notatkaStan.notatka].identyfikator; } //identyfikator notatki
   getNotatkaCzyWczytana() { return this.notatkaStan.wczytana; } //czy wczytana
   getNotatkaCzyEdycja() { return this.notatkaStan.edycja; } //czy w edycji
   getNotatkaWczytanaId() { return this.notatkaStan.notatka; } //id wczytanej notatki
   getNotatkaWersja() { return this.notatkaStan.wersja; } //wersja wczytanej notatki
+  getNotatkaZmiana() { return this.notatkaStan.zmiany; } //czy notatka edytowana - zmieniona
+  setNotatkaZmiana(stan: boolean) { this.notatkaStan.zmiany = stan } //czy notatka edytowana - zmieniona
   getNotatkaMozliwoscEdycji()  { return this.notatki[this.notatkaStan.notatka].stan; } //możliwość edycji notatki
 
 
