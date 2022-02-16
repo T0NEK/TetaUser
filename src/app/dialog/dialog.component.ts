@@ -37,7 +37,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     ( data => 
       { 
         this.tablicazawartosci = [...this.tablicazawartosci, data]; 
-        console.log(data)
+        //console.log(data)
         let count = this.VSVDialog.getDataLength()
         changeDetectorRef.detectChanges();
         if (this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }

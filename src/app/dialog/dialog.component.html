@@ -7,7 +7,7 @@
         <span *ngFor="let item of item.linia">
               {{item.prefix}}
                 <span *ngFor="let item of item.text" [style.color]="item.kolor" [class]="item.rodzaj">
-                  {{item.prefix}}{{item.text1}}{{item.separator}}{{item.text2}}{{item.sufix}}
+                  {{item.prefix}}{{item.text}}{{item.sufix}}
                 </span>
               {{item.sufix}}    
         </span>      

@@ -26,7 +26,7 @@ sprawdzPolecenie(polecenie: string)
   let wynik = <Polecenia> {"nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
   for (let index = 0; index < this.polecenia.length; index++) 
   {
-    if ( this.polecenia[index].nazwa == polecenie )
+    if ( this.polecenia[index].nazwa.toLowerCase() == polecenie.toLowerCase() )
     {
        wynik = {"nazwa": this.polecenia[index].nazwa,
                 "czas": this.polecenia[index].czas,

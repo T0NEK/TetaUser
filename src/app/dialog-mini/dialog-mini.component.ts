@@ -24,7 +24,7 @@ export class DialogMiniComponent implements OnInit {
        this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
-        //this.tablicazawartosci = [...this.tablicazawartosci, data]; 
+        this.tablicazawartosci = [...this.tablicazawartosci, data]; 
         let count = this.VSVUstawienia.getDataLength()
         changeDetectorRef.detectChanges();
         this.VSVUstawienia.scrollToIndex((count), 'smooth')
@@ -36,8 +36,8 @@ export class DialogMiniComponent implements OnInit {
   }
   ngAfterViewInit()
   {
-  //  this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
-  //  this.changeDetectorRef.detectChanges();
+    this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
+    this.changeDetectorRef.detectChanges();
   } 
 
   ngOnDestroy()

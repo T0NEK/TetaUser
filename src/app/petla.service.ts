@@ -57,16 +57,16 @@ ngOnDestroy()
 
 poleceniaWykonaj(polecenie: string, tekst: string)
 {
- console.log('działanie ',polecenie)
- console.log('tekst: ',tekst)
- console.log('bufordane: ',this.bufordane)
+ //console.log('działanie ',polecenie)
+ //console.log('tekst: ',tekst)
+ //console.log('bufordane: ',this.bufordane)
   if (polecenie != 'end')
  {
     let dowykonania = this.polecenia.sprawdzDzialania(polecenie) 
-    console.log('polecenie: ',dowykonania)
+    //console.log('polecenie: ',dowykonania)
     switch (dowykonania.dzialanie) {
       case 'komunikat': setTimeout(() => {
-                                this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.komunikat);
+                                this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.komunikat);
                                 this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);   
                               }, dowykonania.czas);
             break;
@@ -76,7 +76,7 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                                 }, dowykonania.czas);
             break;
       case 'dane': setTimeout(() => {
-                                this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.komunikat); 
+                                this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.komunikat); 
                                 this.funkcje.UstawStanPolecenia(dowykonania);
                                 this.funkcje.OdblokujLinieDialogu('',0);
                               }, dowykonania.czas);
@@ -125,7 +125,7 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                           this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
             break;              
       case 'bad': 
-                  this.funkcje.addLiniaKomunikatuAlert(this.funkcje.dedal, dowykonania.komunikat);
+                  this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), dowykonania.komunikat);
             break;  
     default:
             break;
@@ -145,24 +145,24 @@ Informacje(dowykonania: Polecenia, tekst: string): string
   //console.log( 'zalogowany',this.funkcje.getZalogowany() )
 
   switch (dowykonania.komunikat) {
-    case 'tekst': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + tekst + dowykonania.sufix);
+    case 'tekst': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + tekst + dowykonania.sufix);
                   wynik = dowykonania.nastepnyTrue;   
           break;
-    case 'bufor1':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.bufordane[0] + dowykonania.sufix);
+    case 'bufor1':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.bufordane[0] + dowykonania.sufix);
                     wynik = dowykonania.nastepnyTrue;
           break;
-    case 'bufor2':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.bufordane[1] + dowykonania.sufix);
+    case 'bufor2':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.bufordane[1] + dowykonania.sufix);
                     wynik = dowykonania.nastepnyTrue;
            break;
-    case 'bufor12': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix +this.bufordane[0] + ' ' + this.bufordane[1] + dowykonania.sufix);
+    case 'bufor12': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix +this.bufordane[0] + ' ' + this.bufordane[1] + dowykonania.sufix);
                     wynik = dowykonania.nastepnyTrue;
           break;
     case 'notatka': switch (dowykonania.sufix)
                     {
-                      case 'wlasciciel': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.notatki.getNotatkaWlasciciel() );
+                      case 'wlasciciel': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.notatki.getNotatkaWlasciciel() );
                             wynik = dowykonania.nastepnyTrue;
                             break;
-                      case 'identyfikator': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.dedal, dowykonania.prefix + this.notatki.getNotatkaIdentyfikator() );
+                      case 'identyfikator': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.notatki.getNotatkaIdentyfikator() );
                             wynik = dowykonania.nastepnyTrue;
                             break;
                       default: wynik = 'bad'; break;
@@ -240,46 +240,43 @@ default: wynik = 'bad'; break;
 return wynik;
 }
 
-
-
 Lista(dowykonania: any, tekst: string)
 {
   //console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
-/*    case 'polecenia': this.wyswietlLista( 0, false, this.polecenia.getPolecenia(), dowykonania, 
-                      [{"",
-                      {"prefix": "", "nazwa1": "nazwa", "separator":"", "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": 'liniakomend'}, 
-                      ""}],
+    case 'polecenia': this.wyswietlLista( 0, false, this.polecenia.getPolecenia(), dowykonania,
+                      "", 
+                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", 'rgb(00, 123, 255)', "liniakomend")], "")],
+                      "",
                       tekst); 
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
+                      "", 
+                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", 'rgb(00, 123, 255)', "liniakomend")], "")],
                       "",
-                      {"prefix": "", "nazwa1": "nazwa", "separator":"", "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": 'liniakomend'}, 
-                      "", this.funkcje.getDane0(), "", this.funkcje.getDane0(),
-                      "", 
-                      tekst); 
-          break;
-    case 'moduly': this.wyswietlLista(0, false, this.moduly.getModuly(), dowykonania,
-                      'Moduł: "',
-                      {"prefix": '', "nazwa1": "nazwa" , "separator":'', "nazwa2": "", "sufix": "", "kolor": 'rgb(00, 123, 255)', "rodzaj": 'liniakomend'}, 
-                      '" symbol: [',      
-                      {"prefix": "", "nazwa1": "symbol", "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(00, 123, 255)", "rodzaj": "liniakomend"},
-                      "]",
-                      this.funkcje.getDane0(), "", 
-                      tekst); 
-          break;
-    case 'notatki': this.wyswietlLista(0, false, this.notatki.getNotatki(), dowykonania,
-                      "id: [",
-                      {"prefix": "", "nazwa1": "identyfikator", "separator":"", "nazwa2": "", "sufix": "", "kolor": "rgb(00, 123, 255)", "rodzaj": "liniakomend"},
-                      '] tutuł: "',
-                      {"prefix": "", "nazwa1": "tytul" , "separator":" (autor: ", "nazwa2": "wlascicielText", "sufix": ")", "kolor": 'rgb(00, 123, 255)', "rodzaj": ''}, 
-                      '" z dnia:',      
-                      {"prefix": "", "nazwa1": "czas", "separator":" (", "nazwa2": "stanText", "sufix": ")", "kolor": "rgb(00, 123, 255)", "rodzaj": ""},
-                      "", 
                       tekst); 
           break;      
-  */}
+    case 'moduly': this.wyswietlLista( 0, false, this.moduly.getModuly(), dowykonania,
+                      "", 
+                      [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", 'rgb(00, 123, 255)', "liniakomend")], '" symbol: ['),
+                       this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "symbol", "", 'rgb(00, 123, 255)', "liniakomend")], "]"),
+                      ],
+                      "",
+                      tekst); 
+          break;
+    case 'notatki': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
+          "", 
+          [this.funkcje.setNazwaLinia('id: [', [this.funkcje.setTextNazwa("", "identyfikator", "", 'rgb(00, 123, 255)', "liniakomend")], ']'),
+           this.funkcje.setNazwaLinia('; tutuł: "', [this.funkcje.setTextNazwa("", "tytul", "", 'rgb(00, 123, 255)', "liniakomend")], '"'),
+           this.funkcje.setNazwaLinia('; autor: "', [this.funkcje.setTextNazwa("", "wlascicielText", "", 'rgb(00, 123, 255)', "")], '"'),
+           this.funkcje.setNazwaLinia('; z dnia: ', [this.funkcje.setTextNazwa("", "czas", "", 'rgb(00, 123, 255)', "")], ''),
+           this.funkcje.setNazwaLinia('; dostepność: ', [this.funkcje.setTextNazwa("", "stanText", "", 'rgb(00, 123, 255)', "")], '')
+          ],
+          "",
+          tekst); 
+    break;
+ }
   
 }
 
@@ -304,7 +301,7 @@ GetSet(dowykonania: any)
 
 
 
-wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, prefix: string, linia: Nazwa[], sufix: string, tekst: string)
+wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, prefix: string, linia: Linia[], sufix: string, tekst: string)
 {
   
   //console.log('licznik ',licznik)
@@ -313,35 +310,36 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
   //console.log('zalogowany ',this.funkcje.getZalogowany())
   //console.log('dane1 ',dane1)
   //console.log('dane2 ',dane2)
-/*
+
   setTimeout(() => 
   {
     if (licznik < lista.length)
     {
       if ( ( ( (typeof lista[licznik].autoryzacja === 'boolean' ? lista[licznik].autoryzacja : false ) == wszystkie) || (wszystkie) ) && ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
        { 
-        let linie: Nazwa [] = [];
-        for (let index = 0; index < linia.length; index++) {
-          const element: Nazwa = 
-                          {
-                            "prefix": linia[index].prefix,
-                            "text1": (linia[index].text1 != '' ? lista[licznik][linia[index].text1] : '' ),
-                            "separator": linia[index].separator, 
-                            "text2": (linia[index].text2 != '' ? lista[licznik][linia[index].text2] : '' ),
-                            "sufix": linia[index].sufix,
-                            "kolor": linia[index].kolor,
-                            "rodzaj": linia[index].rodzaj
-                          };
-          linie = [...linie, element]                          
+        let liniaNew: Linia[] = [];
+        for (let indexL = 0; indexL < linia.length; indexL++) 
+        {
+          let nazwaNew: Nazwa[] = [];
+          for (let indexT = 0; indexT < linia[indexL].text.length; indexT++) {
+            //const element2 = (typeof linia[indexL].text[indexT].text === "string" ? lista[licznik][linia[indexL].text[indexT].text] : '')
+            //console.log('element2 ',element2)      
+            nazwaNew = [...nazwaNew, this.funkcje.setTextNazwa(
+                              linia[indexL].text[indexT].prefix,
+                              (typeof linia[indexL].text[indexT].text === "string" ? lista[licznik][linia[indexL].text[indexT].text] : ''),
+                              linia[indexL].text[indexT].sufix,
+                              linia[indexL].text[indexT].kolor,
+                              linia[indexL].text[indexT].rodzaj
+                        )]
+          }  
+        liniaNew = [...liniaNew, this.funkcje.setNazwaLinia(
+                              linia[indexL].prefix,
+                              nazwaNew,
+                              linia[indexL].sufix
+                        )]
         }
-        this.funkcje.addLiniaKomunikatu
-        (
-            this.funkcje.dedal, 
-            prefix,
-            linie,
-            sufix
-        )
-        }
+        this.funkcje.addLiniaKomunikatu(this.funkcje.getDedal(), "", liniaNew, "");
+      }
       this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, linia,  sufix, tekst)
     }
     else
@@ -350,7 +348,7 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
       this.poleceniaWykonaj(polecenie.nastepnyTrue, tekst)
     }
   }, polecenie.czas);
-*/
+
 }
 /* (end) pomoc */
 }

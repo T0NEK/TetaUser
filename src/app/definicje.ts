@@ -1,9 +1,7 @@
 export interface Nazwa
   {
     prefix: string;
-    text1: string;
-    separator: string;
-    text2: string;
+    text: string;
     sufix: string;
     rodzaj: string;
     kolor: string;  
@@ -86,6 +84,7 @@ export interface Notatka
     id: number;  
     identyfikator: string;
     tytul :string;
+    wlasciciel: number;
     wlascicielText: string;
     stan: boolean;
     stanText: string;
@@ -103,8 +102,8 @@ export interface Tresc
   export interface StanNotatka
   {
     wczytana : boolean;   //czy wczytana
-    edycja: boolean;      //cy w edycji 
-    notatka: number;      //id wczytanej notatki  
+    edycja: boolean;      //czy w edycji 
+    notatka: Notatka;      //wczytana notatka  
     wersja: number;       //wersja wczytanej notatki
     zmiany: boolean;      //notatka edytoawna - zmieniona treść
   }

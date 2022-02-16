@@ -63,7 +63,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
       { 
         //this.notatka = data.notatka;
         //this.wersja = data.wersja;
-        this.notatkaTytul = 'Notatka: ' + this.notatki.getNotatki()[this.notatki.getNotatkaWczytanaId()].tytul + '   (id: ' + this.notatki.getNotatki()[this.notatki.getNotatkaWczytanaId()].identyfikator + ' ver: ' + this.notatki.getNotatkaWersja() + ')';
+        this.notatkaTytul = 'Notatka: ' + this.notatki.getNotatkaTytul() + '   (id: ' + this.notatki.getNotatkaIdentyfikator() + ' ver: ' + this.notatki.getNotatkaWersja() + ')';
         this.PoleNotatki.nativeElement.value = this.notatki.getNotatkaTresc();
         this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
       } 

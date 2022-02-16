@@ -9,7 +9,7 @@ import { Linia, Nazwa, Wiersze, Zalogowany } from './definicje';
 
 export class FunkcjeWspolneService {
 
-public dedal = 'dadal';
+private dedal = 'dadal';
 private osoba: Zalogowany;
 
 constructor()
@@ -24,10 +24,9 @@ constructor()
 
 /* (start) funkcje zalogowanego */ 
 
-getZalogowany()
-{
-  return this.osoba
-}
+getDedal() { return this.dedal };
+
+getZalogowany() { return this.osoba };
 
 
 wylogujOsoba(): Zalogowany
@@ -59,139 +58,55 @@ addLinieDialogu(linia: Wiersze)
    this.linieDialogu = [...this.linieDialogu, linia];   
   }
 
+setTextNazwa(prefix: string, text: string, sufix: string, kolor: string, rodzaj: string):Nazwa
+{
+  return {
+    "prefix": (typeof prefix === "string" ? prefix : "" ),
+    "text": (typeof text === "string" ? text : "" ),
+    "sufix": (typeof sufix === "string" ? sufix : "" ),
+    "kolor": (typeof kolor === "string" ? kolor : "" ),
+    "rodzaj": (typeof rodzaj === "string" ? rodzaj : "tekst" )
+  }
+}
+
+setNazwaLinia(prefix: string, nazwa: Nazwa[], sufix: string):Linia
+{
+  return {
+    "prefix":  (typeof prefix === "string" ? prefix : "" ),
+    "text": nazwa, 
+    "sufix": (typeof sufix === "string" ? sufix : "" )
+  }
+}
+
+
 addLiniaKomunikatuPolecenia(name: string, blad: string)
   {
-    this.addLiniaKomunikatu(name, 
-      "", 
-      [{
-        "prefix": "", 
-        "text": [{
-                  "prefix": "",
-                  "text1": blad,
-                  "separator": "",
-                  "text2": "",
-                  "sufix": "",
-                  "kolor": this.getZalogowany().kolor,
-                  "rodzaj": "liniakomend"
-                }], 
-        "sufix": ""
-      }],
-      "");
+    this.addLiniaKomunikatu(name, "", [this.setNazwaLinia("", [this.setTextNazwa("", blad, "", this.getZalogowany().kolor, "liniakomend")], "")], "");
   }
   
 
 addLiniaKomunikatuKolor(name: string, blad: string, kolor: string)
   {
-    this.addLiniaKomunikatu(name, 
-      "", 
-      [{
-        "prefix": "", 
-        "text": [{
-                  "prefix": "",
-                  "text1": blad,
-                  "separator": "",
-                  "text2": "",
-                  "sufix": "",
-                  "kolor": kolor,
-                  "rodzaj": "tekst"
-                }], 
-        "sufix": ""
-      }],
-      "");
+    this.addLiniaKomunikatu(name, "", [this.setNazwaLinia("", [this.setTextNazwa("", blad, "", kolor, "")], "")], "");
   }
   
 
 addLiniaKomunikatuInfo(name: string, blad: string)
 {
-  this.addLiniaKomunikatu(name, 
-    "", 
-    [{
-      "prefix": "", 
-      "text": [{
-                "prefix": "",
-                "text1": blad,
-                "separator": "",
-                "text2": "",
-                "sufix": "",
-                "kolor": "",
-                "rodzaj": "tekst"
-              }], 
-      "sufix": ""
-    }],
-    "");
+  this.addLiniaKomunikatu(name, "", [this.setNazwaLinia("", [this.setTextNazwa("", blad, "", "", "")], "")], "");
 }
 
 addLiniaKomunikatuAlert(name: string, blad: string)
 {
-  this.addLiniaKomunikatu(name, 
-    "", 
-    [{
-      "prefix": "", 
-      "text": [{
-                "prefix": "",
-                "text1": blad,
-                "separator": "",
-                "text2": "",
-                "sufix": "",
-                "kolor": "rgb(199, 100, 43)",
-                "rodzaj": "tekst"
-              }], 
-      "sufix": ""
-    }],
-    "");
+  this.addLiniaKomunikatu(name, "", [this.setNazwaLinia("", [this.setTextNazwa("", blad, "", "rgb(199, 100, 43)", "")], "")], "");
 }
 
 
 addLiniaKomunikatuKrytyczny(name: string, blad: string)
 {
-  this.addLiniaKomunikatu(name, 
-                          "", 
-                          [{
-                            "prefix": "", 
-                            "text": [{
-                                      "prefix": "",
-                                      "text1": blad,
-                                      "separator": "",
-                                      "text2": "",
-                                      "sufix": "",
-                                      "kolor": "rgb(199, 100, 43)",
-                                      "rodzaj": "tekst"
-                                    }], 
-                            "sufix": ""
-                          }],
-                          "");
-  this.addLiniaKomunikatu(name, 
-                            "", 
-                            [{
-                              "prefix": "", 
-                              "text": [{
-                                        "prefix": "",
-                                        "text1": 'Błąd krytyczny - terminal stop',
-                                        "separator": "",
-                                        "text2": "",
-                                        "sufix": "",
-                                        "kolor": "red",
-                                        "rodzaj": "tekst"
-                                      }], 
-                              "sufix": ""
-                            }],
-                            "");
-  this.addLiniaKomunikatu(name, 
-                              "", 
-                              [{
-                                "prefix": "", 
-                                "text": [{
-                                          "prefix": "",
-                                          "text1": 'Wezwij MG',
-                                          "separator": "",
-                                          "text2": "",
-                                          "sufix": "",
-                                          "kolor": "red",
-                                          "rodzaj": "tekst"
-                                        }], 
-                                "sufix": ""
-                              }],
-                              ""); 
+  this.addLiniaKomunikatuAlert(name, blad)
+  this.addLiniaKomunikatuKolor(name, "Błąd krytyczny - terminal stop", 'red')
+  this.addLiniaKomunikatuKolor(name, "Wezwij MG", 'red')
 }
 
   
