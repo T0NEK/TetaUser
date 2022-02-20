@@ -18,6 +18,7 @@ export class LiniaKomendComponent implements OnDestroy {
 private fokus_subscribe_lk = new Subscription();
 private blokada_subscribe_lk = new Subscription();
 private haslo_subscribe_lk = new Subscription();
+private poleceniahistoria_subscribe_lk = new Subscription();
 private stan_polecen_subscribe_lk = new Subscription();
 private add_subscribe_lk = new Subscription();
 linia = '';
@@ -27,18 +28,18 @@ blokada = true;
 private stanpolecenia: Polecenia;
 private pozycja = 0;
 szerokoscInput: any;
-maxLenght = 60;
+maxLenght: number;
 
 constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
     //console.log('con linia kom')
       this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll;     
-
+      this.maxLenght = funkcje.iloscZnakowwKomend;
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
           ( data => 
             { 
-              //console.log('data ',data)
+              //console.log('data ',data+'.')
               if (typeof data === 'string')
               {
               data = data.substring(0, this.maxLenght - this.linia.length);  
@@ -105,6 +106,15 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
               } 
             );
   
+      this.poleceniahistoria_subscribe_lk = funkcje.LiniaDialoguStanHistoria$.subscribe 
+            ( data => 
+              { if (data == '')
+                { this.KasujHistorie(); }
+                else
+                { this.DodajHistorie(data)}
+              } 
+            );
+  
 
       this.add_subscribe_lk = funkcje.LiniaDialoguAddChar$.subscribe 
           ( data => 
@@ -138,6 +148,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
     this.fokus_subscribe_lk.unsubscribe();    
     this.blokada_subscribe_lk.unsubscribe();    
     this.haslo_subscribe_lk.unsubscribe();    
+    this.poleceniahistoria_subscribe_lk.unsubscribe();    
     this.stan_polecen_subscribe_lk.unsubscribe();    
     this.add_subscribe_lk.unsubscribe();    
   }
@@ -263,8 +274,8 @@ ClearLinia()
 /* (end) funkcje lini Input*/
 
 /* (start) historia poleceń */
-private linie = Array ();
-private linie_wskaznik = 0;
+private linie = Array ('pomoc', 'zapisz', 'zamknij', '1644743771H5V129934757909', 'edytuj', 'notatka','notatki','wersja');
+private linie_wskaznik = this.linie.length;
 
 DodajHistorie(linia: string)
 {
@@ -272,6 +283,12 @@ DodajHistorie(linia: string)
   this.linie_wskaznik = this.linie.length;
   //console.log('historia ',this.linie,'    wskaznik',this.linie_wskaznik )
 }
+KasujHistorie()
+{
+  this.linie = [];
+  this.linie_wskaznik = 0;
+}
+
 PokazHistorie(kierunek: number)
 {
   this.linie_wskaznik = this.linie_wskaznik + kierunek;

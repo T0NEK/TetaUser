@@ -28,6 +28,8 @@ export class AppComponent implements OnDestroy
   public szerokoscAll: any;
   public szerokoscInput: any;
   public szerokoscClear = 46;
+  
+  
   @ViewChild('content') content!: ElementRef;
   @HostListener('click',['$event']) onClick1(event: any) { this.onClick(event)}
   //@HostListener('keydown',['$event']) onClick4(event: any) { this.onKeyup(event) }

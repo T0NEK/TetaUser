@@ -8,6 +8,7 @@ import { OsobyService } from './osoby.service';
 import { Sprawdz } from './definicje';
 import { PetlaService } from './petla.service';
 import { PoleceniaService } from './polecenia.service';
+import { NotatkiService } from './notatki.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class CzasService implements OnDestroy
   private czas1000 = 100;
   
     
-  constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private petla: PetlaService, private polecenia: PoleceniaService) 
+  constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService, private notatki: NotatkiService) 
   {
   //console.log('czas con');
   this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Uruchomiono terminal');
@@ -84,6 +85,7 @@ ZmianyPoLogowaniu()
    this.tablica_sprawdzajaca.stanRejestracja = false;
    this.tablica_sprawdzajaca.stanPolecenia = false;
    this.tablica_sprawdzajaca.stanDzialania = false; 
+   this.notatki.setNotatkaClear();
    this.PetlaStart(5);
 }
 
@@ -469,14 +471,6 @@ formatUplyw(poczatek: any, obecny: any)
     return uplyw
 }
 /* (end) formatowanie upływu */ 
-
-
-
-
-
-
-
-
 
 
 

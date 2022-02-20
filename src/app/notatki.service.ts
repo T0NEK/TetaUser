@@ -17,7 +17,7 @@ export class NotatkiService {
   constructor(private http: HttpClient, private komunikacja: KomunikacjaService)
   { 
   //this.notatkiStan = false;
-  this.notatkaStan = {"wczytana": false, "edycja": false, "notatka": {"id":0, "identyfikator": "", "czas": "", "stan": false, "stanText": "", "tytul": "", "wlasciciel":0, "wlascicielText":""}, "wersja": 0, "zmiany": false};
+  this.notatkaStan = {"wczytana": false, "edycja": false, "notatka": {"id":0, "identyfikator": "", "czas": "", "stan": false, "stanText": "", "tytul": "", "wlasciciel":0, "wlascicielText":""}, "wersja": 0, "zmiany": false, "tresc": ""};
   }
   
   
@@ -168,7 +168,7 @@ export class NotatkiService {
     }
     else
     {
-      this.OdczytajNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
+      this.ZapiszNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
     }
   }
 
@@ -182,17 +182,27 @@ export class NotatkiService {
   getNotatkaPozycja(wersja: number)  //pozycja w tabeli wersji notatek
   { let wynik = 0; for (let index = 0; index < this.notatka.length; index++) { if (this.notatka[index].wersja == wersja) { wynik =  index; break; }} return wynik;  }
   getNotatkaTresc() { return this.notatka[this.getNotatkaPozycja(this.getNotatkaWersja())].tresc; } //treść aktualnej wersji notatki
+  getNotatkaTrescNew() { return this.notatkaStan.tresc; } //treść aktualnej wersji notatki
+  setNotatkaTrescNew(notatka: string) { this.notatkaStan.tresc = notatka; } // treść edytowanej notatki
   getNotatkaWlasciciel() { return this.notatkaStan.notatka.wlascicielText; } //właściciel notatki
   getNotatkaWlascicielId() { return this.notatkaStan.notatka.wlasciciel; } // id właściciela notatki
   getNotatkaIdentyfikator() { return this.notatkaStan.notatka.identyfikator; } //identyfikator notatki
   getNotatkaTytul() { return this.notatkaStan.notatka.tytul; } //tytuł notatki
   getNotatkaCzyWczytana() { return this.notatkaStan.wczytana; } //czy wczytana
   getNotatkaCzyEdycja() { return this.notatkaStan.edycja; } //czy w edycji
+  getNotatkaCzyDostepna(numer: number) { return (this.notatka[numer].stan ? true : this.notatka[numer].stanText); } //czy dostępna
   getNotatkaWczytanaId() { return this.notatkaStan.notatka.id; } //id wczytanej notatki
   getNotatkaWersja() { return this.notatkaStan.wersja; } //wersja wczytanej notatki
+  getNotatkaWersjaMax() { return this.notatka.length -1; } //wersja wczytanej notatki
+  getNotatkaZakres(numer: number) { return ( numer > this.getNotatkaWersjaMax() ? false : true);} //czy numer jest w zakresie notatek
   getNotatkaZmiana() { return this.notatkaStan.zmiany; } //czy notatka edytowana - zmieniona
-  setNotatkaZmiana(stan: boolean) { this.notatkaStan.zmiany = stan } //czy notatka edytowana - zmieniona
-  getNotatkaMozliwoscEdycji()  { return this.notatkaStan.notatka.stan; } //możliwość edycji notatki
+  setNotatkaZmiana(stan: boolean) { this.notatkaStan.zmiany = stan } //ustawienie czy notatka edytowana - zmieniona
+  getNotatkaMozliwoscEdycji(zalogowany: number)  { return ((this.notatkaStan.notatka.stan)&&(this.getNotatkaWlascicielId() == zalogowany )); } //możliwość edycji notatki
+  setNotatkaClear() { 
+                      this.notatka = [];
+                      this.notatkaStan = {"wczytana": false, "edycja": false, "notatka": {"id":0, "identyfikator": "", "czas": "", "stan": false, "stanText": "", "tytul": "", "wlasciciel": 0, "wlascicielText":""}, "wersja": 0, "zmiany": false, "tresc": ""};
+                      this.OdczytajTresc.next({"notatka": this.notatka, "wersja": 0 })
+                    }
 
 
   private NotatkaEdytuj = new Subject<any>();
@@ -202,6 +212,16 @@ export class NotatkiService {
   setNotatkaEdytujOff()
   { this.notatkaStan.edycja = false; this.NotatkaEdytuj.next(false) }
 
+  setNotatkaWersja(wersja: number)
+  {
+    console.log('wersja',wersja)
+    this.notatkaStan.wersja = wersja;
+    this.notatkaStan.zmiany = false;
+    this.notatkaStan.tresc = "";
+    this.OdczytajTresc.next({"notatka": this.notatka, "wersja": wersja })  
+  }
+
+
 
   WczytajnotatkiTresc(stan: number, dowykonania: any, notatka: string)
   {
@@ -209,7 +229,7 @@ export class NotatkiService {
     //console.log('id: ', this.getNotatkaId(notatka))
     //console.log('notatki', this.getNotatki())
       this.notatka = [];
-      this.notatkaStan = {"wczytana": false, "edycja": false, "notatka": {"id":0, "identyfikator": "", "czas": "", "stan": false, "stanText": "", "tytul": "", "wlasciciel": 0, "wlascicielText":""}, "wersja": 0, "zmiany": false};
+      this.notatkaStan = {"wczytana": false, "edycja": false, "notatka": {"id":0, "identyfikator": "", "czas": "", "stan": false, "stanText": "", "tytul": "", "wlasciciel": 0, "wlascicielText":""}, "wersja": 0, "zmiany": false, "tresc": ""};
       this.odczytaj_notatki_tresc(5, stan, dowykonania, notatka);
   }
 
@@ -234,7 +254,7 @@ console.log('data WNT',data)
       --licznik;
       this.http.post(this.komunikacja.getURL() + 'notatka/', data, httpOptions).subscribe( 
         data =>  {
-          console.log(data)
+          //console.log(data)
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
@@ -245,12 +265,14 @@ console.log('data WNT',data)
                         this.notatka = [...this.notatka, {
                           "id": wynik.notatki[index].id,
                           "wersja": wynik.notatki[index].wersja, 
+                          "stan": wynik.notatki[index].stan,
+                          "stanText": wynik.notatki[index].stanText,
                           "czas": wynik.notatki[index].czas,
                           "tresc": wynik.notatki[index].tresc,
                           }]
                   }  
                   //this.notatkiStan = true;
-                  this.notatkaStan = {"wczytana": true, "edycja": false, "notatka": {"id": wynik.id, "identyfikator": wynik.identyfikator, "czas": wynik.czas, "stan": wynik.stan, "stanText": wynik.stanText, "tytul": wynik.tytul, "wlasciciel": wynik.wlasciciel, "wlascicielText": wynik.wlascicielText}, "wersja": wynik.wersja, "zmiany": false};
+                  this.notatkaStan = {"wczytana": true, "edycja": false, "notatka": {"id": wynik.id, "identyfikator": wynik.identyfikator, "czas": wynik.czas, "stan": wynik.stan, "stanText": wynik.stanText, "tytul": wynik.tytul, "wlasciciel": wynik.wlasciciel, "wlascicielText": wynik.wlascicielText}, "wersja": wynik.wersja, "zmiany": false, "tresc": ""};
                   this.OdczytajNotatkiTresc.next({"nastepny": dowykonania.nastepnyTrue, "komunikat": wynik.error})
                   this.OdczytajTresc.next({"notatka": this.notatka, "wersja": wynik.wersja })
 //console.log('notatka odczyt:',this.notatka)
@@ -266,7 +288,7 @@ console.log('data WNT',data)
                 }
                   },
         error => {
-          console.log(error)
+          //console.log(error)
                   setTimeout(() => {this.odczytaj_notatki_tresc(licznik, stan, dowykonania,notatka)}, 1000) 
                 }
                 )      
@@ -274,6 +296,74 @@ console.log('data WNT',data)
     else
     {
       this.OdczytajNotatkiTresc.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
+    }
+  }
+
+
+  ZapiszTrescnotatki(dowykonania: any)
+  {
+    this.zapisz_tresc_notatki(5, this.getNotatkaWczytanaId(), this.getNotatkaWersjaMax() + 1, this.getNotatkaTrescNew(), dowykonania);
+  }
+  
+  private ZapiszTrescNotatki = new Subject<any>();
+  ZapiszTrescNotatki$ = this.ZapiszTrescNotatki.asObservable()
+  private zapisz_tresc_notatki(licznik: number, id: number, wersja: number, notatka: string, dowykonania: any)
+  {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin':'*',
+        'content-type': 'application/json',
+        Authorization: 'my-auth-token'
+      })
+    };
+    
+  var data = JSON.stringify({"kierunek": "set", "stan": id, "wersja": wersja, "notatka": notatka})  
+  
+  if (licznik > 0 )
+    {
+      --licznik;
+      this.http.post(this.komunikacja.getURL() + 'notatka/', data, httpOptions).subscribe( 
+        data =>  {
+          console.log(data)
+                let wynik = JSON.parse(JSON.stringify(data));
+                if (wynik.wynik == true) 
+                {
+                  if (wynik.stan == true)
+                  {  
+                    this.notatka = [...this.notatka, {
+                      "id": wynik.id,
+                      "wersja": wynik.wersja, 
+                      "stan": wynik.stan,
+                      "stanText": wynik.stanText,
+                      "czas": wynik.czas,
+                      "tresc": wynik.tresc
+                      }]
+                    this.notatkaStan.wersja = wynik.wersja;
+                    this.notatkaStan.zmiany = false;
+                    this.notatkaStan.tresc = "";
+                    this.OdczytajTresc.next({"notatka": this.notatka, "wersja": wynik.wersja })  
+                    this.ZapiszTrescNotatki.next({"nastepny": dowykonania.nastepnyTrue, "komunikat": wynik.error})
+            //console.log(this.notatki)
+                  }
+                  else
+                  {//stan false
+                    this.ZapiszTrescNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
+                  }
+                }
+                else
+                {//wynik false
+                  setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania)}, 1000) 
+                }
+                  },
+        error => {
+          console.log(error)
+                  setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania)}, 1000) 
+                }
+                )      
+    }
+    else
+    {
+      this.ZapiszTrescNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
     }
   }
 

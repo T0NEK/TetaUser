@@ -29,6 +29,7 @@ export class NotatkiComponent implements OnDestroy {
  notatkaTytul: string;
  //notatka: Tresc[] = [];
  notatkaEdycja: boolean;
+ notatkaEdytowana: string;
  //wersja: number;
  notatkaLenght: any;
 
@@ -36,9 +37,8 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
   {
     this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-150) + 'px';
     this.notatkaTytul = 'Wczytaj notatkę';
-    //this.notatka = [];
     this.notatkaEdycja = false;
-    //this.wersja = 0;
+    this.notatkaEdytowana = 'inherit';
     this.notatkaLenght = {"obecna": 0, "max": 1024};
 
     this.fokus_subscribe_no = funkcje.PoleNotatki$.subscribe 
@@ -61,11 +61,23 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
     this.notatkaTresc_subscribe_no = notatki.OdczytajTresc$.subscribe 
     ( data =>
       { 
-        //this.notatka = data.notatka;
-        //this.wersja = data.wersja;
+        //console.log(data)
+        //console.log(this.notatki.getNotatkaCzyWczytana())
+        if (this.notatki.getNotatkaCzyWczytana())
+        {
         this.notatkaTytul = 'Notatka: ' + this.notatki.getNotatkaTytul() + '   (id: ' + this.notatki.getNotatkaIdentyfikator() + ' ver: ' + this.notatki.getNotatkaWersja() + ')';
         this.PoleNotatki.nativeElement.value = this.notatki.getNotatkaTresc();
         this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
+        this.notatkaEdytowana = (this.notatki.getNotatkaZmiana() ? 'red' : 'inherit')
+        }
+        else
+        {
+          this.notatkaTytul = 'Wczytaj notatkę';
+          this.PoleNotatki.nativeElement.value = '';
+          this.notatkaEdycja = false;
+          this.notatkaEdytowana = 'inherit';
+          this.notatkaLenght = {"obecna": 0, "max": 1024};
+        }
       } 
     );
   }
@@ -81,13 +93,15 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
   {
     this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
     this.notatki.setNotatkaZmiana(this.PoleNotatki.nativeElement.value != this.notatki.getNotatkaTresc());
+    this.notatkaEdytowana = (this.notatki.getNotatkaZmiana() ? 'red' : 'inherit')
+    this.notatki.setNotatkaTrescNew(this.PoleNotatki.nativeElement.value);
   }
 
   
   onClick(kto: any)
   {
-    console.log('app   ',kto);
-    console.log(this.PoleNotatki.nativeElement.value)
+    //console.log('app   ',kto);
+    //console.log(this.PoleNotatki.nativeElement.value)
     //console.log(kto.target);
     //console.log('>',kto.target.innerText,'<');
     //console.log(kto.target.className);
@@ -95,7 +109,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
 
   onKeyUp(kto: any)
   {
-    console.log('app2   ',kto);
+    //console.log('app2   ',kto);
     //console.log(kto.target);
     //console.log('>',kto.target.innerText,'<');
     //console.log(kto.target.className);

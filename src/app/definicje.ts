@@ -5,6 +5,7 @@ export interface Nazwa
     sufix: string;
     rodzaj: string;
     kolor: string;  
+    dlugosc: number;
   }
   
 export interface Linia
@@ -12,6 +13,7 @@ export interface Linia
   prefix: string;
   text: Nazwa[];
   sufix: string;
+  dlugosc: number;
 }
   
 export interface Wiersze 
@@ -95,6 +97,8 @@ export interface Tresc
   {
     id: number;  
     wersja: number;
+    stan: boolean;
+    stanText: string;
     czas: string;
     tresc: string;
   }
@@ -106,4 +110,15 @@ export interface Tresc
     notatka: Notatka;      //wczytana notatka  
     wersja: number;       //wersja wczytanej notatki
     zmiany: boolean;      //notatka edytoawna - zmieniona treść
+    tresc: string;        //zmieniona treść 
+  }
+
+  export interface Kolory
+  {
+    info: string;
+    alert: string;
+    krytyczny: string;
+    liniakomend: string;
+    zalogowany: string;
+    wylogowany: string;  
   }

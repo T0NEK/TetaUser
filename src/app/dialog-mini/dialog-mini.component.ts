@@ -24,7 +24,7 @@ export class DialogMiniComponent implements OnInit {
        this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
-        this.tablicazawartosci = [...this.tablicazawartosci, data]; 
+        this.tablicazawartosci = funkcje.getLinieDialogu(); 
         let count = this.VSVUstawienia.getDataLength()
         changeDetectorRef.detectChanges();
         this.VSVUstawienia.scrollToIndex((count), 'smooth')

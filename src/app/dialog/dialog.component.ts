@@ -1,5 +1,5 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Component,  OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component,  OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CzasService } from '../czas.service';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service'; 
@@ -21,6 +21,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   private zakladkasubscribe = new Subscription();
   checked = true;
   height: any;
+  znak = '';
   
 
     
@@ -36,8 +37,9 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
-        this.tablicazawartosci = [...this.tablicazawartosci, data]; 
-        //console.log(data)
+        //this.tablicazawartosci = [...this.tablicazawartosci, data]; 
+        this.tablicazawartosci = funkcje.getLinieDialogu();
+        //console.log('.'+data+'.')
         let count = this.VSVDialog.getDataLength()
         changeDetectorRef.detectChanges();
         if (this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }
@@ -58,6 +60,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() 
   {
+    
    //console.log('onInit dialog') 
   }
   
@@ -74,4 +77,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tablicazawartoscisubscribe.unsubscribe();
     this.zakladkasubscribe.unsubscribe();
   }
+
+
+  
 }

@@ -19,6 +19,7 @@ private dzialaniasubscribe_p = new Subscription();
 private notatkisubscribe_p = new Subscription();
 private notatkitrescsubscribe_p = new Subscription();
 private zapisznotatkisubscribe_p = new Subscription();
+private zapisznotatkitrescsubscribe_p = new Subscription();
 private bufordane = Array();
 
 
@@ -40,6 +41,8 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
   this.zapisznotatkisubscribe_p = this.notatki.ZapiszNotatki$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
+  this.zapisznotatkitrescsubscribe_p = this.notatki.ZapiszTrescNotatki$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
   
     
 }
@@ -53,6 +56,7 @@ ngOnDestroy()
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
    if(this.notatkitrescsubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
    if(this.zapisznotatkisubscribe_p) { this.zapisznotatkisubscribe_p.unsubscribe(); }   
+   if(this.zapisznotatkitrescsubscribe_p) { this.zapisznotatkisubscribe_p.unsubscribe(); }   
   }
 
 poleceniaWykonaj(polecenie: string, tekst: string)
@@ -128,6 +132,7 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                   this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), dowykonania.komunikat);
             break;  
     default:
+            
             break;
     }
  }
@@ -148,13 +153,21 @@ Informacje(dowykonania: Polecenia, tekst: string): string
     case 'tekst': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + tekst + dowykonania.sufix);
                   wynik = dowykonania.nastepnyTrue;   
           break;
+    case 'tekstAlert': this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), dowykonania.prefix + tekst + dowykonania.sufix);
+          wynik = dowykonania.nastepnyTrue;   
+          break;
+    case 'tekstPolecenie': 
+    this.funkcje.addLiniaKomunikatu("", this.funkcje.getDedal(), "", "", [this.funkcje.setNazwaLinia(dowykonania.prefix, [this.funkcje.setTextNazwa("", tekst, "", this.funkcje.getKolor().liniakomend, "liniakomend")], dowykonania.sufix)], "");
+    //this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getDedal(), dowykonania.prefix + tekst + dowykonania.sufix);
+          wynik = dowykonania.nastepnyTrue;   
+          break;
     case 'bufor1':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.bufordane[0] + dowykonania.sufix);
                     wynik = dowykonania.nastepnyTrue;
           break;
     case 'bufor2':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.bufordane[1] + dowykonania.sufix);
                     wynik = dowykonania.nastepnyTrue;
            break;
-    case 'bufor12': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix +this.bufordane[0] + ' ' + this.bufordane[1] + dowykonania.sufix);
+    case 'bufor12': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix +this.bufordane[0] + dowykonania.sufix + this.bufordane[1]);
                     wynik = dowykonania.nastepnyTrue;
           break;
     case 'notatka': switch (dowykonania.sufix)
@@ -190,7 +203,25 @@ Wykonaj(warunek: Polecenia): string
                               break;
                           }
           break;
-    default:
+    case 'kasuj': switch (warunek.sufix) {
+                          case 'historia': this.funkcje.setLiniaDialoguClear(); wynik = warunek.nastepnyTrue;
+                                break;
+                          case 'polecenia': this.funkcje.setLiniaKomunikatuHistoriaClear(); wynik = warunek.nastepnyTrue; 
+                                break;
+                          case 'notatka': this.notatki.setNotatkaClear(); wynik = warunek.nastepnyTrue; 
+                                break;
+                          default: wynik = 'bad';                              
+                            break;
+                          }
+          break;
+    case 'notatka': switch (warunek.sufix) {
+                          case 'wersja': this.notatki.setNotatkaWersja(this.bufordane[0]); wynik = warunek.nastepnyTrue;
+                                break;
+                          default: wynik = 'bad';                              
+                            break;
+                          }
+break;
+default:
       wynik = 'bad';
       break;
   }
@@ -201,41 +232,57 @@ sprawdzWarunek(warunek: Polecenia): string
 {
   const decyzjeT = ['t', 'T'];
   const decyzjeN = ['n', 'N'];
+  const decyzjeC = ['1','2','3','4','5','6','7','8','9','0'];
   let wynik: string;
   //console.log( 'warunek',warunek )
   //console.log( 'zalogowany',this.funkcje.getZalogowany() )
   switch (warunek.komunikat) {
-    case 'notatka': if ( this.notatki.getNotatkaCzyWczytana() )
-                        { wynik = warunek.nastepnyTrue}
-                        else
-                        { wynik = warunek.nastepnyFalse }
+    case 'notatka': switch (warunek.sufix) {
+                          case 'wczytana': if ( this.notatki.getNotatkaCzyWczytana() )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }
+                                break;
+                          case 'edycja': if ( this.notatki.getNotatkaCzyEdycja() )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }
+                                break
+                          case 'edytuj': if ( this.notatki.getNotatkaMozliwoscEdycji(this.funkcje.getZalogowany().zalogowany) )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }
+                                break
+                          case 'zmiany': if ( this.notatki.getNotatkaZmiana() )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }
+                                break          
+                          case 'zakres': if ( this.notatki.getNotatkaZakres(Number(this.bufordane[0])) )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }
+                                break
+                          case 'dostepna': this.bufordane[1] = this.notatki.getNotatkaCzyDostepna(Number(this.bufordane[0]))
+                          console.log(this.bufordane)
+                          console.log(this.bufordane[1] === true)
+                                          if ( this.bufordane[1] === true )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }      
+                                break          
+                default: wynik = 'bad'; break;
+                          }
           break
-    case 'edycja': if ( this.notatki.getNotatkaCzyEdycja() )
-                      { wynik = warunek.nastepnyTrue}
-                      else
-                      { wynik = warunek.nastepnyFalse }
-          break
-    case 'edytuj': if ( this.notatki.getNotatkaMozliwoscEdycji() )
-                      { wynik = warunek.nastepnyTrue}
-                      else
-                      { wynik = warunek.nastepnyFalse }
-          break
-    case 'zmiany': if ( this.notatki.getNotatkaZmiana() )
-                      { wynik = warunek.nastepnyTrue}
-                      else
-                      { wynik = warunek.nastepnyFalse }
-          break          
-    case 'taknieSprawdz': if ( decyzjeT.concat(decyzjeN).indexOf(this.bufordane[0]) != -1 )
-                      { wynik = warunek.nastepnyTrue}
-                      else
-                      { wynik = warunek.nastepnyFalse}
-          break          
-    case 'taknieZdecyduj': if ( decyzjeT.indexOf(this.bufordane[0]) != -1 )
-                      { wynik = warunek.nastepnyTrue}
-                      else
-                      { wynik = warunek.nastepnyFalse}
-          break          
-default: wynik = 'bad'; break;
+    case 'sprawdz': switch (warunek.sufix) {
+                          case 'number':  wynik = warunek.nastepnyTrue;
+                                          for (let index = 0; index < this.bufordane[0].length; index++) 
+                                          { if ( decyzjeC.indexOf(this.bufordane[0][index]) <0 )
+                                            { wynik = warunek.nastepnyFalse; break; }
+                                          }                    
+                                break          
+                          case 'taknie': if ( decyzjeT.concat(decyzjeN).indexOf(this.bufordane[0]) != -1 )
+                                        { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
+                                break          
+                          default: wynik = 'bad'; break;
+                          }    
+          break;                  
+    case 'zdecyduj': switch (warunek.sufix) {          
+                          case 'taknie': if ( decyzjeT.indexOf(this.bufordane[0]) != -1 )
+                                        { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
+                          break;
+                          default: wynik = 'bad'; break;
+                          }    
+          break;          
+    default: wynik = 'bad'; break;
   }
 return wynik;
 }
@@ -247,31 +294,31 @@ Lista(dowykonania: any, tekst: string)
   {
     case 'polecenia': this.wyswietlLista( 0, false, this.polecenia.getPolecenia(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", 'rgb(00, 123, 255)', "liniakomend")], "")],
+                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], "")],
                       "",
                       tekst); 
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", 'rgb(00, 123, 255)', "liniakomend")], "")],
+                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], "")],
                       "",
                       tekst); 
           break;      
     case 'moduly': this.wyswietlLista( 0, false, this.moduly.getModuly(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", 'rgb(00, 123, 255)', "liniakomend")], '" symbol: ['),
-                       this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "symbol", "", 'rgb(00, 123, 255)', "liniakomend")], "]"),
+                      [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], '"'),
+                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend")], " ]"),
                       ],
                       "",
                       tekst); 
           break;
     case 'notatki': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
           "", 
-          [this.funkcje.setNazwaLinia('id: [', [this.funkcje.setTextNazwa("", "identyfikator", "", 'rgb(00, 123, 255)', "liniakomend")], ']'),
-           this.funkcje.setNazwaLinia('; tutuł: "', [this.funkcje.setTextNazwa("", "tytul", "", 'rgb(00, 123, 255)', "liniakomend")], '"'),
-           this.funkcje.setNazwaLinia('; autor: "', [this.funkcje.setTextNazwa("", "wlascicielText", "", 'rgb(00, 123, 255)', "")], '"'),
-           this.funkcje.setNazwaLinia('; z dnia: ', [this.funkcje.setTextNazwa("", "czas", "", 'rgb(00, 123, 255)', "")], ''),
-           this.funkcje.setNazwaLinia('; dostepność: ', [this.funkcje.setTextNazwa("", "stanText", "", 'rgb(00, 123, 255)', "")], '')
+          [this.funkcje.setNazwaLinia('id: [ ', [this.funkcje.setTextNazwa("", "identyfikator", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ' ];'),
+           this.funkcje.setNazwaLinia(' tutuł: "', [this.funkcje.setTextNazwa("", "tytul", "", this.funkcje.getKolor().liniakomend, "liniakomend")], '";'),
+           this.funkcje.setNazwaLinia(' autor: "', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "")], '";'),
+           this.funkcje.setNazwaLinia(' z dnia: ', [this.funkcje.setTextNazwa("", "czas", "", this.funkcje.getKolor().liniakomend, "")], ';'),
+           this.funkcje.setNazwaLinia(' dostepność: ', [this.funkcje.setTextNazwa("", "stanText", "", this.funkcje.getKolor().liniakomend, "")], '')
           ],
           "",
           tekst); 
@@ -293,7 +340,7 @@ GetSet(dowykonania: any)
         break;  
     case 'zapisz': switch (dowykonania.sufix) {
             case 'notatki': this.notatki.Zapisznotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], dowykonania); break;
-            //case 'notatka': this.notatki.WczytajnotatkiTresc(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane[0]); break;                
+            case 'notatka': this.notatki.ZapiszTrescnotatki(dowykonania); break;                
             }
         break;
   }
@@ -326,7 +373,7 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
             //console.log('element2 ',element2)      
             nazwaNew = [...nazwaNew, this.funkcje.setTextNazwa(
                               linia[indexL].text[indexT].prefix,
-                              (typeof linia[indexL].text[indexT].text === "string" ? lista[licznik][linia[indexL].text[indexT].text] : ''),
+                              (typeof linia[indexL].text[indexT].text === "string" ? lista[licznik][linia[indexL].text[indexT].text]:''),
                               linia[indexL].text[indexT].sufix,
                               linia[indexL].text[indexT].kolor,
                               linia[indexL].text[indexT].rodzaj
@@ -338,7 +385,7 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
                               linia[indexL].sufix
                         )]
         }
-        this.funkcje.addLiniaKomunikatu(this.funkcje.getDedal(), "", liniaNew, "");
+        this.funkcje.addLiniaKomunikatu("", this.funkcje.getDedal(), "", "", liniaNew, "");
       }
       this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, linia,  sufix, tekst)
     }
