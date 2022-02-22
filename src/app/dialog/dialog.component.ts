@@ -18,17 +18,17 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   private tablicazawartoscisubscribe = new Subscription();
   tablicazawartosci: Wiersze[] = [];  
   @ViewChild('scrollViewportDialog') VSVDialog!: CdkVirtualScrollViewport;
-  private zakladkasubscribe = new Subscription();
+  //private zakladkasubscribe = new Subscription();
   checked = true;
   height: any;
-  znak = '';
+
   
 
     
   //@Input() : any;
   //@Output() raport = new EventEmitter<string>();
   
-  constructor(private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
+  constructor(private hostElement: ElementRef, private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
   {
     this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-100) + 'px';
     //console.log (all.wysokoscAll,'    ',all.wysokoscInfo,'    ',all.wysokoscKlw,'    ',all.wysokoscLinia,'    ',all.wysokoscDialogMin,'    ',all.wysokoscPrzewijaj)
@@ -37,8 +37,10 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
-        //this.tablicazawartosci = [...this.tablicazawartosci, data]; 
-        this.tablicazawartosci = funkcje.getLinieDialogu();
+        this.tablicazawartosci = [...this.tablicazawartosci, data]; 
+        //let wiersz: Wiersze = this.funkcje.addLiniaKomunikatuFormat(data,all.szerokoscNawigacja)
+        //this.tablicazawartosci = [...this.tablicazawartosci, wiersz]; 
+        //this.tablicazawartosci = funkcje.getLinieDialogu();
         //console.log('.'+data+'.')
         let count = this.VSVDialog.getDataLength()
         changeDetectorRef.detectChanges();
@@ -60,24 +62,22 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() 
   {
-    
-   //console.log('onInit dialog') 
+    //console.log('onInit dialog') 
   }
   
   ngAfterViewInit()
   {
   //console.log('AV dialog')
-    this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
-    this.changeDetectorRef.detectChanges();
+    //this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
+    //this.changeDetectorRef.detectChanges();
   } 
 
   ngOnDestroy()
   {
   //console.log('dest dialog')
     this.tablicazawartoscisubscribe.unsubscribe();
-    this.zakladkasubscribe.unsubscribe();
+    //this.zakladkasubscribe.unsubscribe();
   }
-
 
   
 }

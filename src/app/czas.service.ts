@@ -26,9 +26,9 @@ export class CzasService implements OnDestroy
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService, private notatki: NotatkiService) 
   {
   //console.log('czas con');
-  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Uruchomiono terminal');
   setTimeout(() => {
-      this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Łączę z serwerem - czekaj');
+    this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Uruchomiono terminal');
+    this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Łączę z serwerem - czekaj');
       setTimeout(() => {
         this.komunikacja.StartKomunikacja();
         this.funkcje.ZablokujAll('');
@@ -180,16 +180,16 @@ PetlaStart(licznik: number)
               {
                   if (this.polecenia.getDzialania().length == 0) 
                   {
-                    this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), 'Ponawiam odczyt danych dla poleceń');
+                    this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(),'Ponawiam odczyt danych dla poleceń');
                     setTimeout(()=> { this.PetlaStart(--licznik) }, this.czas1000)      
                   }  
                   else 
                   {// działania ok
-                    this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Wczytano dane dla poleceń');
+                    this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Wczytano dane dla poleceń');
                     setTimeout(() => {
-                      this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Synchronizuję czas');  
+                      this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Synchronizuję czas');  
                       setTimeout(() => {
-                      this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Odczytuję dane');
+                      this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Odczytuję dane');
                       this.tablica_sprawdzajaca.stanDzialania = true  
                       this.odczytaj_czas_startu_dedal();
                       this.odczytaj_czas_dedala();
@@ -203,7 +203,7 @@ PetlaStart(licznik: number)
         {//odczyt dostepnych poleceń
           if (licznik == 0)
           {
-            this.funkcje.addLiniaKomunikatuKrytyczny(this.funkcje.getDedal(), 'Błąd odczytu dostępnych poleceń')
+            this.funkcje.addLiniaKomunikatuKrytyczny(this.funkcje.getDedal(),'Błąd odczytu dostępnych poleceń')
           }
           else
           {
@@ -216,7 +216,7 @@ PetlaStart(licznik: number)
               {// polecenia ok
                 this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Wczytano polecenia');
                 setTimeout(() => {
-                  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Odczytuję dane dla poleceń');
+                  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Odczytuję dane dla poleceń');
                   this.tablica_sprawdzajaca.stanPolecenia = true  
                   this.polecenia.WczytajDzialania(this.funkcje.getZalogowany().zalogowany);
                   setTimeout(()=> { this.PetlaStart(this.licznikBlad) }, this.czas500); 
@@ -229,7 +229,7 @@ PetlaStart(licznik: number)
       {// rejestracja stanowiska i odczyt korekty czasu
         if (licznik == 0)
         {
-          this.funkcje.addLiniaKomunikatuKrytyczny(this.funkcje.getDedal(), 'Błąd rejestracji terminala - odmowa dostepu')
+          this.funkcje.addLiniaKomunikatuKrytyczny(this.funkcje.getDedal(),'Błąd rejestracji terminala - odmowa dostepu')
         }
         else
         {

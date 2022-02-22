@@ -16,10 +16,12 @@ export class ZalogowaniUzytkownicyComponent implements OnDestroy {
   tablicaosoby: Osoby[] = [];
   tablicagoscie: Osoby[] = [];
   height: any;
+  width: any;
 
 constructor(private all: AppComponent, private osoby: OsobyService) 
   {
     this.height = all.wysokoscNawigacja;
+    this.width = all.szerokoscZalogowani;
     //console.log(this.height)
     this.osobysubscribe_zu = osoby.OdczytajOsoby$.subscribe
     ( data => { this.tablicaosoby = data; } )

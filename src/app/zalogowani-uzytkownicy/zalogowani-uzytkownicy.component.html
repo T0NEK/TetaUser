@@ -1,4 +1,4 @@
-<div>
+<div [ngStyle]="{'width': width +'px', 'max-width': width +'px'}">
 <div class="btn btn-primary">Zalogowani</div>
 <div *ngFor="let item of tablicaosoby"  class="example-mat-card">
   <div class="text-success">{{item.imie}} {{item.nazwisko}} ({{item.funkcja}})</div>

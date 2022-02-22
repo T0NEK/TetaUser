@@ -287,6 +287,16 @@ sprawdzWarunek(warunek: Polecenia): string
 return wynik;
 }
 
+znaki()
+{
+  {
+    this.funkcje.addLiniaKomunikatuInfo('', '1 1');
+  }
+  
+}
+
+
+
 Lista(dowykonania: any, tekst: string)
 {
   //console.log(dowykonania)
@@ -297,6 +307,7 @@ Lista(dowykonania: any, tekst: string)
                       [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], "")],
                       "",
                       tekst); 
+                      this.znaki()
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
                       "", 

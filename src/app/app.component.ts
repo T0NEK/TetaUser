@@ -28,7 +28,8 @@ export class AppComponent implements OnDestroy
   public szerokoscAll: any;
   public szerokoscInput: any;
   public szerokoscClear = 46;
-  
+  public szerokoscZalogowani = 220;
+  public szerokoscNawigacja: any;
   
   @ViewChild('content') content!: ElementRef;
   @HostListener('click',['$event']) onClick1(event: any) { this.onClick(event)}
@@ -48,6 +49,7 @@ constructor(config: NgbModalConfig, private modalService: NgbModal, private funk
     this.wysokoscNawigacja = (this.wysokoscAll - this.wysokoscInfo - this.wysokoscKlw - this.wysokoscLinia - this.wysokoscDialogMin - this.wysokoscPrzewijaj);
   //  console.log(this.wysokoscNawigacja);
     this.szerokoscInput = this.szerokoscAll - this.szerokoscClear;
+    this.szerokoscNawigacja = this.szerokoscAll - this.szerokoscZalogowani;
 
     config.backdrop = 'static';
     config.keyboard = false;
@@ -90,7 +92,7 @@ onClick(kto: any)
   {
     //console.log('app   ',kto);
     //console.log(kto.target);
-    //console.log('>',kto.target.innerText,'<');
+    //console.log(kto.target.innerText);
     //console.log(kto.target.className);
     //console.log(kto.target.classList);
     

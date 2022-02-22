@@ -3,6 +3,10 @@
     color: lightgreen;
     cursor: crosshair;
 }
+#Okno
+{
+   width: 200px;
+}
 .example-viewport
   {
     width: 100%;

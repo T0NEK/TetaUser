@@ -4,6 +4,10 @@
     color: lightgreen;
     cursor: crosshair;
 }
+div.row
+{
+    margin: 0;
+}
 .modal-body
 {
     background: black;

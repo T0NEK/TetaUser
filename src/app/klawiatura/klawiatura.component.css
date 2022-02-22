@@ -22,7 +22,7 @@
 }
 .spacja
 {
-  min-width: calc(2 * var(--szerokosc_przycisk) + 2 * var(--odstep));
+  min-width: calc(3 * var(--szerokosc_przycisk) + 4 * var(--odstep));
   height: var(--wysokosc_przycisk);  
   min-height: var(--wysokosc_przycisk);  
   margin: var(--odstep);

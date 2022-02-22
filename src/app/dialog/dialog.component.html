@@ -1,10 +1,9 @@
 <div [ngStyle]="{'height': height}">
-  <cdk-virtual-scroll-viewport #scrollViewportDialog appendOnly itemSize="24" minBufferPx="200" maxBufferPx="400" class="example-viewport" [ngStyle]="{'height': height}" autosize>
+  <cdk-virtual-scroll-viewport #scrollViewportDialog appendOnly [itemSize]="24" minBufferPx="200" maxBufferPx="400" class="example-viewport" [ngStyle]="{'height': height}" autosize>
     <div *cdkVirtualFor="let item of tablicazawartosci"  class="example-item">
       {{(item.data == "" ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : item.data) }}<span>{{item.name}}</span>{{item.prefix}}<span *ngFor="let item of item.linia">{{item.prefix}}<span *ngFor="let item of item.text" [style.color]="item.kolor" [class]="item.rodzaj">{{item.prefix}}{{item.text}}{{item.sufix}}</span>{{item.sufix}}</span>{{item.sufix}}
     </div>
   </cdk-virtual-scroll-viewport>
-
  <div class="przewijaj"> 
   <mat-slide-toggle [(ngModel)]="checked" (change)="onClick('slide-toggle')"><span [ngClass]="{'text-success':checked, 'text-danger':!checked}">{{ checked ? "przewijaj" : "nie przewijaj"}}</span></mat-slide-toggle>
  </div>
