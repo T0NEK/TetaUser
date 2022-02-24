@@ -41,16 +41,23 @@ export class NotatkiService {
   }
 */
   
-  Wczytajnotatki(stan: number, dowykonania: any)
+WczytajnotatkiDostep(stan: number, dowykonania: any, id: string)
   {
       //this.notatkiStan = false;
       this.notatki = [];
-      this.odczytaj_notatki(5, stan, dowykonania);
+      this.odczytaj_notatki(5, stan, id, dowykonania, "dos");
+  }
+
+Wczytajnotatki(stan: number, dowykonania: any)
+  {
+      //this.notatkiStan = false;
+      this.notatki = [];
+      this.odczytaj_notatki(5, stan, '', dowykonania, "get");
   }
   
   private OdczytajNotatki = new Subject<any>();
   OdczytajNotatki$ = this.OdczytajNotatki.asObservable()
-  private odczytaj_notatki(licznik: number, stan: number, dowykonania: any)
+  private odczytaj_notatki(licznik: number, stan: number, id: string, dowykonania: any, get: string)
   {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -60,7 +67,7 @@ export class NotatkiService {
       })
     };
     
-  var data = JSON.stringify({"kierunek": "get", "stan": stan})  
+  var data = JSON.stringify({"kierunek": get, "stan": stan, "id": id })  
   
   if (licznik > 0 )
     {
@@ -99,12 +106,12 @@ export class NotatkiService {
                 }
                 else
                 {//wynik false
-                  setTimeout(() => {this.odczytaj_notatki(licznik, stan, dowykonania)}, 1000) 
+                  setTimeout(() => {this.odczytaj_notatki(licznik, stan, id, dowykonania, get)}, 1000) 
                 }
                   },
         error => {
           //console.log(error)
-                  setTimeout(() => {this.odczytaj_notatki(licznik, stan, dowykonania)}, 1000) 
+                  setTimeout(() => {this.odczytaj_notatki(licznik, stan, id, dowykonania, get)}, 1000) 
                 }
                 )      
     }
@@ -118,7 +125,6 @@ export class NotatkiService {
   {
       this.zapisz_notatki(5, stan, identyfikator, dowykonania, "udo", osoba);
   }
-
 
   Usunnotatki(stan: number, identyfikator: string, dowykonania: any)
   {

@@ -315,6 +315,15 @@ Lista(dowykonania: any, tekst: string)
                       "",
                       tekst); 
           break;
+    case 'dostep': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
+                      "", 
+                      [this.funkcje.setNazwaLinia('osoba: ', [this.funkcje.setTextNazwa("", "stanText", " ", this.funkcje.getKolor().liniakomend, "liniakomend")], ' '),
+                      this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ''),
+                      this.funkcje.setNazwaLinia(" funkcja: ", [this.funkcje.setTextNazwa("(", "tytul", ")", "", "")], ""),
+                      ],
+                      "",
+                      tekst); 
+          break;      
     case 'notatki': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
           "", 
           [this.funkcje.setNazwaLinia('id: [ ', [this.funkcje.setTextNazwa("", "identyfikator", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ' ];'),
@@ -338,6 +347,7 @@ GetSet(dowykonania: any)
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
           case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
+          case 'notatka_dostep': this.notatki.WczytajnotatkiDostep(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane[0]); break;                
           case 'notatka': this.notatki.WczytajnotatkiTresc(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane[0]); break;                
           }
         break;  
