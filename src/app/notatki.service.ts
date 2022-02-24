@@ -114,16 +114,25 @@ export class NotatkiService {
     }
   }
 
+  Udostepnijnotatki(stan: number, identyfikator: string, osoba: string[], dowykonania: any)
+  {
+      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "udo", osoba);
+  }
 
+
+  Usunnotatki(stan: number, identyfikator: string, dowykonania: any)
+  {
+      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "del", []);
+  }
 
   Zapisznotatki(stan: number, tytul: string, dowykonania: any)
   {
-      this.zapisz_notatki(5, stan, tytul, dowykonania);
+      this.zapisz_notatki(5, stan, tytul, dowykonania, "set", []);
   }
   
   private ZapiszNotatki = new Subject<any>();
   ZapiszNotatki$ = this.ZapiszNotatki.asObservable()
-  private zapisz_notatki(licznik: number, stan: number, tytul: string, dowykonania: any)
+  private zapisz_notatki(licznik: number, stan: number, tytul: string, dowykonania: any, del: string, osoba: string[])
   {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -133,14 +142,14 @@ export class NotatkiService {
       })
     };
     
-  var data = JSON.stringify({"kierunek": "set", "stan": stan, "tytul": tytul})  
+  var data = JSON.stringify({"kierunek": del, "stan": stan, "tytul": tytul, "imie": osoba[0], "nazwisko": osoba[1]})  
   
   if (licznik > 0 )
     {
       --licznik;
       this.http.post(this.komunikacja.getURL() + 'notatki/', data, httpOptions).subscribe( 
         data =>  {
-          //console.log(data)
+          console.log(data)
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
@@ -157,12 +166,12 @@ export class NotatkiService {
                 }
                 else
                 {//wynik false
-                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania)}, 1000) 
+                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba)}, 1000) 
                 }
                   },
         error => {
-          //console.log(error)
-                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania)}, 1000) 
+          console.log(error)
+                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba)}, 1000) 
                 }
                 )      
     }

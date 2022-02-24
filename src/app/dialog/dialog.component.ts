@@ -30,21 +30,30 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   
   constructor(private hostElement: ElementRef, private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
   {
-    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-100) + 'px';
+    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj - 100) + 'px';
     //console.log (all.wysokoscAll,'    ',all.wysokoscInfo,'    ',all.wysokoscKlw,'    ',all.wysokoscLinia,'    ',all.wysokoscDialogMin,'    ',all.wysokoscPrzewijaj)
     //console.log('konstruktor dialog')
     //console.log(this.VSVDialog._totalContentHeight);
     this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
-        this.tablicazawartosci = [...this.tablicazawartosci, data]; 
-        //let wiersz: Wiersze = this.funkcje.addLiniaKomunikatuFormat(data,all.szerokoscNawigacja)
-        //this.tablicazawartosci = [...this.tablicazawartosci, wiersz]; 
-        //this.tablicazawartosci = funkcje.getLinieDialogu();
-        //console.log('.'+data+'.')
+        if (data.clear)
+        {
+          this.tablicazawartosci = [];
+          changeDetectorRef.detectChanges();
+        }
+        else
+        {
+        let wiersze = this.funkcje.addLiniaKomunikatuFormat(data.przed, data.name, data.po ,data.prefix, data.linia, data.sufix, all.szerokoscNawigacja - 20)
+        for (let index = 0; index < wiersze.length; index++) 
+        {
+          //console.log('wiersz ',index,' = ',wiersze[index])
+          this.tablicazawartosci = [...this.tablicazawartosci, wiersze[index]]; 
+        }
         let count = this.VSVDialog.getDataLength()
         changeDetectorRef.detectChanges();
         if (this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }
+        }
       }
     );   
   }

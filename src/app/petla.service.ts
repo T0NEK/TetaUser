@@ -254,10 +254,13 @@ sprawdzWarunek(warunek: Polecenia): string
                                           { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }
                                 break
                           case 'dostepna': this.bufordane[1] = this.notatki.getNotatkaCzyDostepna(Number(this.bufordane[0]))
-                          console.log(this.bufordane)
-                          console.log(this.bufordane[1] === true)
+                          //console.log(this.bufordane)
+                          //console.log(this.bufordane[1] === true)
                                           if ( this.bufordane[1] === true )
-                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }      
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }   
+                                break             
+                          case 'identyfikator': if ( this.bufordane[0] == this.notatki.getNotatkaIdentyfikator() )
+                                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse }                      
                                 break          
                 default: wynik = 'bad'; break;
                           }
@@ -287,16 +290,6 @@ sprawdzWarunek(warunek: Polecenia): string
 return wynik;
 }
 
-znaki()
-{
-  {
-    this.funkcje.addLiniaKomunikatuInfo('', '1 1');
-  }
-  
-}
-
-
-
 Lista(dowykonania: any, tekst: string)
 {
   //console.log(dowykonania)
@@ -307,7 +300,6 @@ Lista(dowykonania: any, tekst: string)
                       [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], "")],
                       "",
                       tekst); 
-                      this.znaki()
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
                       "", 
@@ -327,9 +319,9 @@ Lista(dowykonania: any, tekst: string)
           "", 
           [this.funkcje.setNazwaLinia('id: [ ', [this.funkcje.setTextNazwa("", "identyfikator", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ' ];'),
            this.funkcje.setNazwaLinia(' tutuł: "', [this.funkcje.setTextNazwa("", "tytul", "", this.funkcje.getKolor().liniakomend, "liniakomend")], '";'),
-           this.funkcje.setNazwaLinia(' autor: "', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "")], '";'),
-           this.funkcje.setNazwaLinia(' z dnia: ', [this.funkcje.setTextNazwa("", "czas", "", this.funkcje.getKolor().liniakomend, "")], ';'),
-           this.funkcje.setNazwaLinia(' dostepność: ', [this.funkcje.setTextNazwa("", "stanText", "", this.funkcje.getKolor().liniakomend, "")], '')
+           this.funkcje.setNazwaLinia(' autor: "', [this.funkcje.setTextNazwa("", "wlascicielText", "", "", "")], '";'),
+           this.funkcje.setNazwaLinia(' z dnia: ', [this.funkcje.setTextNazwa("", "czas", "", "", "")], ';'),
+           this.funkcje.setNazwaLinia(' dostepność: ', [this.funkcje.setTextNazwa("", "stanText", "", "", "")], '')
           ],
           "",
           tekst); 
@@ -354,6 +346,14 @@ GetSet(dowykonania: any)
             case 'notatka': this.notatki.ZapiszTrescnotatki(dowykonania); break;                
             }
         break;
+    case 'usun': switch (dowykonania.sufix) {
+            case 'notatki': this.notatki.Usunnotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], dowykonania); break;
+            }
+         break;        
+    case 'udostepnij': switch (dowykonania.sufix) {
+            case 'notatki': this.notatki.Udostepnijnotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], [this.bufordane[1], this.bufordane[2]],  dowykonania); break;
+            }
+       break;             
   }
 }
 

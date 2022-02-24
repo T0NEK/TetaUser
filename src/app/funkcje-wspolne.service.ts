@@ -11,7 +11,6 @@ private dedal = 'dadal';
 private osoba: Zalogowany;
 private kolory: Kolory;
 public iloscZnakowwKomend = 60;
-public dlugoscZnakowDialogu = 500;
 
 
 constructor ()
@@ -64,43 +63,47 @@ zalogujOsoba(data : any)
 /* (end) funkcje zalogowanego */ 
 
 /* (start) dodanie lini komunikatu */
-private linieDialogu: Wiersze[] = [];
+//private linieDialogu: Wiersze[] = [];
   
-getLinieDialogu() { return this.linieDialogu; }
+//getLinieDialogu() { return this.linieDialogu; }
 
-setLiniaDialoguClear()
-{
-  this.linieDialogu = [];
-  this.LiniaKomunikatu.next(false);
-}
+/*
 addLinieDialogu(linia: Wiersze) 
   {
    this.linieDialogu = [...this.linieDialogu, linia];   
   }
-
-
-
+*/
 setTextNazwa(prefix: string, text: string, sufix: string, kolor: string, rodzaj: string):Nazwa
 {
+  //console.log('tx', (typeof prefix === "string" ? prefix : '' ) + (typeof text === "string" ? text : '' ) + (typeof sufix === "string" ? sufix : '' ))
+  //console.log('dl', this.DlugoscTekstu(typeof prefix === "string" ? prefix : '' ) + this.DlugoscTekstu(typeof text === "string" ? text : '' ) + this.DlugoscTekstu(typeof sufix === "string" ? sufix : '' ))
   return {
     "prefix": (typeof prefix === "string" ? prefix : "" ),
     "text": (typeof text === "string" ? text : "" ),
     "sufix": (typeof sufix === "string" ? sufix : "" ),
     "kolor": (typeof kolor === "string" ? kolor : "" ),
     "rodzaj": (typeof rodzaj === "string" ? rodzaj : "tekst" ),
-    "dlugosc": this.DlugoscTekstu(typeof prefix === "string" ? prefix : '' ) + this.DlugoscTekstu(typeof text === "string" ? text : '' ) + this.DlugoscTekstu(typeof sufix === "string" ? sufix : '' )
+    "dlugosc": this.DlugoscTekstu(typeof prefix === "string" ? prefix : '' ) + this.DlugoscTekstu(typeof text === "string" ? text : '' ) + this.DlugoscTekstu(typeof sufix === "string" ? sufix : '' ) + 4
   }
 }
 
 setNazwaLinia(prefix: string, nazwa: Nazwa[], sufix: string):Linia
 {
   let dlugosc = 0;
-  for (let index = 0; index < nazwa.length; index++) { dlugosc = dlugosc + nazwa[index].dlugosc }
+  //console.log('1',(typeof prefix === "string" ? prefix : '' ) + (typeof sufix === "string" ? sufix : '' ))
+  //console.log(this.DlugoscTekstu(typeof prefix === "string" ? prefix : '' ) + dlugosc + this.DlugoscTekstu(typeof sufix === "string" ? sufix : '' ))
+  for (let index = 0; index < nazwa.length; index++) 
+  { 
+    //console.log('2-',index,'- ', nazwa[index])
+    //console.log('3-',index,'- ',nazwa[index].dlugosc)
+    dlugosc = dlugosc + nazwa[index].dlugosc 
+  }
+  //console.log('4',dlugosc)
   return {
     "prefix":  (typeof prefix === "string" ? prefix:"" ),
     "text": nazwa, 
     "sufix": (typeof sufix === "string" ? sufix:"" ),
-    "dlugosc": this.DlugoscTekstu(typeof prefix === "string" ? prefix : '' ) + dlugosc + this.DlugoscTekstu(typeof sufix === "string" ? sufix : '' )
+    "dlugosc": this.DlugoscTekstu(typeof prefix === "string" ? prefix : '' ) + dlugosc + this.DlugoscTekstu(typeof sufix === "string" ? sufix : '' ) + 4
   }
 }
 
@@ -113,7 +116,6 @@ setLiniaWiersz(data: string, przed: string, name: string, po: string, prefix: st
           'sufix': sufix
           }
 }
-
 
 addLiniaKomunikatuPolecenia(name: string, blad: string)
   {
@@ -145,54 +147,52 @@ addLiniaKomunikatuKrytyczny(name: string, blad: string)
   this.addLiniaKomunikatuKolor(name, "Wezwij MG", this.getKolor().krytyczny)
 }
 
-setLiniaKomunikatuClear()
+setLiniaDialoguClear()
 {
-
+  this.LiniaKomunikatu.next({'przed': '', 'name': '', 'po': '', 'prefix': '', 'linia': '', 'sufix': '', 'clear': true});
 }
-
-
-
   
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();
 addLiniaKomunikatu(przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string)
 {
-  this.addLiniaKomunikatuFormat(przed, name, po, prefix, linia, sufix, 0)
+ let clear = false; 
+ this.LiniaKomunikatu.next({'przed': przed, 'name': name, 'po': po, 'prefix': prefix, 'linia': linia, 'sufix': sufix, 'clear': false})
 }
 
-addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string, szerokosc: number)
+addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string, szerokosc: number): Wiersze[]
 {
+  let wynik: Wiersze[] = []
   przed = (przed === "" ? ', ' : przed);
   po = ( po === "" ? ' > ' : po);
   let dlugosc = 0;
+  let spacje = 0;
   let wiersz: Wiersze;
   for (let index = 0; index < linia.length; index++) { dlugosc = dlugosc + linia[index].dlugosc }
   let data = (moment()).format('YYYY-MM-DD HH:mm:ss');
-  console.log('dł',data.length + przed.length + name.length + po.length + prefix.length + dlugosc + sufix.length,'il',this.dlugoscZnakowDialogu);
-  if ( (data.length + przed.length + name.length + po.length + prefix.length + dlugosc + sufix.length) < this.dlugoscZnakowDialogu)
+  if ( ( this.DlugoscTekstu(data + przed + name + po + prefix + sufix) + dlugosc) < szerokosc)
   {
-  let wiersz: Wiersze = this.setLiniaWiersz (data, przed, name, po, prefix, linia, sufix);  
-  this.addLinieDialogu( wiersz )
-  this.LiniaKomunikatu.next( wiersz );
+  wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, linia, sufix);  
+  wynik = [...wynik, wiersz];
   }
   else
   {
-    if ((data.length + przed.length + name.length + po.length + prefix.length ) > this.dlugoscZnakowDialogu)
+    let dlugosc = 0;
+    if ( this.DlugoscTekstu(data + przed + name + po + prefix ) > szerokosc)
   {
     wiersz = this.setLiniaWiersz (data, przed, name, po, "", [], "")
-    this.addLinieDialogu( wiersz );
-    this.LiniaKomunikatu.next( wiersz );
+    wynik = [...wynik, wiersz];
     data = "";
     name = "";
     przed = "";
     po = "";
+    spacje = 10 * 2.45; // 10 spacje w html przed kolejną linią
   }
   {
     let liniaNew: Linia[] = []; 
-    dlugosc = 0;
     for (let index = 0; index < linia.length; index++) 
     {
-      if ( (data.length + przed.length + name.length + po.length + prefix.length + dlugosc + linia[index].dlugosc ) < this.dlugoscZnakowDialogu)
+      if ( (this.DlugoscTekstu(data + przed + name + po + prefix) + spacje + dlugosc + linia[index].dlugosc ) < szerokosc)
       {
         liniaNew = [...liniaNew,linia[index]];
         dlugosc = dlugosc + linia[index].dlugosc
@@ -200,35 +200,33 @@ addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string
       else
       {
         wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, liniaNew, "");
-        this.addLinieDialogu( wiersz );
-        this.LiniaKomunikatu.next( wiersz );
+        wynik = [...wynik, wiersz];
         data = "";
         name = "";
         przed = "";
         po = "";
         prefix = "";
         liniaNew = [linia[index]];
-        dlugosc = 10; // spacje w html
+        dlugosc =  linia[index].dlugosc;
+        spacje = 10 * 2.45; // 10 spacje w html przed kolejną linią
       }
     }
-  if ((data.length + przed.length + name.length + po.length + prefix.length + dlugosc + sufix.length) < this.dlugoscZnakowDialogu)
+  if ( ( this.DlugoscTekstu(data + przed + name + po + prefix +  sufix) + spacje + dlugosc ) < szerokosc)
   {
     wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, liniaNew, sufix)
-    this.addLinieDialogu( wiersz );
-    this.LiniaKomunikatu.next( wiersz);
+    wynik = [...wynik, wiersz];
   }
   else
   {
     wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, liniaNew, "")
-    this.addLinieDialogu( wiersz );
-    this.LiniaKomunikatu.next( wiersz);
+    wynik = [...wynik, wiersz];
     wiersz = this.setLiniaWiersz ("", "", "", "", "", [], sufix);
-    this.addLinieDialogu( wiersz );
-    this.LiniaKomunikatu.next( wiersz);
+    wynik = [...wynik, wiersz];
     
   }      
   } 
   }
+  return wynik
 }
 /* (end) dodanie lini komunikatu */ 
 
@@ -329,7 +327,7 @@ LiniaDialoguChar(znak: any)
   klw11 = Array ('1','2','3','4','5','6','7','8','9','0',',','.','-',':',';','?','!','"','(',')');
   dlu11 = Array (10.1,10.1,10.1,10.1,10.1,10.1,10.1,10.1,10.1,10.1,3.54,4.74,4.97,4.37,3.8,8.5,4.64,5.75,6.15,6.25);
   klw11alt = Array ('`','~','@','#','$','%',String.fromCharCode(8240),'^','&','*','[',']','{','}','<','>');
-  dlu11alt = Array (5.57,12.25,16.17,11.09,10.1,13.19,18.0,7,52,11.19,7.75,4.77,4.77,6.09,6.09,9.15,9.40);
+  dlu11alt = Array (5.57,12.25,16.17,11.09,10.1,13.19,18.0,7.52,11.19,7.75,4.77,4.77,6.09,6.09,9.15,9.40);
   klw12 = Array ('ą','ć','ę','ł','ń','ó','ś','ż','ź',String.fromCharCode(8593),String.fromCharCode(8592),String.fromCharCode(8594));
   dlu12 = Array (9.79,9.41,9.54,4.87,9.94,10.27,9.29,8.92,8.92,9.0,18.0,18.0);
   klw12caps = Array ('Ą','Ć','Ę','Ł','Ń','Ó','Ś','Ż','Ź',String.fromCharCode(8593),String.fromCharCode(8592),String.fromCharCode(8594));
@@ -350,11 +348,10 @@ LiniaDialoguChar(znak: any)
 
 private  znaki = Array <string>();
 private  dluznaki = Array <number>();
-  
 
 DlugoscTekstu(tekst: string): number
 {
-  let dlugosc = 0
+  let dlugosc = 0;
   for (let index = 0; index < tekst.length; index++) 
   {
     dlugosc = dlugosc + this.dluznaki[this.znaki.indexOf(tekst[index])];

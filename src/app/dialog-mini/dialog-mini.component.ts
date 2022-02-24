@@ -24,10 +24,23 @@ export class DialogMiniComponent implements OnInit {
        this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
-        this.tablicazawartosci = funkcje.getLinieDialogu(); 
+        if (data.clear)
+        {
+          this.tablicazawartosci = [];
+          changeDetectorRef.detectChanges();
+        }
+        else
+        {
+        let wiersze = this.funkcje.addLiniaKomunikatuFormat(data.przed, data.name, data.po ,data.prefix, data.linia, data.sufix, all.szerokoscInput - 20)
+        for (let index = 0; index < wiersze.length; index++) 
+        {
+          //console.log('wiersz ',index,' = ',wiersze[index])
+          this.tablicazawartosci = [...this.tablicazawartosci, wiersze[index]]; 
+        }
         let count = this.VSVUstawienia.getDataLength()
         changeDetectorRef.detectChanges();
         this.VSVUstawienia.scrollToIndex((count), 'smooth')
+      }
       }
     );  
   }
@@ -36,7 +49,7 @@ export class DialogMiniComponent implements OnInit {
   }
   ngAfterViewInit()
   {
-    this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
+    //this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
     this.changeDetectorRef.detectChanges();
   } 
 

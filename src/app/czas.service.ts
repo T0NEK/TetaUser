@@ -132,7 +132,7 @@ PetlaStart(licznik: number)
                                   //this.taktujUplyw();
                                   this.taktujCzasDedala();  
                                   this.taktujDedalaUplyw();          
-                                  this.osoby.wczytajOsoby();
+                                  this.osoby.wczytajOsoby(this.funkcje.getZalogowany().zalogowany);
                                   //pętla !!
                                   this.funkcje.OdblokujAll('');
                                 }

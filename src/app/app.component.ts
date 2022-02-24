@@ -28,7 +28,7 @@ export class AppComponent implements OnDestroy
   public szerokoscAll: any;
   public szerokoscInput: any;
   public szerokoscClear = 46;
-  public szerokoscZalogowani = 220;
+  public szerokoscZalogowani = 280;
   public szerokoscNawigacja: any;
   
   @ViewChild('content') content!: ElementRef;
@@ -98,7 +98,7 @@ onClick(kto: any)
     
 
     if ( kto.target.classList.contains('liniakomend') )
-    { this.funkcje.fokusLiniaDialogu(kto.target.innerText) }
+    { this.funkcje.fokusLiniaDialogu( kto.target.innerText ) }
     else if ( kto.target.classList.contains('notatki') )
     { this.funkcje.fokusPoleNotatki() }
     else
