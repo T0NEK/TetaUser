@@ -52,7 +52,6 @@ export interface Polecenia
       nazwa: string;
       czas: number;
       dzialanie: string;
-      autoryzacja: boolean;
       polecenie: boolean;
       prefix: string;
       komunikat: string;
@@ -66,7 +65,6 @@ export interface Zalogowany
       zalogowany: number;
       imie: string;
       nazwisko: string;
-      autoryzacja: boolean;
       funkcja: string;
       rodzaj: string;
       kolor: string;

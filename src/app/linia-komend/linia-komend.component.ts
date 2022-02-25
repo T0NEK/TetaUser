@@ -33,7 +33,7 @@ maxLenght: number;
 constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
   {
     //console.log('con linia kom')
-      this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
+      this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll;     
       this.maxLenght = funkcje.iloscZnakowwKomend;
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
@@ -91,7 +91,6 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
                 this.stanpolecenia.czas = (typeof data.czas === 'string' ? data.czas : ' ');
                 this.stanpolecenia.komunikat = (typeof data.komunikat === 'string' ? data.komunikat : ' ');
                 this.stanpolecenia.dzialanie = (typeof data.dzialanie === 'string' ? data.dzialanie : ' ');
-                this.stanpolecenia.autoryzacja = (typeof data.dzialanie === 'number' ? data.autoryzacja : 0);
                 this.stanpolecenia.nastepnyTrue = (typeof data.nastepnyTrue === 'string' ? data.nastepnyTrue : 'brak');
                 this.stanpolecenia.nastepnyFalse = (typeof data.nastepnyFalse === 'string' ? data.nastepnyFalse : 'brak');
                 this.liniaInput.nativeElement.focus();

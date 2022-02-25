@@ -22,10 +22,10 @@ constructor ()
   
   this.kolory = {"info": "", "alert": "rgb(199, 100, 43)", "krytyczny": "red", "liniakomend": "rgb(00, 123, 255)", "zalogowany": "rgb(230, 255, 0)", "wylogowany": "white"}
   
-  this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'autoryzacja': false, 'funkcja': '', 'rodzaj': '','kolor': ""} 
+  this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor': ""} 
   
   //do skasowania
-  this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'autoryzacja': 2, 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
+  this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
 
   this.znaki = this.znaki.concat('',' ',this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
   this.dluznaki = this.dluznaki.concat(0,2.45,this.dlu11,this.dlu11alt,this.dlu12,this.dlu12alt,this.dlu12caps,this.dlu21,this.dlu21caps,this.dlu22,this.dlu22caps)
@@ -46,7 +46,7 @@ getZalogowany() { return this.osoba };
 
 wylogujOsoba(): Zalogowany
 {
-  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'autoryzacja': false, 'funkcja': '', 'rodzaj': '','kolor': this.getKolor().wylogowany} 
+  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor': this.getKolor().wylogowany} 
 }
 
 zalogujOsoba(data : any)
@@ -54,7 +54,6 @@ zalogujOsoba(data : any)
   this.osoba.zalogowany = data.zalogowany;
   this.osoba.imie = data.imie;
   this.osoba.nazwisko = data.nazwisko;
-  this.osoba.autoryzacja = data.autoryzacja;
   this.osoba.funkcja = data.funkcja;
   this.osoba.rodzaj = data.rodzaj;
   this.osoba.kolor = (data.zalogowany == 0 ? this.getKolor().wylogowany : this.getKolor().zalogowany);

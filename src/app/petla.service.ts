@@ -383,7 +383,7 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
   {
     if (licznik < lista.length)
     {
-      if ( ( ( (typeof lista[licznik].autoryzacja === 'boolean' ? lista[licznik].autoryzacja : false ) == wszystkie) || (wszystkie) ) && ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
+      if ( ( (wszystkie) ) && ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
        { 
         let liniaNew: Linia[] = [];
         for (let indexL = 0; indexL < linia.length; indexL++) 
