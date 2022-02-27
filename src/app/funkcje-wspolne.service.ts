@@ -155,7 +155,6 @@ private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();
 addLiniaKomunikatu(przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string)
 {
- let clear = false; 
  this.LiniaKomunikatu.next({'przed': przed, 'name': name, 'po': po, 'prefix': prefix, 'linia': linia, 'sufix': sufix, 'clear': false})
 }
 

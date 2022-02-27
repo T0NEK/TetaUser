@@ -318,8 +318,8 @@ Lista(dowykonania: any, tekst: string)
     case 'dostep': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
                       "", 
                       [this.funkcje.setNazwaLinia('osoba: ', [this.funkcje.setTextNazwa("", "stanText", " ", this.funkcje.getKolor().liniakomend, "liniakomend")], ' '),
-                      this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ''),
-                      this.funkcje.setNazwaLinia(" funkcja: ", [this.funkcje.setTextNazwa("(", "tytul", ")", "", "")], ""),
+                      this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ' '),
+                      this.funkcje.setNazwaLinia(" (funkcja: ", [this.funkcje.setTextNazwa("", "tytul", ")", "", "")], ""),
                       ],
                       "",
                       tekst); 
