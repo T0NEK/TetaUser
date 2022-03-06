@@ -120,3 +120,25 @@ export interface Tresc
     zalogowany: string;
     wylogowany: string;  
   }
+
+  export interface OsobyWiadomosci
+   {
+      id: number;
+      imie: string;
+      nazwisko: string;
+      funkcja: string;
+      widoczny: boolean;
+      wybrany: boolean;
+  }
+
+  export interface Wiadomosci
+  {
+     id: number;
+     autor: string;
+     autorText: string;
+     odbiorca: string;
+     odbiorcaText: string;
+     tresc: string;
+     czas: string;
+     przeczytana: boolean;
+ }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 
 
 @Component({
@@ -10,7 +11,7 @@ export class NawigacjaComponent implements OnInit {
 
   active: any = 1;
   
-  constructor() 
+  constructor(private funkcje: FunkcjeWspolneService) 
   {
     
   }
@@ -22,6 +23,6 @@ export class NawigacjaComponent implements OnInit {
  
   Changed(event: any)
   {
-    //this.komunikacja.changePrzelaczZakladka(event)
+    this.funkcje.setzakladkadialogu(event)
   }
 }

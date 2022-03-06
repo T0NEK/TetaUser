@@ -5,7 +5,7 @@
     </div>
   </cdk-virtual-scroll-viewport>
  <div class="przewijaj"> 
-  <mat-slide-toggle [(ngModel)]="checked" (change)="onClick('slide-toggle')"><span [ngClass]="{'text-success':checked, 'text-danger':!checked}">{{ checked ? "przewijaj" : "nie przewijaj"}}</span></mat-slide-toggle>
+  <mat-slide-toggle (toggleChange)="Przewijaj()" [(ngModel)]="checked" (change)="onClick('slide-toggle')"><span [ngClass]="{'text-success':checked, 'text-danger':!checked}">{{ checked ? "przewijaj" : "nie przewijaj"}}</span></mat-slide-toggle>
  </div>
 </div>
 

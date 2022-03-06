@@ -12,9 +12,9 @@ import { OsobyService } from '../osoby.service';
 export class ZalogowaniUzytkownicyComponent implements OnDestroy {
 
   private osobysubscribe_zu = new Subscription();
-  private gosciesubscribe_zu = new Subscription();
+  //private gosciesubscribe_zu = new Subscription();
   tablicaosoby: Osoby[] = [];
-  tablicagoscie: Osoby[] = [];
+  //tablicagoscie: Osoby[] = [];
   height: any;
   width: any;
 
@@ -31,8 +31,8 @@ constructor(private all: AppComponent, private osoby: OsobyService)
 
   ngOnDestroy()
   {
-   if(this.osobysubscribe_zu) { this.osobysubscribe_zu.unsubscribe()}   
-   if(this.gosciesubscribe_zu) { this.gosciesubscribe_zu.unsubscribe()}   
+    if(this.osobysubscribe_zu) { this.osobysubscribe_zu.unsubscribe()}   
+    //if(this.gosciesubscribe_zu) { this.gosciesubscribe_zu.unsubscribe()}   
   }
 
 }

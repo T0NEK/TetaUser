@@ -1,2 +1,8 @@
-<h1>Hello !</h1>
-<div class="col-2 text-left text-white">Jest: {{czas_rzeczywisty}}</div>
+<div [ngStyle]="{'width': width +'px', 'max-width': width +'px'}">
+    <div *ngFor="let item of tablicaosoby; let i = index"  class="example-mat-card, text-success">
+      <mat-slide-toggle (toggleChange)="Przewijaj('one',false)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny">{{item.imie}} &nbsp;<span >{{item.nazwisko}}</span><span class="male">&nbsp;&nbsp;({{item.funkcja}})</span></mat-slide-toggle>
+    </div>
+    <div ><mat-slide-toggle #wszyscy (change)="Przewijaj('all',true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span></div>
+    <div ><mat-slide-toggle #nikt (change)="Przewijaj('all',false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
+</div>
+

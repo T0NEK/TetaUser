@@ -22,7 +22,7 @@ constructor ()
   
   this.kolory = {"info": "", "alert": "rgb(199, 100, 43)", "krytyczny": "red", "liniakomend": "rgb(00, 123, 255)", "zalogowany": "rgb(230, 255, 0)", "wylogowany": "white"}
   
-  this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor': ""} 
+  this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor': "white"} 
   
   //do skasowania
   this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
@@ -72,6 +72,15 @@ addLinieDialogu(linia: Wiersze)
    this.linieDialogu = [...this.linieDialogu, linia];   
   }
 */
+
+
+private ZakladkaDialogu = new Subject<any>();
+ ZakladkaDialogu$ = this.ZakladkaDialogu.asObservable();
+ setzakladkadialogu(event: any)
+ {
+   this.ZakladkaDialogu.next(event);
+ }
+
 setTextNazwa(prefix: string, text: string, sufix: string, kolor: string, rodzaj: string):Nazwa
 {
   //console.log('tx', (typeof prefix === "string" ? prefix : '' ) + (typeof text === "string" ? text : '' ) + (typeof sufix === "string" ? sufix : '' ))

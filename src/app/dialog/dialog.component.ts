@@ -18,7 +18,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   private tablicazawartoscisubscribe = new Subscription();
   tablicazawartosci: Wiersze[] = [];  
   @ViewChild('scrollViewportDialog') VSVDialog!: CdkVirtualScrollViewport;
-  //private zakladkasubscribe = new Subscription();
+  private zakladkasubscribe = new Subscription();
   checked = true;
   height: any;
 
@@ -34,6 +34,14 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
     //console.log (all.wysokoscAll,'    ',all.wysokoscInfo,'    ',all.wysokoscKlw,'    ',all.wysokoscLinia,'    ',all.wysokoscDialogMin,'    ',all.wysokoscPrzewijaj)
     //console.log('konstruktor dialog')
     //console.log(this.VSVDialog._totalContentHeight);
+    this.zakladkasubscribe = funkcje.ZakladkaDialogu$.subscribe
+    (
+       data =>
+       {
+          if (data == 1) { if (this.checked) { this.Przewin()} }
+
+       }
+    )
     this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
@@ -41,6 +49,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           this.tablicazawartosci = [];
           changeDetectorRef.detectChanges();
+          this.VSVDialog.checkViewportSize()
         }
         else
         {
@@ -50,9 +59,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
           //console.log('wiersz ',index,' = ',wiersze[index])
           this.tablicazawartosci = [...this.tablicazawartosci, wiersze[index]]; 
         }
-        let count = this.VSVDialog.getDataLength()
-        changeDetectorRef.detectChanges();
-        if (this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }
+        if (this.checked) { this.Przewin() }
         }
       }
     );   
@@ -64,10 +71,18 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   Przewijaj()
+  {   
+    if ((!this.checked)) { this.Przewin() }
+  }
+
+  Przewin()
   {
     let count = this.VSVDialog.getDataLength();
-    if (!this.checked) { this.VSVDialog.scrollToIndex((count), 'smooth'); }
+    this.changeDetectorRef.detectChanges();
+    this.VSVDialog.checkViewportSize()
+    this.VSVDialog.scrollToIndex((count), 'smooth'); 
   }
+
 
   ngOnInit() 
   {
@@ -79,13 +94,14 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   //console.log('AV dialog')
     //this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
     this.changeDetectorRef.detectChanges();
+    this.VSVDialog.checkViewportSize()
   } 
 
   ngOnDestroy()
   {
   //console.log('dest dialog')
     this.tablicazawartoscisubscribe.unsubscribe();
-    //this.zakladkasubscribe.unsubscribe();
+    this.zakladkasubscribe.unsubscribe();
   }
 
   

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { CzasService } from './czas.service';
 import { Notatka, StanNotatka, Tresc } from './definicje';
 import { KomunikacjaService } from './komunikacja.service';
 
@@ -123,22 +124,22 @@ Wczytajnotatki(stan: number, dowykonania: any)
 
   Udostepnijnotatki(stan: number, identyfikator: string, osoba: string[], dowykonania: any)
   {
-      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "udo", osoba);
+      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "udo", osoba, "");
   }
 
   Usunnotatki(stan: number, identyfikator: string, dowykonania: any)
   {
-      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "del", []);
+      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "del", [], "");
   }
 
-  Zapisznotatki(stan: number, tytul: string, dowykonania: any)
+  Zapisznotatki(stan: number, tytul: string, dowykonania: any, czas: string)
   {
-      this.zapisz_notatki(5, stan, tytul, dowykonania, "set", []);
+      this.zapisz_notatki(5, stan, tytul, dowykonania, "set", [], czas);
   }
   
   private ZapiszNotatki = new Subject<any>();
   ZapiszNotatki$ = this.ZapiszNotatki.asObservable()
-  private zapisz_notatki(licznik: number, stan: number, tytul: string, dowykonania: any, del: string, osoba: string[])
+  private zapisz_notatki(licznik: number, stan: number, tytul: string, dowykonania: any, del: string, osoba: string[], czas: string)
   {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -148,8 +149,8 @@ Wczytajnotatki(stan: number, dowykonania: any)
       })
     };
     
-  var data = JSON.stringify({"kierunek": del, "stan": stan, "tytul": tytul, "imie": osoba[0], "nazwisko": osoba[1]})  
-  
+  var data = JSON.stringify({"kierunek": del, "stan": stan, "tytul": tytul, "imie": osoba[0], "nazwisko": osoba[1], "czas": czas})  
+  console.log(czas)
   if (licznik > 0 )
     {
       --licznik;
@@ -172,12 +173,12 @@ Wczytajnotatki(stan: number, dowykonania: any)
                 }
                 else
                 {//wynik false
-                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba)}, 1000) 
+                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba, czas)}, 1000) 
                 }
                   },
         error => {
           console.log(error)
-                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba)}, 1000) 
+                  setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba, czas)}, 1000) 
                 }
                 )      
     }

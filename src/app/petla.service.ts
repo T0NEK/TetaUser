@@ -7,6 +7,8 @@ import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { ModulyService } from './moduly.service';
 import { PoleceniaService } from './polecenia.service';
 import { NotatkiService } from './notatki.service';
+import { CzasService } from './czas.service'
+
 
 @Injectable({ providedIn: 'root'})
 
@@ -24,7 +26,7 @@ private bufordane = Array();
 
 
 
-constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private polecenia: PoleceniaService, private moduly: ModulyService, private notatki: NotatkiService)
+constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private polecenia: PoleceniaService, private moduly: ModulyService, private notatki: NotatkiService, private czasy: CzasService)
 {
     //console.log('con polecenia')
   
@@ -352,7 +354,7 @@ GetSet(dowykonania: any)
           }
         break;  
     case 'zapisz': switch (dowykonania.sufix) {
-            case 'notatki': this.notatki.Zapisznotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], dowykonania); break;
+            case 'notatki': this.notatki.Zapisznotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], dowykonania, this.czasy.getCzasDedala()); break;
             case 'notatka': this.notatki.ZapiszTrescnotatki(dowykonania); break;                
             }
         break;
@@ -379,11 +381,14 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
   //console.log('dane1 ',dane1)
   //console.log('dane2 ',dane2)
 
+  //if ( ( ( (typeof lista[licznik].autoryzacja === 'boolean' ? lista[licznik].autoryzacja : false ) == wszystkie) || (wszystkie) ) && ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
+      
+
   setTimeout(() => 
   {
     if (licznik < lista.length)
     {
-      if ( ( (wszystkie) ) && ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
+      if ( ( (wszystkie) ) || ( (typeof lista[licznik].polecenie === 'boolean' ? lista[licznik].polecenie : true) ) )
        { 
         let liniaNew: Linia[] = [];
         for (let indexL = 0; indexL < linia.length; indexL++) 
