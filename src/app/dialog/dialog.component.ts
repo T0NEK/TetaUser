@@ -30,7 +30,8 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   
   constructor(private hostElement: ElementRef, private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
   {
-    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj - 100) + 'px';
+    //this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj - 100) + 'px';
+    this.height = (all.wysokoscNawigacja - all.wysokoscDialogMin ) + 'px'
     //console.log (all.wysokoscAll,'    ',all.wysokoscInfo,'    ',all.wysokoscKlw,'    ',all.wysokoscLinia,'    ',all.wysokoscDialogMin,'    ',all.wysokoscPrzewijaj)
     //console.log('konstruktor dialog')
     //console.log(this.VSVDialog._totalContentHeight);
@@ -100,8 +101,8 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy()
   {
   //console.log('dest dialog')
-    this.tablicazawartoscisubscribe.unsubscribe();
-    this.zakladkasubscribe.unsubscribe();
+  if(this.tablicazawartoscisubscribe) {this.tablicazawartoscisubscribe.unsubscribe()};
+  if(this.zakladkasubscribe) {this.zakladkasubscribe.unsubscribe()};
   }
 
   

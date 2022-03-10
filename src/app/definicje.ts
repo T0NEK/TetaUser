@@ -129,6 +129,7 @@ export interface Tresc
       funkcja: string;
       widoczny: boolean;
       wybrany: boolean;
+      nowe: boolean;
   }
 
   export interface Wiadomosci

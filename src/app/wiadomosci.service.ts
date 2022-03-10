@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { OsobyWiadomosci, Wiadomosci } from './definicje';
+import { OsobyWiadomosci, Wiadomosci, Wiersze } from './definicje';
 import { KomunikacjaService } from './komunikacja.service';
 
 @Injectable({
@@ -13,8 +13,9 @@ private logowaniesubscribe = new Subscription();
 private osobysubscribe = new Subscription();
 private tablicaosoby: OsobyWiadomosci[] = [];
 private wiadomosci: Wiadomosci[] =[];
+private liczbawiadomosci = 0;
+private nowewiadomosci = 0;
 private odbiorca: number = 0;
-private nadawcy: string = '';
 
 
 constructor(private komunikacja: KomunikacjaService, private http: HttpClient)
@@ -72,6 +73,7 @@ private odczytaj_osoby(stan: string)
         if (wynik.wynik == true) 
         {
           this.OdczytajOsoby.next(wynik.osoby);
+          this.tablicaosoby = wynik.osoby;
         }
         else
         {
@@ -89,9 +91,6 @@ private odczytaj_osoby(stan: string)
 
   OdczytajWiadomosci(odbiorca: number)
   {
-    //this.wiadomosci = [];
-    //this.odbiorca = odbiorca;
-    //this.nadawcy = nadawcy;
     this.odczytaj_wiadomosci('wiad', odbiorca);
   }
   
@@ -116,8 +115,21 @@ private odczytaj_osoby(stan: string)
           let wynik = JSON.parse(JSON.stringify(data));    
           if (wynik.wynik == true) 
           {
-
-            this.Wiadomosci.next(wynik.wiadomosci);
+            if (this.wiadomosci.length == 0)
+            {
+              let tablicawiadomosci: Wiersze[] = [];
+              
+              this.wiadomosci = wynik.wiadomosci;
+              this.Wiadomosci.next({"wiadomosci": wynik.wiadomosci})
+              this.liczbawiadomosci = wynik.ilosc;
+              this.nowewiadomosci = wynik.odebrane;
+            }
+            else  
+            {
+            //  this.wiadomosci = wynik.wiadomosci
+            //  this.odczytaj_wiadomosci('wiad', odbiorca);
+            }
+            
 
             setTimeout(() => {this.odczytaj_wiadomosci(stan, odbiorca)}, 1000)
           }
