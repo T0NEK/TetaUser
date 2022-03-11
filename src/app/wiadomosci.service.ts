@@ -72,8 +72,8 @@ private odczytaj_osoby(stan: string)
         let wynik = JSON.parse(JSON.stringify(data));    
         if (wynik.wynik == true) 
         {
-          this.OdczytajOsoby.next(wynik.osoby);
           this.tablicaosoby = wynik.osoby;
+          this.OdczytajOsoby.next(wynik.osoby);
         }
         else
         {
@@ -115,14 +115,19 @@ private odczytaj_osoby(stan: string)
           let wynik = JSON.parse(JSON.stringify(data));    
           if (wynik.wynik == true) 
           {
-            if (this.wiadomosci.length == 0)
+            this.liczbawiadomosci = wynik.ilosc;
+            this.nowewiadomosci = wynik.odebrane;
+            this.Wiadomosci.next(wynik)
+            if (wynik.odebrane > 0)
             {
-              let tablicawiadomosci: Wiersze[] = [];
-              
-              this.wiadomosci = wynik.wiadomosci;
-              this.Wiadomosci.next({"wiadomosci": wynik.wiadomosci})
-              this.liczbawiadomosci = wynik.ilosc;
-              this.nowewiadomosci = wynik.odebrane;
+               this.tablicaosoby.forEach(element => 
+                {
+                if ( wynik.nadawcy.includes(element.id) )
+                {
+                  element.nowe = true;
+                }
+                });
+
             }
             else  
             {

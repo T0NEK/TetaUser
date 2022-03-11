@@ -2,10 +2,10 @@
 <div>
   <div [ngStyle]="{'width': width, 'min-width': width, 'height': height, 'min-height': height}">
     <div *ngFor="let item of tablicaosoby; let i = index"  class="example-mat-card, text-success">
-      <mat-slide-toggle (toggleChange)="Przelacz('one',false)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny">{{item.imie}} &nbsp;<span >{{item.nazwisko}}</span><span class="male">&nbsp;&nbsp;({{item.funkcja}})</span></mat-slide-toggle>
+      <mat-slide-toggle (toggleChange)="Przelacz(i,item.wybrany)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny"><span [ngClass]="{'text-warning':item.nowe}">{{item.imie}} &nbsp;{{item.nazwisko}}</span><span class="male">&nbsp;&nbsp;({{item.funkcja}})</span></mat-slide-toggle>
     </div>
-    <div ><mat-slide-toggle #wszyscy (change)="Przelacz('all',true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span></div>
-    <div ><mat-slide-toggle #nikt (change)="Przelacz('all',false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
+    <div ><mat-slide-toggle #wszyscy (change)="Przelacz(-1,true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span></div>
+    <div ><mat-slide-toggle #nikt (change)="Przelacz(-1,false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
 </div>
 <div>
   <mat-slide-toggle (toggleChange)="Przewijaj()" [(ngModel)]="checked" (change)="onClick('slide-toggle')"><span [ngClass]="{'text-success':checked, 'text-danger':!checked}">{{ checked ? "przewijaj" : "nie przewijaj"}}</span></mat-slide-toggle>
@@ -15,8 +15,8 @@
 
 <div>
   <cdk-virtual-scroll-viewport #scrollViewportDialog appendOnly [itemSize]="24" minBufferPx="200" maxBufferPx="400" class="example-viewport" [ngStyle]="{'width': width1, 'min-width': width1,'height': height}" autosize>
-    <div *cdkVirtualFor="let item of tablicawiadomosci; let i = index"  class="example-item, text-success">
-      {{item.czas}} &nbsp;{{item.autorText}}&nbsp;({{item.tresc}})
+    <div *cdkVirtualFor="let item of tablicawiadomosci"  class="example-item, text-success">
+    <div>{{item.czas}} &nbsp;{{item.autorText}}&nbsp;({{item.tresc}})</div>
     </div>
   </cdk-virtual-scroll-viewport>
 </div>

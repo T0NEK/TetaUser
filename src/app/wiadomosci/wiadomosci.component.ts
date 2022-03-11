@@ -1,5 +1,5 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
@@ -12,7 +12,7 @@ import { WiadomosciService } from '../wiadomosci.service';
   templateUrl: './wiadomosci.component.html',
   styleUrls: ['./wiadomosci.component.css']
 })
-export class WiadomosciComponent implements OnDestroy {
+export class WiadomosciComponent implements OnDestroy, AfterViewInit {
 
 
   @ViewChild('wszyscy') wszyscy!: MatSlideToggle;
@@ -21,6 +21,8 @@ export class WiadomosciComponent implements OnDestroy {
   private zakladkasubscribe = new Subscription();
   private wiadomoscisubscribe = new Subscription();
   tablicaosoby: OsobyWiadomosci[] = [];
+  tablicaosobywybrane: number[] = [];
+  tablicawiadomosciorg: Wiadomosci[] = []; 
   tablicawiadomosci: Wiadomosci[] = []; 
   height: any;
   width: any;
@@ -37,6 +39,7 @@ export class WiadomosciComponent implements OnDestroy {
     this.height = (all.wysokoscNawigacja - all.wysokoscDialogMin) + 'px' ;
     this.width = (all.szerokoscZalogowani + 10) + 'px';
     this.width1 = (all.szerokoscAll - 2 * all.szerokoscZalogowani - 20) + 'px';
+
     this.zakladkasubscribe = funkcje.ZakladkaDialogu$.subscribe
     (
        data =>
@@ -48,6 +51,7 @@ export class WiadomosciComponent implements OnDestroy {
             this.wiadonosci.wczytajOsoby();
             this.wiadonosci.OdczytajWiadomosci( this.funkcje.getZalogowany().zalogowany );
           }
+          { if (this.checked) { this.Przewin()} }
           }
 
        }
@@ -56,19 +60,21 @@ export class WiadomosciComponent implements OnDestroy {
     ( data => 
       { 
         this.tablicaosoby = data;   
+        this.tablicaosoby.forEach((element, index) => { this.tablicaosobywybrane[index] = -1; });
+        console.log(this.tablicaosobywybrane)
       } 
     )
     this.wiadomoscisubscribe = wiadonosci.Wiadomosci$.subscribe
     ( data => 
       { 
-        this.tablicawiadomosci = data.wiadomosci;  
-        changeDetectorRef.detectChanges();
-        this.VSVDialog.checkViewportSize()
-        console.log(this.tablicawiadomosci) 
+        this.tablicawiadomosciorg = data.wiadomosci;  
+        this.tablicawiadomosci = this.AktualizujWybraneOsoby(data.wiadomosci)
+        if (this.checked) { this.Przewin()}
+        //changeDetectorRef.detectChanges();
+        //this.VSVDialog.checkViewportSize()
       } 
     )
 
-    
   }
 
   ngOnDestroy()
@@ -78,19 +84,53 @@ export class WiadomosciComponent implements OnDestroy {
     if(this.wiadomoscisubscribe) { this.zakladkasubscribe.unsubscribe()}   
   }
 
-
-  Przelacz(wszystkie: string, all: boolean)
+  ngAfterViewInit()
   {
-    if (wszystkie == 'all')
+  //console.log('AV dialog')
+    //this.tablicazawartosci = this.funkcje.getLinieDialogu(); 
+    this.changeDetectorRef.detectChanges();
+    this.VSVDialog.checkViewportSize()
+  } 
+
+AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
+{
+  //console.log(this.tablicaosobywybrane)
+  let tabelawynik: Wiadomosci[] = []
+  for (let index = 0; index < tabela.length; index++) 
+  {
+    if ( this.tablicaosobywybrane.includes(tabela[index].id) )
     {
-      this.tablicaosoby.forEach(element => { element.wybrany = all });
+      tabelawynik = [...tabelawynik, tabela[index]]
+    }    
+  }
+  return tabelawynik
+}
+
+
+  Przelacz(wszystkie: number, all: boolean)
+  {
+    console.log(wszystkie)
+    console.log(all)
+    
+    if (wszystkie == -1)
+    {
+      this.tablicaosoby.forEach((element, index) => 
+        { 
+          element.wybrany = all;
+          this.tablicaosobywybrane[index] = (all ? element.id : -1);
+        });
+        
       if (!this.checkedW) { this.wszyscy.toggle() };
       if (this.checkedN) { this.nikt.toggle() };
     }
     else
     {
-      
+      this.tablicaosoby[wszystkie].wybrany = !all;
+      this.tablicaosobywybrane[wszystkie] = (!all ? (this.tablicaosoby[wszystkie].id) : -1);
     }
+  this.tablicawiadomosci = this.AktualizujWybraneOsoby(this.tablicawiadomosciorg)  
+  console.log(this.tablicawiadomosci)
+  console.log(this.tablicaosobywybrane)
   }
 
   onClick(kto: string)
@@ -105,10 +145,10 @@ export class WiadomosciComponent implements OnDestroy {
 
   Przewin()
   {
-    //let count = this.VSVDialog.getDataLength();
-    //this.changeDetectorRef.detectChanges();
-    //this.VSVDialog.checkViewportSize()
-    //this.VSVDialog.scrollToIndex((count), 'smooth'); 
+    let count = this.VSVDialog.getDataLength();
+    this.changeDetectorRef.detectChanges();
+    this.VSVDialog.checkViewportSize()
+    this.VSVDialog.scrollToIndex((count), 'smooth'); 
   }
   
 }
