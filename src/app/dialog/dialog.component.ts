@@ -21,6 +21,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   private zakladkasubscribe = new Subscription();
   checked = true;
   height: any;
+  width1: any;
 
   
 
@@ -31,7 +32,8 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private hostElement: ElementRef, private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
   {
     //this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj - 100) + 'px';
-    this.height = (all.wysokoscNawigacja - all.wysokoscDialogMin ) + 'px'
+    this.height = (all.wysokoscNawigacja - all.wysokoscDialogMin ) + 'px';
+    this.width1 = (all.szerokoscAll - all.szerokoscZalogowani - 10) + 'px';
     //console.log (all.wysokoscAll,'    ',all.wysokoscInfo,'    ',all.wysokoscKlw,'    ',all.wysokoscLinia,'    ',all.wysokoscDialogMin,'    ',all.wysokoscPrzewijaj)
     //console.log('konstruktor dialog')
     //console.log(this.VSVDialog._totalContentHeight);

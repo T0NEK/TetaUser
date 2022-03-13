@@ -135,9 +135,9 @@ export interface Tresc
   export interface Wiadomosci
   {
      id: number;
-     autor: string;
+     autor: number;
      autorText: string;
-     odbiorca: string;
+     odbiorca: number;
      odbiorcaText: string;
      tresc: string;
      czas: string;

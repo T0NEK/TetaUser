@@ -25,7 +25,7 @@ constructor ()
   this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor': "white"} 
   
   //do skasowania
-  this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
+  //this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
 
   this.znaki = this.znaki.concat('',' ',this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
   this.dluznaki = this.dluznaki.concat(0,2.45,this.dlu11,this.dlu11alt,this.dlu12,this.dlu12alt,this.dlu12caps,this.dlu21,this.dlu21caps,this.dlu22,this.dlu22caps)
@@ -73,11 +73,14 @@ addLinieDialogu(linia: Wiersze)
   }
 */
 
+private nrzakladki: any;
+getNrZakladki() { return this.nrzakladki; }
 
 private ZakladkaDialogu = new Subject<any>();
  ZakladkaDialogu$ = this.ZakladkaDialogu.asObservable();
  setzakladkadialogu(event: any)
  {
+   this.nrzakladki = event;
    this.ZakladkaDialogu.next(event);
  }
 
@@ -127,7 +130,7 @@ setLiniaWiersz(data: string, przed: string, name: string, po: string, prefix: st
 
 addLiniaKomunikatuPolecenia(name: string, blad: string)
   {
-    this.addLiniaKomunikatu("", name, "", "", [this.setNazwaLinia("", [this.setTextNazwa("", blad, "", this.getZalogowany().kolor, "liniakomend")], "")], "");
+    this.addLiniaKomunikatu("", name, "", "", [this.setNazwaLinia("", [this.setTextNazwa("", blad, "", this.getZalogowany().kolor, "liniakomend kursor")], "")], "");
   }
   
 

@@ -5,6 +5,7 @@ import { Polecenia } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 import { PetlaService } from '../petla.service';
 import { PoleceniaService } from '../polecenia.service';
+import { WiadomosciService } from '../wiadomosci.service';
 
 @Component({
   selector: 'app-linia-komend',
@@ -30,7 +31,7 @@ private pozycja = 0;
 szerokoscInput: any;
 maxLenght: number;
 
-constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private changeDetectorRef: ChangeDetectorRef )
+constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private wiadomosci: WiadomosciService, private changeDetectorRef: ChangeDetectorRef )
   {
     //console.log('con linia kom')
       this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
@@ -70,17 +71,22 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
                 this.liniaInput.nativeElement.value = data.komunikat;
                 this.pozycja = data.pozycja;
                 this.szerokoscInput = all.szerokoscAll;
+                this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja);  
+                this.liniaInput.nativeElement.focus();
               }
               else
               {
+                setTimeout(() => {
                 this.linia = data.komunikat;
                 this.liniaInput.nativeElement.value = data.komunikat;
                 this.pozycja = data.pozycja;
                 //this.WartoscLinia(data.komunikat, true);
                 (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
+                this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja);  
+                this.liniaInput.nativeElement.focus();
+                },600)
               }
-              this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja);  
-              this.liniaInput.nativeElement.focus();
+              
             } );    
 
       this.stan_polecen_subscribe_lk = funkcje.LiniaDialoguStanPolecen$.subscribe 
@@ -155,7 +161,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
   ZaDlugiTekst(linia: string, pozycja: number)
   {
     this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
-    setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia, pozycja) }, 600);
+    this.funkcje.OdblokujLinieDialogu(linia, pozycja)
   }
   
   Zmiana(event: any)
@@ -273,7 +279,7 @@ ClearLinia()
 /* (end) funkcje lini Input*/
 
 /* (start) historia poleceń */
-private linie = Array ('pomoc', 'zapisz', 'zamknij', '1644743771H5V129934757909', 'edytuj', 'notatka','notatki','wersja');
+private linie = Array ('pomoc', 'zapisz', 'zamknij', '1644743771H5V129934757909', 'edytuj', 'notatka','notatki','wersja','john','liu','zaloguj');
 private linie_wskaznik = this.linie.length;
 
 DodajHistorie(linia: string)
@@ -299,7 +305,7 @@ PokazHistorie(kierunek: number)
       this.funkcje.ZablokujLinieDialogu('koniec historii')
       this.linie_wskaznik = 0;
       if (this.linie.length > 0) { linia = this.linie[0]; } else { linia = ''}
-      setTimeout(() => { this.funkcje.OdblokujLinieDialogu(linia, linia.length) }, 600);
+      this.funkcje.OdblokujLinieDialogu(linia, linia.length)
     }
     else if ( this.linie_wskaznik < this.linie.length )  
     {
@@ -316,6 +322,13 @@ PokazHistorie(kierunek: number)
 
 WybranoEnter(linia: string)
 {
+  
+  if ((this.funkcje.getNrZakladki() == 2 )&&(this.funkcje.getZalogowany().zalogowany != 0))
+  {
+    this.wiadomosci.WyslijWiadomosc.next(linia);
+  }
+  else
+  {
   let polecenie: any;
   if (this.haslo)
   {
@@ -343,7 +356,7 @@ WybranoEnter(linia: string)
    //   this.funkcje.OdblokujLinieDialogu('');
     }, this.stanpolecenia.czas);
   }   
-  
+}
 }
 
 

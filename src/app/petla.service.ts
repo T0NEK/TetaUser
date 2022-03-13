@@ -159,7 +159,7 @@ Informacje(dowykonania: Polecenia, tekst: string): string
           wynik = dowykonania.nastepnyTrue;   
           break;
     case 'tekstPolecenie': 
-    this.funkcje.addLiniaKomunikatu("", this.funkcje.getDedal(), "", "", [this.funkcje.setNazwaLinia(dowykonania.prefix, [this.funkcje.setTextNazwa("", tekst, "", this.funkcje.getKolor().liniakomend, "liniakomend")], dowykonania.sufix)], "");
+    this.funkcje.addLiniaKomunikatu("", this.funkcje.getDedal(), "", "", [this.funkcje.setNazwaLinia(dowykonania.prefix, [this.funkcje.setTextNazwa("", tekst, "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], dowykonania.sufix)], "");
     //this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getDedal(), dowykonania.prefix + tekst + dowykonania.sufix);
           wynik = dowykonania.nastepnyTrue;   
           break;
@@ -299,28 +299,28 @@ Lista(dowykonania: any, tekst: string)
   {
     case 'polecenia': this.wyswietlLista( 0, false, this.polecenia.getPolecenia(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], "")],
+                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], "")],
                       "",
                       tekst); 
           break;
     case 'polecenia_all': this.wyswietlLista( 0, true, this.polecenia.getPolecenia(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], "")],
+                      [this.funkcje.setNazwaLinia("", [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], "")],
                       "",
                       tekst); 
           break;      
     case 'moduly': this.wyswietlLista( 0, false, this.moduly.getModuly(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend")], '"'),
-                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend")], " ]"),
+                      [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
+                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
                       ],
                       "",
                       tekst); 
           break;
     case 'dostep': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
                       "", 
-                      [this.funkcje.setNazwaLinia('osoba: ', [this.funkcje.setTextNazwa("", "stanText", " ", this.funkcje.getKolor().liniakomend, "liniakomend")], ' '),
-                      this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ' '),
+                      [this.funkcje.setNazwaLinia('osoba: ', [this.funkcje.setTextNazwa("", "stanText", " ", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ' '),
+                      this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa("", "wlascicielText", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ' '),
                       this.funkcje.setNazwaLinia(" (funkcja: ", [this.funkcje.setTextNazwa("", "tytul", ")", "", "")], ""),
                       ],
                       "",
@@ -328,8 +328,8 @@ Lista(dowykonania: any, tekst: string)
           break;      
     case 'notatki': this.wyswietlLista( 0, false, this.notatki.getNotatki(), dowykonania,
           "", 
-          [this.funkcje.setNazwaLinia('id: [ ', [this.funkcje.setTextNazwa("", "identyfikator", "", this.funkcje.getKolor().liniakomend, "liniakomend")], ' ];'),
-           this.funkcje.setNazwaLinia(' tutuł: "', [this.funkcje.setTextNazwa("", "tytul", "", this.funkcje.getKolor().liniakomend, "liniakomend")], '";'),
+          [this.funkcje.setNazwaLinia('id: [ ', [this.funkcje.setTextNazwa("", "identyfikator", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ' ];'),
+           this.funkcje.setNazwaLinia(' tutuł: "', [this.funkcje.setTextNazwa("", "tytul", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '";'),
            this.funkcje.setNazwaLinia(' autor: "', [this.funkcje.setTextNazwa("", "wlascicielText", "", "", "")], '";'),
            this.funkcje.setNazwaLinia(' z dnia: ', [this.funkcje.setTextNazwa("", "czas", "", "", "")], ';'),
            this.funkcje.setNazwaLinia(' dostepność: ', [this.funkcje.setTextNazwa("", "stanText", "", "", "")], '')

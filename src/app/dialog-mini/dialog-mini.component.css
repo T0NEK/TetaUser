@@ -13,4 +13,8 @@
     display: block;
     border-bottom: 2px solid  rgb(00, 123, 255);   
     border-top: 2px solid  rgb(00, 123, 255);     
-  }  
+  } 
+.kursor
+  {
+    cursor: pointer;
+  }   

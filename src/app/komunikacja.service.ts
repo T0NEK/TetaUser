@@ -109,7 +109,7 @@ private loguj(licznik: number, parametry: any)
   
 var data = JSON.stringify({ "login": parametry[0], "pass": parametry[1], "zalogowany": parametry[2]})  
 
-console.log('loguje ',parametry )
+//console.log('loguje ',parametry )
 if (licznik == 0) 
 { this.logowanieUsera.next( { "wynik":false, "stan":false, "error":"Problem z logowaniem" } ) }
 else
