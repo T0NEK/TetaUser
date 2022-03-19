@@ -77,13 +77,13 @@ private odczytaj_osoby(stan: string)
         else
         {
           setTimeout(() =>  {
-                            if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_wiadomosci(stan)}
+                            if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_osoby(stan)}
                             }, 1000)
         }
                },
       error => {
                 setTimeout(() =>  {
-                                  if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_wiadomosci(stan)}
+                                  if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_osoby(stan)}
                                   }, 1000)
                }
                )      
@@ -128,7 +128,9 @@ private odczytaj_osoby(stan: string)
             }
             this.nowewiadomosci = wynik.nowe;
             if(noweilosc > 0)
-            { this.funkcje.addLiniaKomunikatuKolor(this.funkcje.getDedal(),'otrzymałeś: ' + noweilosc + ' nowych wiadomości', 'rgb(20,120,140)') }
+            { 
+              this.funkcje.addLiniaKomunikatuKolor(this.funkcje.getDedal(),'otrzymałeś: ' + noweilosc + ' nowych wiadomości', 'rgb(20,120,140)') 
+            }
             this.Wiadomosci.next({"wiadomosci": wynik.wiadomosci, "nadawcy": wynik.nadawcy, "nowe": noweilosc});
             setTimeout(() =>  {
                               if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_wiadomosci(stan)}
@@ -187,7 +189,7 @@ private odczytaj_osoby(stan: string)
   
   if (licznik == 0) 
   {
-    this.ZmianyWiadomosci.next({"wynik": false, "komunikat": ' error: ' + powod})
+    this.ZmianyWiadomosci.next({"wynik": false, "komunikat": ' error: ' + powod, "odczytane": 0})
   }
   else
   {

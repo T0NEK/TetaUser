@@ -27,6 +27,7 @@ StartKomunikacja()
 
 /* (start) port serwera sql */
 private httpURLdane = [
+  'http://192.168.0.16:80/TetaPhp/User/',
   'http://localhost:80/TetaPhp/User/',
   'http://192.168.60.25:8080/TetaPhp/User/',
   'http://localhost:8080/TetaPhp/User/'

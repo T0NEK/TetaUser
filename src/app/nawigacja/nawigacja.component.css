@@ -2,5 +2,8 @@
 {
     color: lightgreen;
     cursor: crosshair;
+    overflow-y: hidden;
+    overflow-x: hidden;
+
 }
 

@@ -1,6 +1,6 @@
 <div class="linia-komend">
   <div class="obok">
-  <input matInput ngModel #liniaInput autofocus autocomplete="off" [maxLength]="maxLenght" (keyup)="Zmiana($event)"  [type]="haslo ? 'password' : 'text'"  [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px'}">
+  <input matInput ngModel #liniaInput autofocus autocomplete="off"  (keyup)="Zmiana($event)"  [type]="haslo ? 'password' : 'text'"  [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px'}">
   </div>
   <div *ngIf="!blokada" class="obok ikona">
     <button *ngIf="linia" matSuffix mat-icon-button aria-label="Clear" (click)="ClearLinia()">

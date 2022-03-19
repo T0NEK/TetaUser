@@ -263,7 +263,7 @@ WartoscLinia(linia: string, clear: boolean)
   this.linia = linia;
   this.liniaInput.nativeElement.value = linia;
   this.pozycja = linia.length;
-  this.szerokoscInput = ( this.linia.length == 0 ?  this.all.szerokoscAll : this.szerokoscInput = this.all.szerokoscInput)
+  this.szerokoscInput = ( this.linia.length == 0 ?  this.all.szerokoscAll : this.all.szerokoscInput)
   this.szerokoscInput = ( clear ?  this.szerokoscInput : this.all.szerokoscAll)
   this.liniaInput.nativeElement.focus();
 }

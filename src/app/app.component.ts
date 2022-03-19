@@ -23,7 +23,7 @@ export class AppComponent implements OnDestroy
   public wysokoscNawigacja: any;
   public wysokoscPrzewijaj = 24;
   public wysokoscDialogMin = 120;
-  public wysokoscKlw = 100;
+  public wysokoscKlw = 0; //100;
   public wysokoscLinia = 42;
   public szerokoscAll: any;
   public szerokoscInput: any;
@@ -45,7 +45,7 @@ constructor(config: NgbModalConfig, private modalService: NgbModal, private funk
   //  console.log(window.innerHeight)
   //  console.log(window.outerHeight)
     this.wysokoscAll = window.innerHeight;
-    this.szerokoscAll = window.innerWidth
+    this.szerokoscAll = window.innerWidth;
     this.wysokoscNawigacja = (this.wysokoscAll - this.wysokoscInfo - this.wysokoscKlw - this.wysokoscLinia - this.wysokoscDialogMin - this.wysokoscPrzewijaj);
   //  console.log(this.wysokoscNawigacja);
     this.szerokoscInput = this.szerokoscAll - this.szerokoscClear;

@@ -3,6 +3,8 @@
     font-size: 18px;
     color: lightgreen;
     cursor: crosshair;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 div.row
 {

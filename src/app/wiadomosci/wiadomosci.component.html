@@ -17,7 +17,7 @@
   <cdk-virtual-scroll-viewport #scrollViewportDialog appendOnly [itemSize]="44" minBufferPx="200" maxBufferPx="400" class="example-viewport" [ngStyle]="{'width': width1, 'min-width': width1,'height': height}" autosize>
     <div *cdkVirtualFor="let item of tablicawiadomosci"  class="example-item, text-success">
       <div class="example-item-detail1" [ngClass]="{'text-info': !item.wyslana}" [ngStyle]="{'font-weight': ((item.przeczytana)||(item.wyslana) ? 'normal' : 'bold')}">{{item.czas}} &nbsp;{{ item.autorText }} &#10140; {{ item.odbiorcaText }}</div>
-      <div class="example-item-detail2" [ngClass]="{'text-info': !item.wyslana}" [ngStyle]="{'font-weight': ((item.przeczytana)||(item.wyslana) ? 'normal' : 'bold')}">{{item.tresc}}</div>
+      <div *ngFor="let item2 of item.tresc" class="example-item-detail2" [ngClass]="{'text-info': !item.wyslana}" [ngStyle]="{'font-weight': ((item.przeczytana)||(item.wyslana) ? 'normal' : 'bold')}">{{item2}}</div>
     </div>
   </cdk-virtual-scroll-viewport>
 </div>

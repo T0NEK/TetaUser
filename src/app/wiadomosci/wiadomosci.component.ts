@@ -76,6 +76,51 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     this.wiadomoscisubscribe = wiadomosci.Wiadomosci$.subscribe
     ( data => 
       { 
+        let wiadomosci: Wiadomosci[] = [];
+        
+        const dlugosc = all.szerokoscAll - 4.5 * all.szerokoscZalogowani;
+        for (let index = 0; index < data.wiadomosci.length; index++) 
+        {
+        if (this.funkcje.DlugoscTekstu(data.wiadomosci[index].tresc[0]) > dlugosc )  
+        {
+          let tresc: string[] = [];
+          let tresc1: string = '';
+          let tresc2: string = '';
+          let spacja: boolean = false;
+          for (let index2 = 0; index2 < data.wiadomosci[index].tresc[0].length; index2++) 
+          {
+            //console.log(this.funkcje.DlugoscTekstu(tresc2 + tresc1))
+            if (this.funkcje.DlugoscTekstu(tresc2 + tresc1) > dlugosc )  
+            {
+              if (spacja)
+              { tresc = [...tresc, tresc2]; tresc2 = '', spacja = false}
+              else
+              { tresc = [...tresc, tresc1]; tresc1 = '';}
+            }
+            else
+            {
+              if (data.wiadomosci[index].tresc[index2] == ' ')
+              {
+                spacja = true;
+                tresc2 = tresc1 + ' '; 
+                tresc1 = '';
+              }
+              else
+              {
+                tresc1 = tresc1 + data.wiadomosci[index].tresc[0][index2]; 
+              }
+            }
+          }
+          tresc = [...tresc, tresc2+tresc1];
+          data.wiadomosci[index].tresc = tresc;
+          wiadomosci = [...wiadomosci, data.wiadomosci[index]]
+        }
+        else
+        {
+          wiadomosci = [...wiadomosci, data.wiadomosci[index]]
+        }
+          
+        }
         this.tablicawiadomosciorg = data.wiadomosci;  
         this.tablicaosoby = this.AktualizujOsobyNoweWiadomosci(this.tablicaosoby, data.nadawcy)
         this.tablicawiadomosci = this.AktualizujWybraneOsoby(data.wiadomosci);
@@ -95,7 +140,10 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
         }
         else
         {
+          if (data.odczytane != 0)
+          {
           this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'odczytano '+data.odczytane+' wiadomości')
+          }
         }
       } 
     )

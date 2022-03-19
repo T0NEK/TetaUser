@@ -10,7 +10,7 @@ export class FunkcjeWspolneService {
 private dedal = 'dadal';
 private osoba: Zalogowany;
 private kolory: Kolory;
-public iloscZnakowwKomend = 60;
+public iloscZnakowwKomend = 100;
 
 
 constructor ()
