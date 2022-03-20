@@ -15,46 +15,50 @@ import { WiadomosciService } from '../wiadomosci.service';
 export class LiniaKomendComponent implements OnDestroy {
 
 
-@ViewChild('liniaInput') liniaInput!: ElementRef;
+//@ViewChild('liniaInput') liniaInput!: ElementRef;
 private fokus_subscribe_lk = new Subscription();
 private blokada_subscribe_lk = new Subscription();
 private haslo_subscribe_lk = new Subscription();
 private poleceniahistoria_subscribe_lk = new Subscription();
 private stan_polecen_subscribe_lk = new Subscription();
 private add_subscribe_lk = new Subscription();
+private zmien_subscribe = new Subscription();
 linia = '';
+liniaP = '';
+liniaH = '';
+liniaHP = '';
 haslo = false;
 private liniablokada = '';
 blokada = true;
 private stanpolecenia: Polecenia;
-private pozycja = 0;
 szerokoscInput: any;
+dlugoscInput: any;
+wysokoscInput = 42;
 maxLenght: number;
+maxLenghtmax = 1000;
 
 constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private wiadomosci: WiadomosciService, private changeDetectorRef: ChangeDetectorRef )
   {
     //console.log('con linia kom')
       this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
-      this.szerokoscInput = all.szerokoscAll;     
+      this.szerokoscInput = all.szerokoscAll;   
+      this.dlugoscInput = this.szerokoscInput * 0.9 * 18 / 24; 
       this.maxLenght = funkcje.iloscZnakowwKomend;
+
       this.fokus_subscribe_lk = funkcje.LiniaDialogu$.subscribe 
           ( data => 
             { 
               //console.log('data ',data+'.')
               if (typeof data === 'string')
               {
-              data = data.substring(0, this.maxLenght - this.linia.length);  
-              this.linia = this.linia.substring(0, this.pozycja) + data + this.linia.substring(this.pozycja);
-              this.liniaInput.nativeElement.value = this.linia;
-              this.pozycja = this.pozycja + data.length;
+               for (let index = 0; index < data.length; index++)
+                {
+                  //console.log(data[index])
+                 this.Zmiana(data[index])
+                } 
+
               }
-              //this.linia = this.linia + (typeof data === 'string' ? data : '');
-              //this.liniaInput.nativeElement.value = this.linia;
-              //this.pozycja = this.linia.length; 
-              (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
-              //this.WartoscLinia(this.linia + (typeof data === 'string' ? data : ''),true)
-              this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja); 
-              this.liniaInput.nativeElement.focus();
+              this.szerokoscInput =((this.linia + this.liniaP).length == 0 ?  all.szerokoscAll : all.szerokoscInput)
             } 
           );
 
@@ -62,31 +66,26 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
           ( data => 
             {
 //('blokuj',data);
-//console.log('data ', data)
-              this.blokada = data.stan;
-              this.liniaInput.nativeElement.disabled = data.stan;
-              if (data.stan)
-              {
-                this.linia = data.komunikat;
-                this.liniaInput.nativeElement.value = data.komunikat;
-                this.pozycja = data.pozycja;
-                this.szerokoscInput = all.szerokoscAll;
-                this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja);  
-                this.liniaInput.nativeElement.focus();
-              }
-              else
-              {
-                setTimeout(() => {
-                this.linia = data.komunikat;
-                this.liniaInput.nativeElement.value = data.komunikat;
-                this.pozycja = data.pozycja;
-                //this.WartoscLinia(data.komunikat, true);
-                (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
-                this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja);  
-                this.liniaInput.nativeElement.focus();
-                },600)
-              }
-              
+console.log('data ', data)
+            this.blokada = data.stan;
+            if (data.stan)
+            { 
+              this.szerokoscInput = all.szerokoscAll;  
+             setTimeout(() => {
+              this.linia = data.komunikat.liniaL;
+              this.liniaH = '*'.repeat(this.linia.length);
+              this.liniaP = data.komunikat.liniaP;
+              this.liniaHP = '*'.repeat(this.liniaP.length);
+             },50)  
+            }
+            else
+            { 
+              this.szerokoscInput = ((this.linia + this.liniaP).length == 0 ?  all.szerokoscAll : all.szerokoscInput) 
+              this.linia = data.komunikat.liniaL;
+              this.liniaH = '*'.repeat(this.linia.length);
+              this.liniaP = data.komunikat.liniaP;
+              this.liniaHP = '*'.repeat(this.liniaP.length);
+            }
             } );    
 
       this.stan_polecen_subscribe_lk = funkcje.LiniaDialoguStanPolecen$.subscribe 
@@ -99,7 +98,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
                 this.stanpolecenia.dzialanie = (typeof data.dzialanie === 'string' ? data.dzialanie : ' ');
                 this.stanpolecenia.nastepnyTrue = (typeof data.nastepnyTrue === 'string' ? data.nastepnyTrue : 'brak');
                 this.stanpolecenia.nastepnyFalse = (typeof data.nastepnyFalse === 'string' ? data.nastepnyFalse : 'brak');
-                this.liniaInput.nativeElement.focus();
+                //this.liniaInput.nativeElement.focus();
               } 
             );
   
@@ -107,7 +106,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
             ( data => 
               { 
                 this.haslo = ( data == 'on' ? true : false);
-                this.liniaInput.nativeElement.focus();
+                //this.liniaInput.nativeElement.focus();
               } 
             );
   
@@ -119,31 +118,37 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
                 { this.DodajHistorie(data)}
               } 
             );
+      this.zmien_subscribe = funkcje.LiniaDialoguZmien$.subscribe 
+            ( data => 
+              { 
+                //console.log('doZmiana -', data)
+                this.Zmiana(data)
+                //this.liniaInput.nativeElement.focus();
+              } 
+            );
   
 
       this.add_subscribe_lk = funkcje.LiniaDialoguAddChar$.subscribe 
           ( data => 
             { 
+              //console.log('add: ',data)
+
               let nowyznak = this.DodajZnak(data);
-              if (this.blokada)
-              {
-                this.liniablokada = nowyznak;
-              }
-              else
-              {
-                if (nowyznak.length <= this.maxLenght)
+              
+                //console.log(this.maxLenght)
+                if ( (this.funkcje.DlugoscTekstu(nowyznak.liniaL + nowyznak.liniaP) <= this.dlugoscInput) && ( (nowyznak.liniaL + nowyznak.liniaP ).length <= ( this.funkcje.getNrZakladki() == 2 ? this.maxLenghtmax : this.maxLenght ) ) )
                 {
-                this.linia = nowyznak;
-                this.liniaInput.nativeElement.value = nowyznak;
-                (this.linia.length == 0 ? this.szerokoscInput = all.szerokoscAll : this.szerokoscInput = all.szerokoscInput)
-                this.liniaInput.nativeElement.setSelectionRange(this.pozycja, this.pozycja); 
+                this.linia = nowyznak.liniaL;
+                this.liniaH = '*'.repeat(this.linia.length);
+                this.liniaP = nowyznak.liniaP;
+                this.liniaHP = '*'.repeat(this.liniaP.length);
+                this.szerokoscInput = ((this.linia + this.liniaP).length == 0 ? all.szerokoscAll :  all.szerokoscInput)
                 }
                 else
                 {
-                  this.ZaDlugiTekst(this.linia, this.pozycja) 
+                  this.ZaDlugiTekst({"liniaL": this.linia, "liniaP": this.liniaP}) 
                 }
-              }
-            this.liniaInput.nativeElement.focus();  
+              
             } 
           );
   }
@@ -156,16 +161,21 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
     this.poleceniahistoria_subscribe_lk.unsubscribe();    
     this.stan_polecen_subscribe_lk.unsubscribe();    
     this.add_subscribe_lk.unsubscribe();    
+    this.zmien_subscribe.unsubscribe();    
   }
 
-  ZaDlugiTekst(linia: string, pozycja: number)
+  ZaDlugiTekst(tekst: any)
   {
-    this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
-    this.funkcje.OdblokujLinieDialogu(linia, pozycja)
+    //this.funkcje.ZablokujLinieDialogu('max ' + this.maxLenght + ' znaków')
+    this.funkcje.ZablokujLinieDialogu({"liniaL":'zbyt dużo znaków', "liniaP": ""})
+    setTimeout(() => {
+    this.funkcje.OdblokujLinieDialogu({"liniaL": tekst.liniaL, "liniaP": tekst.liniaP})
+    },1600)
   }
   
   Zmiana(event: any)
   {
+  //  console.log('ZMIANA', event) 
   /* 
     console.log('ZMIANA', event) 
     console.log('ZMIANA', event.key)
@@ -174,74 +184,28 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
     console.log('pozycjeE', this.liniaInput.nativeElement.selectionEnd )
     console.log('pozycje', this.liniaInput.nativeElement.value )
   */    
-    switch (event.key) {
-      case 'ArrowRight': if ( Math.abs(this.liniaInput.nativeElement.selectionEnd - this.pozycja) == 1)
-                          { this.funkcje.LiniaDialoguChar(8594); }
-                          else
-                          { let tekst = this.liniaInput.nativeElement.value.substring(this.pozycja, this.liniaInput.nativeElement.selectionEnd);
-                            for (let index = 0; index < tekst.length; index++) 
-                            { this.funkcje.LiniaDialoguChar(8594); }
-                          }
-                          break;
-      case 'ArrowLeft': if ( Math.abs(this.liniaInput.nativeElement.selectionStart - this.pozycja) == 1)
-                        { this.funkcje.LiniaDialoguChar(8592); }
-                        else
-                        { let tekst = this.liniaInput.nativeElement.value.substring(this.pozycja, this.liniaInput.nativeElement.selectionStart);
-                          for (let index = 0; index < tekst.length; index++) 
-                          { this.funkcje.LiniaDialoguChar(8592); }
-                        }
-                        break;
+    switch (event) {
+      case 'ArrowRight': this.funkcje.LiniaDialoguChar(8594); break;
+      case 'ArrowLeft': this.funkcje.LiniaDialoguChar(8592); break;
       case 'ArrowUp':   this.funkcje.LiniaDialoguChar(8593); break;
       case 'Home':      this.funkcje.LiniaDialoguChar(8593); break;
       case 'ArrowDown': this.funkcje.LiniaDialoguChar(8595); break;
       case 'End':       this.funkcje.LiniaDialoguChar(8595); break;
-      case 'Backspace': if ( Math.abs(this.liniaInput.nativeElement.selectionStart - this.pozycja) == 1)
-                        { this.funkcje.LiniaDialoguChar('&back'); }
-                        else
-                        { let tekst = this.linia.substring(this.liniaInput.nativeElement.selectionStart, this.pozycja);
-                          for (let index = 0; index < tekst.length; index++) 
-                          { this.funkcje.LiniaDialoguChar('&back'); }
-                        }
-                        break;
-      case 'Delete':    let ile = this.linia.length - this.liniaInput.nativeElement.value.length;
-                        if ( ile == 1)
-                        { this.funkcje.LiniaDialoguChar('&del'); }
-                        else
-                        { 
-                          for (let index = 0; index < ile; index++) 
-                          { this.funkcje.LiniaDialoguChar('&del'); }
-                        }
-                        break;
+      case 'Backspace': this.funkcje.LiniaDialoguChar('&back'); break;
+      case 'Delete':    this.funkcje.LiniaDialoguChar('&del'); break;
       case 'Enter': this.funkcje.LiniaDialoguChar('&enter'); break;
-      case ' ': this.funkcje.LiniaDialoguChar('&space'); break;
+      case 'Space': this.funkcje.LiniaDialoguChar('&space'); break;
       default:
-        if (this.linia.length >= this.maxLenght)
-        { 
-          this.ZaDlugiTekst(this.linia, this.pozycja) 
-        }
-        else
         {        
-          if (event.key.length == 1 )
+          if (event.length == 1 )
             { 
-              if ( Math.abs(this.liniaInput.nativeElement.selectionStart - this.pozycja) == 1)
-              {
-                this.funkcje.LiniaDialoguChar(event.key.charCodeAt(0)); 
-              }  
-              else
-              {
-              let tekst = this.liniaInput.nativeElement.value.substring(this.pozycja, this.liniaInput.nativeElement.selectionStart);
-              for (let index = 0; index < tekst.length; index++) 
-              {
-                this.funkcje.LiniaDialoguChar(tekst[index].charCodeAt(0));
-              }  
-              }          
+              this.funkcje.LiniaDialoguChar(event.charCodeAt(0)); 
             }
             else
-            { this.DodajString(event.key) }
+            { this.DodajString(event) }
         }
       break;
     }
- // this.liniaInput.nativeElement.selectionStart = this.pozycja;
   }
 
   
@@ -261,20 +225,20 @@ WartoscLinia(linia: string, clear: boolean)
 {
   //console.log('linia ', linia)
   this.linia = linia;
-  this.liniaInput.nativeElement.value = linia;
-  this.pozycja = linia.length;
-  this.szerokoscInput = ( this.linia.length == 0 ?  this.all.szerokoscAll : this.all.szerokoscInput)
+  this.szerokoscInput = ( (this.linia + this.liniaP).length == 0 ?  this.all.szerokoscAll : this.all.szerokoscInput)
   this.szerokoscInput = ( clear ?  this.szerokoscInput : this.all.szerokoscAll)
-  this.liniaInput.nativeElement.focus();
+}
+
+key(event: any)
+{
+  console.log(event)
 }
 
 ClearLinia()
 {
-  this.linia = '';
-  this.liniaInput.nativeElement.value = '';
-  this.pozycja = 0;
+  this.linia = ''; this.liniaP = '';
+  this.liniaH = ''; this.liniaHP = '';
   this.szerokoscInput = this.all.szerokoscAll;
-  this.liniaInput.nativeElement.focus();
 }  
 /* (end) funkcje lini Input*/
 
@@ -298,19 +262,21 @@ PokazHistorie(kierunek: number)
 {
   this.linie_wskaznik = this.linie_wskaznik + kierunek;
   //console.log(this.linie_wskaznik)
-  let linia = '';
-  this.pozycja = 0;
+  let linia = ''; 
     if ( this.linie_wskaznik < 0) 
     {
-      this.funkcje.ZablokujLinieDialogu('koniec historii')
+      this.linia = ''; this.liniaP = '';
+      this.funkcje.ZablokujLinieDialogu({"liniaL":'koniec historii', "liniaP": ""})
       this.linie_wskaznik = 0;
       if (this.linie.length > 0) { linia = this.linie[0]; } else { linia = ''}
-      this.funkcje.OdblokujLinieDialogu(linia, linia.length)
+      setTimeout(() => {
+      this.funkcje.OdblokujLinieDialogu({"liniaL":linia, "liniaP": ""})
+      },1600)
     }
-    else if ( this.linie_wskaznik < this.linie.length )  
+    else 
+    if ( this.linie_wskaznik < this.linie.length )  
     {
       linia = this.linie[this.linie_wskaznik];
-      this.pozycja = linia.length;
     }
     else
     {
@@ -322,92 +288,86 @@ PokazHistorie(kierunek: number)
 
 WybranoEnter(linia: string)
 {
-  
   if ((this.funkcje.getNrZakladki() == 2 )&&(this.funkcje.getZalogowany().zalogowany != 0))
   {
     this.wiadomosci.WyslijWiadomosc.next(linia);
   }
   else
-  {
-  let polecenie: any;
-  if (this.haslo)
-  {
-    let ciag = '*';
-    this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getZalogowany().imie, ciag.repeat(linia.length));
+  {  
+  if ( (this.funkcje.DlugoscTekstu(linia) <= this.dlugoscInput) && ( linia.length <= ( this.funkcje.getNrZakladki() == 2 ? this.maxLenghtmax : this.maxLenght ) ) )
+    {
+    let polecenie: any;
+    if (this.haslo)
+      {
+        this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getZalogowany().imie, '*'.repeat(linia.length));
+      }
+      else
+      {
+        this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getZalogowany().imie,linia);
+        this.DodajHistorie(linia);  
+      }
+
+    if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
+      {
+        polecenie = this.polecenia.sprawdzPolecenie(linia);
+        setTimeout(() => {
+                this.petla.poleceniaWykonaj(polecenie.dzialanie, '');
+      //         this.funkcje.OdblokujLinieDialogu('');
+        }, polecenie.czas);
+      }
+      else
+      {
+        setTimeout(() => {
+          this.petla.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
+          this.funkcje.UstawStanPolecenia('');
+      //   this.funkcje.OdblokujLinieDialogu('');
+        }, this.stanpolecenia.czas);
+      }   
+    }
+    else
+    { 
+      this.ZaDlugiTekst({"liniaL": linia, "liniaP": ""}) 
+    }  
   }
-  else
-  {
-    this.funkcje.addLiniaKomunikatuPolecenia(this.funkcje.getZalogowany().imie,linia);
-    this.DodajHistorie(linia);  
-  }
-  if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
-  {
-    polecenie = this.polecenia.sprawdzPolecenie(linia);
-    setTimeout(() => {
-            this.petla.poleceniaWykonaj(polecenie.dzialanie, '');
-   //         this.funkcje.OdblokujLinieDialogu('');
-    }, polecenie.czas);
-  }
-  else
-  {
-    setTimeout(() => {
-      this.petla.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
-      this.funkcje.UstawStanPolecenia('');
-   //   this.funkcje.OdblokujLinieDialogu('');
-    }, this.stanpolecenia.czas);
-  }   
-}
 }
 
 
 DodajZnak(znak: any)
   {
     let linia = this.linia;
+    let liniaP = this.liniaP;
 //console.log('znak  ',znak)
-    switch (znak) {
-      case '&enter'     : if (linia.length != 0) 
+if (!this.blokada)
+{  
+  switch (znak) {
+      case '&enter'     : if ((linia + liniaP).length != 0) 
                           { 
-                            this.funkcje.ZablokujLinieDialogu('')
-                            this.WybranoEnter(linia)
-                            linia = ''; 
-                            this.pozycja = 0;
+                            this.funkcje.ZablokujLinieDialogu({"liniaL": "", "liniaP": ""})
+                            this.WybranoEnter(linia + liniaP)
+                            linia = ''; liniaP = ''; 
                           }
                           break;
-      case '&delall'    : linia = ''; this.pozycja = 0; break;
-      case '&back'      : linia = linia.substring(0, this.pozycja-1) + linia.substring(this.pozycja);
-                        (this.pozycja == 0 ? this.pozycja = 0 : this.pozycja--); 
+      case '&delall'    : linia = ''; liniaP = ''; 
+                          break;
+      case '&back'  :   linia = linia.substring(0,linia.length-1); break;
+      case '&del'   :   liniaP = liniaP.substring(1); break;
+      case '&bad'   :   break;
+      case 8593     :   linia = this.PokazHistorie(-1); liniaP = ""; //góra
                         break;
-      case '&del'   :   linia = linia.substring(0, this.pozycja) + linia.substring(this.pozycja+1);
+      case 8595     :   linia = this.PokazHistorie(1); liniaP = "";//dół
                         break;
-      case '&bad'   :   linia = linia.substring(0, this.pozycja) + linia.substring(this.pozycja);
-                        break;
-      case 8593     :   linia = this.PokazHistorie(-1) //góra
-                        break;
-      case 8595     :   linia = this.PokazHistorie(1); //dół
-                        break;
-      case 8592     :   (this.pozycja == 0 ? this.pozycja = 0 : this.pozycja--); //w lewo
-                        break;
-      case 8594     :   (this.pozycja == linia.length ? this.pozycja = linia.length : this.pozycja++); //w prawo
-                        break;
-      case '&amp;'   :  linia = linia.substring(0, this.pozycja) + '&' + linia.substring(this.pozycja);
-                        (this.pozycja == linia.length ? this.pozycja = linia.length : this.pozycja++);
-                        break;
-      case '&lt;'    :  linia = linia.substring(0, this.pozycja) + '<' + linia.substring(this.pozycja);
-                        (this.pozycja == linia.length ? this.pozycja = linia.length : this.pozycja++);
-                        break;
-      case '&rt;'    :  linia = linia.substring(0, this.pozycja) + '>' + linia.substring(this.pozycja);
-                        (this.pozycja == linia.length ? this.pozycja = linia.length : this.pozycja++);
-                        break;
-      case '&space' :   linia = linia.substring(0, this.pozycja) + ' ' + linia.substring(this.pozycja);
-                        (this.pozycja == linia.length ? this.pozycja = linia.length : this.pozycja++);
-                        break;
-      default       :   linia = linia.substring(0, this.pozycja) + String.fromCharCode(znak) + linia.substring(this.pozycja);
-                        (this.pozycja == linia.length ? this.pozycja = linia.length : this.pozycja++);
-                        break;
+      case 8592     :   liniaP = linia.substring(linia.length-1) + liniaP;  linia = linia.substring(0,linia.length-1); break;
+      case 8594     :   linia = linia + liniaP.substring(0,1);  liniaP = liniaP.substring(1); break;
+      case '&amp;'   :  linia = linia + '&'; break;
+      case '&lt;'    :  linia = linia + '<'; break;
+      case '&rt;'    :  linia = linia + '>'; break;
+      case '&space' :   linia = linia + ' '; break;
+      default       :   linia = linia + String.fromCharCode(znak); break;
     }
     //console.log('linia ', linia,'       ', this.pozycja)
     //console.log('linia ', this.linia,'       ', this.liniablokada)
-    return linia
-  }
+  }    
+  return {"liniaL":linia, "liniaP":liniaP}
+}
 
 }

@@ -1,9 +1,14 @@
+
 <div class="linia-komend">
   <div class="obok">
-  <input matInput ngModel #liniaInput autofocus autocomplete="off"  (keyup)="Zmiana($event)"  [type]="haslo ? 'password' : 'text'"  [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px'}">
+<!--  <input matInput ngModel #liniaInput autofocus autocomplete="off"  (keyup)="Zmiana($event)"  [type]="haslo ? 'password' : 'text'"  [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px'}">
+-->
+  <div ngModel class="imput" [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px', 'height': wysokoscInput +'px', 'max-height': wysokoscInput +'px'}" [ngClass]="{'niedostepne': blokada}">
+    {{haslo ? liniaH : linia}}<span *ngIf="!blokada" class="kursor" [ngStyle]="{'height': wysokoscInput +'px', 'max-height': wysokoscInput +'px'}">|</span>{{haslo ? liniaHP : liniaP}}
+  </div>
   </div>
   <div *ngIf="!blokada" class="obok ikona">
-    <button *ngIf="linia" matSuffix mat-icon-button aria-label="Clear" (click)="ClearLinia()">
+    <button *ngIf="linia + liniaP" matSuffix mat-icon-button aria-label="Clear" (click)="ClearLinia()">
       <mat-icon>close</mat-icon>
     </button>
   </div>

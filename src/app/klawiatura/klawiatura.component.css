@@ -1,9 +1,9 @@
 :host
 {
-    --odstep: 2px;  
+    --odstep: 1px;  
     --wysokosc_przycisk: 34px;
-    --szerokosc_przycisk: 34px;
-    padding: 10px;
+    --szerokosc_przycisk: 32px;
+    padding: 9px;
 }
 .cyfra
 {

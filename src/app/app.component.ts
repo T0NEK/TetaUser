@@ -23,17 +23,18 @@ export class AppComponent implements OnDestroy
   public wysokoscNawigacja: any;
   public wysokoscPrzewijaj = 24;
   public wysokoscDialogMin = 120;
-  public wysokoscKlw = 0; //100;
+  public wysokoscKlw = 100;
   public wysokoscLinia = 42;
   public szerokoscAll: any;
   public szerokoscInput: any;
   public szerokoscClear = 46;
   public szerokoscZalogowani = 280;
+  public szerokoscWiadOsoby = 180;
   public szerokoscNawigacja: any;
   
   @ViewChild('content') content!: ElementRef;
   @HostListener('click',['$event']) onClick1(event: any) { this.onClick(event)}
-  //@HostListener('keydown',['$event']) onClick4(event: any) { this.onKeyup(event) }
+  @HostListener('window:keydown',['$event']) onKey1(event: any) { this.onKey(event) }
   private blokada_subscribe_app = new Subscription();
   private modalCzekaj: any;
 
@@ -100,18 +101,23 @@ onClick(kto: any)
     if ( kto.target.classList.contains('liniakomend') )
     { this.funkcje.fokusLiniaDialogu( kto.target.innerText ) }
     else if ( kto.target.classList.contains('notatki') )
-    { this.funkcje.fokusPoleNotatki() }
-    else
-    { this.funkcje.fokusLiniaDialogu('') }
+          { this.funkcje.fokusPoleNotatki() }
+          else
+          { this.funkcje.fokusLiniaDialogu('') }
   }
 
-onKeyDown(kto: KeyboardEvent)
+onKey(kto: KeyboardEvent)
 {
   //console.log(kto.key);
+  //console.log(kto.key.charAt(0));
+  //console.log(kto.key.charCodeAt(0));
   //console.log(kto.altKey);
   //console.log(kto.shiftKey);
   //console.log(kto);
-  //this.funkcje.LiniaDialoguChar(kto.key.charCodeAt(0))
+  if ( kto.key == kto.key.charAt(0) )
+  { this.funkcje.LiniaDialoguChar(kto.key.charCodeAt(0)) }
+  else
+  { this.funkcje.LiniaDialogu_Zmien(kto.key) }
 }
 
 onWindowResize(event: any) {

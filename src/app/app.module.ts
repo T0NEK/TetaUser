@@ -30,7 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [																
+  declarations: [																	
     AppComponent,
       InformacjeComponent,
       NawigacjaComponent,

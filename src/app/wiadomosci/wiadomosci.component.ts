@@ -40,8 +40,8 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
   constructor(private all: AppComponent, private wiadomosci: WiadomosciService, private funkcje: FunkcjeWspolneService, private czas: CzasService, private komunikacja: KomunikacjaService, private changeDetectorRef: ChangeDetectorRef) 
   { 
     this.height = (all.wysokoscNawigacja - all.wysokoscDialogMin) + 'px' ;
-    this.width = (all.szerokoscZalogowani + 10) + 'px';
-    this.width1 = (all.szerokoscAll - 2 * all.szerokoscZalogowani - 20) + 'px';
+    this.width = all.szerokoscWiadOsoby + 'px';
+    this.width1 = (all.szerokoscAll - all.szerokoscZalogowani - all.szerokoscWiadOsoby - 10) + 'px';
 
     this.zakladkasubscribe = funkcje.ZakladkaDialogu$.subscribe
     (
@@ -78,41 +78,16 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
       { 
         let wiadomosci: Wiadomosci[] = [];
         
-        const dlugosc = all.szerokoscAll - 4.5 * all.szerokoscZalogowani;
+        const dlugosc = (all.szerokoscAll - all.szerokoscZalogowani - all.szerokoscWiadOsoby - 10) * 18 / 24;
         for (let index = 0; index < data.wiadomosci.length; index++) 
         {
+
         if (this.funkcje.DlugoscTekstu(data.wiadomosci[index].tresc[0]) > dlugosc )  
         {
-          let tresc: string[] = [];
-          let tresc1: string = '';
-          let tresc2: string = '';
-          let spacja: boolean = false;
-          for (let index2 = 0; index2 < data.wiadomosci[index].tresc[0].length; index2++) 
-          {
-            //console.log(this.funkcje.DlugoscTekstu(tresc2 + tresc1))
-            if (this.funkcje.DlugoscTekstu(tresc2 + tresc1) > dlugosc )  
-            {
-              if (spacja)
-              { tresc = [...tresc, tresc2]; tresc2 = '', spacja = false}
-              else
-              { tresc = [...tresc, tresc1]; tresc1 = '';}
-            }
-            else
-            {
-              if (data.wiadomosci[index].tresc[index2] == ' ')
-              {
-                spacja = true;
-                tresc2 = tresc1 + ' '; 
-                tresc1 = '';
-              }
-              else
-              {
-                tresc1 = tresc1 + data.wiadomosci[index].tresc[0][index2]; 
-              }
-            }
-          }
-          tresc = [...tresc, tresc2+tresc1];
+          let tresc: string[] = this.PodzielWiadomosc(data.wiadomosci[index].tresc[0], dlugosc);
+          //console.log(tresc)
           data.wiadomosci[index].tresc = tresc;
+          //console.log(data.wiadomosci[index].tresc)
           wiadomosci = [...wiadomosci, data.wiadomosci[index]]
         }
         else
@@ -160,12 +135,14 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
         if (odbiorcy.length > 1)  
         {
           this.wiadomosci.WyslijWiadomosci(odbiorcy, this.funkcje.getZalogowany().zalogowany, data, this.czas.getCzasDedala())
-          this.funkcje.OdblokujLinieDialogu('',0)
+          this.funkcje.OdblokujLinieDialogu({"liniaL": "", "liniaP": ""})
         }
         else
         {
           this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(),'musisz wybrać adresata')
-          this.funkcje.OdblokujLinieDialogu(data,data.length)
+          setTimeout(() => {
+          this.funkcje.OdblokujLinieDialogu({"liniaL": data, "liniaP": ""})
+          },600)
         }
 
       } 
@@ -187,6 +164,42 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     this.changeDetectorRef.detectChanges();
     this.VSVDialog.checkViewportSize()
   } 
+
+PodzielWiadomosc(wiadomosc: string, dlugosc: number): string[]
+{
+    let tresc: string[] = [];
+    let tresc1: string = '';
+    let tresc2: string = '';
+    let spacja: boolean = false;
+    for (let index = 0; index < wiadomosc.length; index++) 
+    {
+      if (this.funkcje.DlugoscTekstu(tresc2 + tresc1) > dlugosc )  
+      {
+        if (spacja)
+        { tresc = [...tresc, tresc2]; tresc2 = '', spacja = false}
+        else
+        { tresc = [...tresc, tresc1]; tresc1 = '';}
+      }
+      else
+      {
+        if (wiadomosc[index] == ' ')
+        {
+          spacja = true;
+          tresc2 = tresc2 + tresc1 + ' '; 
+          tresc1 = '';
+        }
+        else
+        {
+          tresc1 = tresc1 + wiadomosc[index]; 
+        }
+      }
+    }
+    tresc = [...tresc, tresc2+tresc1];
+//console.log(tresc)    
+return tresc;  
+}
+
+
 
 AktualizujOsobyNoweWiadomosci(tabela: OsobyWiadomosci[], nadawcy: number[]): OsobyWiadomosci[]
 {

@@ -84,7 +84,7 @@ poleceniaWykonaj(polecenie: string, tekst: string)
       case 'dane': setTimeout(() => {
                                 this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.komunikat); 
                                 this.funkcje.UstawStanPolecenia(dowykonania);
-                                this.funkcje.OdblokujLinieDialogu('',0);
+                                this.funkcje.OdblokujLinieDialogu({"liniaL": "", "liniaP": ""});
                               }, dowykonania.czas);
             break;
       case 'warunek': setTimeout(() => {
@@ -140,7 +140,7 @@ poleceniaWykonaj(polecenie: string, tekst: string)
  }
  else
  {
-  this.funkcje.OdblokujLinieDialogu('',0);
+  this.funkcje.OdblokujLinieDialogu({"liniaL": "", "liniaP": ""});
  }
 }
 

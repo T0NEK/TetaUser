@@ -5,8 +5,6 @@
     }
 .linia-komend 
     {
-        width: 100%;
-        min-width: 100%;
         background-color: black;
         color: chartreuse;      
         font-size: 24px;
@@ -16,45 +14,24 @@
     {
       display: inline-block;
     }
-::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline
+.imput
 {
-    background-color: rgb(00, 123, 255);
-}
-::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple 
-    {
-        background-color: rgb(00, 123, 255);
-    }
-::ng-deep .mat-input-element
-    {
-        caret-color: chartreuse;    
-    }
-input
+    cursor: text;    
+}    
+.kursor
 {
-    background: black;
-    color: chartreuse;
-    padding-left: 5px;
-    font-size: 24px;
-    border: 0px;
-    border-top: 1px solid rgb(00, 123, 255);
-    user-select: none;
+    margin-left: -3px;
+    margin-right: -2px;
+    animation-name: kursorek;
+    animation: kursorek 1000ms linear infinite;
 }
-input:focus
-{
-    outline-style: none;
-}
-input:disabled
+@keyframes kursorek
     {
-        color: rgb(185, 0, 62);
-        background-color: black;
-        cursor: crosshair;
-        animation-name: mrugaj;
-        animation: mrugaj 1000ms linear infinite;
-    }
-@keyframes mrugaj
-    {
-        0% { color: rgb(185, 0, 62); }
-        50% { color: black; }
-        100% { color: rgb(86, 0, 185); }
+        0% { color: yellow; }
+        30% { color: rgb(172, 172, 0); }
+        60% { color: rgb(90, 90, 0); }
+        80% { color: rgb(172, 172, 0); }
+        100% { color: yellow; }
     }  
 .ikona
     {   
@@ -62,3 +39,28 @@ input:disabled
         vertical-align: middle;
         text-align: right;
     }
+
+
+    ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline
+    {
+        background-color: rgb(00, 123, 255);
+    }
+    ::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple 
+        {
+            background-color: rgb(00, 123, 255);
+        }
+    
+.niedostepne
+    {
+        cursor: crosshair;
+        animation-name: mrugaj;
+        animation: mrugaj 800ms linear infinite;
+    }
+@keyframes mrugaj
+    {
+        0% { color: red; }
+        30% { color: rgb(172, 0, 0); }
+        60% { color: rgb(90, 0, 0); }
+        80% { color: rgb(172, 0, 0); }
+        100% { color: red; }
+    }  

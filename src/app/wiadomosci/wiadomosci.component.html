@@ -2,7 +2,7 @@
 <div>
   <div [ngStyle]="{'width': width, 'min-width': width, 'height': height, 'min-height': height}">
     <div *ngFor="let item of tablicaosoby; let i = index"  class="example-mat-card, text-success">
-      <mat-slide-toggle (toggleChange)="Przelacz(i,item.wybrany)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny"><span [ngClass]="{'text-warning':item.nowe}">{{item.imie}} &nbsp;{{item.nazwisko}}</span><span class="male">&nbsp;&nbsp;({{item.funkcja}})</span></mat-slide-toggle>
+      <mat-slide-toggle (toggleChange)="Przelacz(i,item.wybrany)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny"><span [ngClass]="{'text-warning':item.nowe}">{{item.imie}} &nbsp;{{item.nazwisko}}</span></mat-slide-toggle>
     </div>
     <div ><mat-slide-toggle #wszyscy (change)="Przelacz(-1,true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span></div>
     <div ><mat-slide-toggle #nikt (change)="Przelacz(-1,false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
