@@ -52,7 +52,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
       { 
         this.notatkaEdycja = data;
         this.PoleNotatki.nativeElement.style.cursor = (data ? 'auto' : 'crosshair');
-        this.PoleNotatki.nativeElement.focus();
+        //this.PoleNotatki.nativeElement.focus();
       } 
     );
 
@@ -96,9 +96,17 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
     this.notatki.setNotatkaTrescNew(this.PoleNotatki.nativeElement.value);
   }
 
-  Fokus(event: string)
+  Fokus(event: boolean)
   {
-    console.log('fokus', event)
+    console.log(this.notatki.getNotatkaCzyEdycja())
+    console.log(event)
+   if (this.notatki.getNotatkaCzyEdycja())
+   { 
+   if (event) 
+   { this.funkcje.ZablokujLinieDialogu({"liniaL": "", "liniaP": ""}) }
+   else
+   { this.funkcje.OdblokujLinieDialogu({"liniaL": "", "liniaP": ""}) }
+   } 
   }
 
   onClick(kto: any)

@@ -1,6 +1,6 @@
 <mat-form-field appearance="fill" class="wymiary">
 <mat-label>{{notatkaTytul}}</mat-label>
-  <textarea matInput ngModel #PoleNotatki spellcheck="false" maxlength="notatkaLenght.max" [readonly]="!notatkaEdycja"  [ngStyle]="{'height': height}" (ngModelChange)="Zmiana()" class="notatki" (focus)="Fokus('on')" (blur)="Fokus('off')"></textarea>
+  <textarea matInput ngModel #PoleNotatki spellcheck="false" maxlength="notatkaLenght.max" [readonly]="!notatkaEdycja"  [ngStyle]="{'height': height}" (ngModelChange)="Zmiana()" class="notatki" (focus)="Fokus(true)" (blur)="Fokus(false)"></textarea>
 <mat-hint [ngStyle]="{ 'color': notatkaEdytowana}" align="end">{{(notatkaEdytowana == 'red' ? 'zmieniona treść' : 'oryginalna treść')}} ({{notatkaLenght.obecna}} znaków z {{notatkaLenght.max}})</mat-hint>
 
 </mat-form-field>

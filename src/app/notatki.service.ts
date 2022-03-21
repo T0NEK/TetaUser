@@ -168,6 +168,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
                   }
                   else
                   {//stan false
+                    this.setNotatkaClear();
                     this.ZapiszNotatki.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
                   }
                 }
@@ -264,7 +265,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
     };
     
   var data = JSON.stringify({"kierunek": "get",  "stan": stan, "notatka": notatka})  
-console.log('data WNT',data)
+//console.log('data WNT',data)
   if (licznik > 0 )
     {
       --licznik;
@@ -316,14 +317,14 @@ console.log('data WNT',data)
   }
 
 
-  ZapiszTrescnotatki(dowykonania: any)
+  ZapiszTrescnotatki(dowykonania: any, czas: string)
   {
-    this.zapisz_tresc_notatki(5, this.getNotatkaWczytanaId(), this.getNotatkaWersjaMax() + 1, this.getNotatkaTrescNew(), dowykonania);
+    this.zapisz_tresc_notatki(5, this.getNotatkaWczytanaId(), this.getNotatkaWersjaMax() + 1, this.getNotatkaTrescNew(), dowykonania, czas);
   }
   
   private ZapiszTrescNotatki = new Subject<any>();
   ZapiszTrescNotatki$ = this.ZapiszTrescNotatki.asObservable()
-  private zapisz_tresc_notatki(licznik: number, id: number, wersja: number, notatka: string, dowykonania: any)
+  private zapisz_tresc_notatki(licznik: number, id: number, wersja: number, notatka: string, dowykonania: any, czas: string)
   {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -333,7 +334,7 @@ console.log('data WNT',data)
       })
     };
     
-  var data = JSON.stringify({"kierunek": "set", "stan": id, "wersja": wersja, "notatka": notatka})  
+  var data = JSON.stringify({"kierunek": "set", "stan": id, "wersja": wersja, "notatka": notatka, "czas": czas})  
   
   if (licznik > 0 )
     {
@@ -368,12 +369,12 @@ console.log('data WNT',data)
                 }
                 else
                 {//wynik false
-                  setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania)}, 1000) 
+                  setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania, czas)}, 1000) 
                 }
                   },
         error => {
           console.log(error)
-                  setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania)}, 1000) 
+                  setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania, czas)}, 1000) 
                 }
                 )      
     }

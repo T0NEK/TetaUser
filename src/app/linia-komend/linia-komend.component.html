@@ -3,7 +3,7 @@
   <div class="obok">
 <!--  <input matInput ngModel #liniaInput autofocus autocomplete="off"  (keyup)="Zmiana($event)"  [type]="haslo ? 'password' : 'text'"  [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px'}">
 -->
-  <div ngModel class="imput" [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px', 'height': wysokoscInput +'px', 'max-height': wysokoscInput +'px'}" [ngClass]="{'niedostepne': blokada}" class="spacje">
+  <div ngModel class="imput spacje" [ngStyle]="{'width': szerokoscInput +'px', 'max-width': szerokoscInput +'px', 'height': wysokoscInput +'px', 'max-height': wysokoscInput +'px'}" [ngClass]="{'niedostepne': blokada}" >
     {{haslo ? liniaH : linia}}<span *ngIf="!blokada" class="kursor" [ngStyle]="{'height': wysokoscInput +'px', 'max-height': wysokoscInput +'px'}">|</span>{{haslo ? liniaHP : liniaP}}
   </div>
   </div>

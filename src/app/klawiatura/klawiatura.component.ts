@@ -21,6 +21,8 @@ export class KlawiaturaComponent implements OnDestroy {
   klw21caps: any;
   klw22: any;
   klw22caps: any;
+  klw22alt: any;
+  klw22capsalt: any;
   zwloka_czas: any;
   zwloka = 250;
   //@Output() bufor = new EventEmitter<string>();
@@ -36,6 +38,8 @@ export class KlawiaturaComponent implements OnDestroy {
       this.klw21caps = funkcje.klw21caps;
       this.klw22 = funkcje.klw22;
       this.klw22caps = funkcje.klw22caps;    
+      this.klw22alt = funkcje.klw22alt;
+      this.klw22capsalt = funkcje.klw22capsalt;    
     }
       
   ngOnDestroy()

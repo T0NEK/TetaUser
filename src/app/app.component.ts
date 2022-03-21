@@ -114,10 +114,17 @@ onKey(kto: KeyboardEvent)
   //console.log(kto.altKey);
   //console.log(kto.shiftKey);
   //console.log(kto);
+  if ( kto.key == 'Tab')
+  {
+    this.funkcje.fokusLiniaDialogu('')
+  }
+  else
+  {
   if ( kto.key == kto.key.charAt(0) )
   { this.funkcje.LiniaDialoguChar(kto.key.charCodeAt(0)) }
   else
   { this.funkcje.LiniaDialogu_Zmien(kto.key) }
+  }
 }
 
 onWindowResize(event: any) {

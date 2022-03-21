@@ -355,7 +355,7 @@ GetSet(dowykonania: any)
         break;  
     case 'zapisz': switch (dowykonania.sufix) {
             case 'notatki': this.notatki.Zapisznotatki(this.funkcje.getZalogowany().zalogowany, this.bufordane[0], dowykonania, this.czasy.getCzasDedala()); break;
-            case 'notatka': this.notatki.ZapiszTrescnotatki(dowykonania); break;                
+            case 'notatka': this.notatki.ZapiszTrescnotatki(dowykonania, this.czasy.getCzasDedala()); break;                
             }
         break;
     case 'usun': switch (dowykonania.sufix) {

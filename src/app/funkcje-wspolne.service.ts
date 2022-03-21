@@ -18,7 +18,7 @@ constructor ()
   //console.log('con fun wsp');
   
   //this.dane0 = {"prefix": "", "nazwa1": "", "separator":"", "nazwa2": "", "sufix": "", "kolor": "", "rodzaj": ""};
-  this.poprawne = this.poprawne.concat(this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
+  this.poprawne = this.poprawne.concat(this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps,this.klw22alt)
   
   this.kolory = {"info": "", "alert": "rgb(199, 100, 43)", "krytyczny": "red", "liniakomend": "rgb(00, 123, 255)", "zalogowany": "rgb(230, 255, 0)", "wylogowany": "white"}
   
@@ -27,8 +27,8 @@ constructor ()
   //do skasowania
   this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
 
-  this.znaki = this.znaki.concat('',' ',this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
-  this.dluznaki = this.dluznaki.concat(0,2.45,this.dlu11,this.dlu11alt,this.dlu12,this.dlu12alt,this.dlu12caps,this.dlu21,this.dlu21caps,this.dlu22,this.dlu22caps)
+  this.znaki = this.znaki.concat('',' ',this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps,this.klw22alt,this.klw22capsalt)
+  this.dluznaki = this.dluznaki.concat(0,2.45,this.dlu11,this.dlu11alt,this.dlu12,this.dlu12alt,this.dlu12caps,this.dlu21,this.dlu21caps,this.dlu22,this.dlu22caps,this.dlu22alt,this.dlu22capsalt)
 
 
 }
@@ -354,7 +354,7 @@ this.LiniaDialoguZmien.next(znak)
   dlu12 = Array (9.79,9.41,9.54,4.87,9.94,10.27,9.29,8.92,8.92,9.0,18.0,18.0);
   klw12caps = Array ('Ą','Ć','Ę','Ł','Ń','Ó','Ś','Ż','Ź',String.fromCharCode(8593),String.fromCharCode(8592),String.fromCharCode(8594));
   dlu12caps = Array (11.75,11.72,10.24,9.7,12.84,12.39,10.69,10.79,10.79,9.0,18.0,18.0);
-  klw12alt = Array ('+','-',String.fromCharCode(215),String.fromCharCode(247),'=',String.fromCharCode(8800),String.fromCharCode(177),String.fromCharCode(176),'_','/','|',String.fromCharCode(92),String.fromCharCode(10003),String.fromCharCode(8593),String.fromCharCode(8592),String.fromCharCode(8594))
+  klw12alt = Array ('+','-',String.fromCharCode(215),String.fromCharCode(247),'=',String.fromCharCode(8800),String.fromCharCode(177),String.fromCharCode(176),'_','/','|',String.fromCharCode(92),String.fromCharCode(10003),String.fromCharCode(8648),String.fromCharCode(8647),String.fromCharCode(8649))
   dlu12alt = Array (10.2,4.97,9.6,10.27,9.89,9.89,9.62,6.72,8.12,7.42,8.12,4.39,13.49,9.0,18.0,18.0)
   klw21 = Array ('a','b','c','d','e','f','g','h','i','j','k','l','m');
   dlu21 = Array (9.79,10.1,9.42,10.15,9.54,6.25,10.1,9.92,4.37,4.3,9.12,4.37,15.78);
@@ -362,8 +362,12 @@ this.LiniaDialoguZmien.next(znak)
   dlu21caps = Array (11.75,11.2,11.72,11.8,10.24,9.95,12.27,12.84,4.9,9.94,11.29,9.69,15.72);
   klw22 = Array ('n','o','p','q','r','s','t','u','v','w','x','y','z',String.fromCharCode(8595));
   dlu22 = Array (9.94,10.27,10.1,10.24,6.09,9.29,5.89,9.92,8.72,13.54,8.92,8.52,8.92,9);
+  klw22alt = Array ('n','o','p','q','r','s','t','u','v','w','x','y','z',String.fromCharCode(8650));
+  dlu22alt = Array (9.94,10.27,10.1,10.24,6.09,9.29,5.89,9.92,8.72,13.54,8.92,8.52,8.92,9);
   klw22caps = Array ('N','O','P','Q','R','S','T','U','V','W','X','Y','Z',String.fromCharCode(8595));
   dlu22caps = Array (12.84,12.39,11.35,12.39,11.09,10.69,10.73,11.67,11.45,15.97,11.29,10.82,10.79,9.0);
+  klw22capsalt = Array ('N','O','P','Q','R','S','T','U','V','W','X','Y','Z',String.fromCharCode(8650));
+  dlu22capsalt = Array (12.84,12.39,11.35,12.39,11.09,10.69,10.73,11.67,11.45,15.97,11.29,10.82,10.79,9.0);
   poprawne = Array ('&space','&back','&del','&enter','Backspace', 'Delete', 'Enter',' ');
   dlupoprawne = Array (2.45,0,0,0,0,0,0,2.45);
 
@@ -384,6 +388,7 @@ DlugoscTekstu(tekst: string): number
 
 PoprawnyZnak(znak: any)
 {
+//console.log(znak)
 //console.log('typ ', typeof znak === 'number' )
 //console.log('jest ', this.poprawne.indexOf(String.fromCharCode(znak)))
 //console.log('jestznak: ', this.poprawne[this.poprawne.indexOf(String.fromCharCode(znak))])
