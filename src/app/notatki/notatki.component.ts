@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
-import { Tresc } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 import { NotatkiService } from '../notatki.service';
 
@@ -97,7 +96,11 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
     this.notatki.setNotatkaTrescNew(this.PoleNotatki.nativeElement.value);
   }
 
-  
+  Fokus(event: string)
+  {
+    console.log('fokus', event)
+  }
+
   onClick(kto: any)
   {
     //console.log('app   ',kto);

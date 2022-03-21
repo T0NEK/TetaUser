@@ -60,4 +60,6 @@ export class DialogMiniComponent implements OnInit {
   {
     this.tablicazawartoscisubscribe.unsubscribe();
   }
+
+
 }

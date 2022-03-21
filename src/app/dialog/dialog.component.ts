@@ -107,5 +107,6 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
   if(this.zakladkasubscribe) {this.zakladkasubscribe.unsubscribe()};
   }
 
+
   
 }

@@ -25,7 +25,7 @@ constructor ()
   this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '','kolor': "white"} 
   
   //do skasowania
-  //this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
+  this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
 
   this.znaki = this.znaki.concat('',' ',this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps)
   this.dluznaki = this.dluznaki.concat(0,2.45,this.dlu11,this.dlu11alt,this.dlu12,this.dlu12alt,this.dlu12caps,this.dlu21,this.dlu21caps,this.dlu22,this.dlu22caps)
@@ -176,10 +176,11 @@ addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string
   przed = (przed === "" ? ', ' : przed);
   po = ( po === "" ? ' > ' : po);
   let dlugosc = 0;
-  let spacje = 0;
+  //let spacje = 0;
+  let spacje = '          ';
   let wiersz: Wiersze;
   for (let index = 0; index < linia.length; index++) { dlugosc = dlugosc + linia[index].dlugosc }
-  let data = (moment()).format('YYYY-MM-DD HH:mm:ss');
+  let data = ' ' + (moment()).format('YYYY-MM-DD HH:mm:ss');
   if ( ( this.DlugoscTekstu(data + przed + name + po + prefix + sufix) + dlugosc) < szerokosc)
   {
   wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, linia, sufix);  
@@ -192,17 +193,17 @@ addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string
   {
     wiersz = this.setLiniaWiersz (data, przed, name, po, "", [], "")
     wynik = [...wynik, wiersz];
-    data = "";
+    data = spacje;
     name = "";
     przed = "";
     po = "";
-    spacje = 10 * 2.45; // 10 spacje w html przed kolejną linią
+    //spacje = 10 * 2.45; // 10 spacje w html przed kolejną linią
   }
   {
     let liniaNew: Linia[] = []; 
     for (let index = 0; index < linia.length; index++) 
     {
-      if ( (this.DlugoscTekstu(data + przed + name + po + prefix) + spacje + dlugosc + linia[index].dlugosc ) < szerokosc)
+      if ( (this.DlugoscTekstu(data + przed + name + po + prefix) + dlugosc + linia[index].dlugosc ) < szerokosc)
       {
         liniaNew = [...liniaNew,linia[index]];
         dlugosc = dlugosc + linia[index].dlugosc
@@ -211,17 +212,17 @@ addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string
       {
         wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, liniaNew, "");
         wynik = [...wynik, wiersz];
-        data = "";
+        data = spacje;
         name = "";
         przed = "";
         po = "";
         prefix = "";
         liniaNew = [linia[index]];
         dlugosc =  linia[index].dlugosc;
-        spacje = 10 * 2.45; // 10 spacje w html przed kolejną linią
+        //spacje = 10 * 2.45; // 10 spacje w html przed kolejną linią
       }
     }
-  if ( ( this.DlugoscTekstu(data + przed + name + po + prefix +  sufix) + spacje + dlugosc ) < szerokosc)
+  if ( ( this.DlugoscTekstu(data + przed + name + po + prefix +  sufix) + dlugosc ) < szerokosc)
   {
     wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, liniaNew, sufix)
     wynik = [...wynik, wiersz];
@@ -230,7 +231,7 @@ addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string
   {
     wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, liniaNew, "")
     wynik = [...wynik, wiersz];
-    wiersz = this.setLiniaWiersz ("", "", "", "", "", [], sufix);
+    wiersz = this.setLiniaWiersz (data, "", "", "", "", [], sufix);
     wynik = [...wynik, wiersz];
     
   }      

@@ -2,7 +2,7 @@
   <div class="btn btn-primary szeroki" (click)="klwalt=!klwalt">{{klwalt ? '123' : '!@#'}}</div>
   <div class="btn btn-primary cyfra" (click)="onAdd($event)" (mousedown)="onNext(zwloka, $event)" (mouseup)="onStop()" *ngFor="let item of ( klwalt ? klw11alt : klw11 )">{{item}}</div>
   <div class="btn btn-primary cyfra" (click)="onAdd($event)" (mousedown)="onNext(zwloka, $event)" (mouseup)="onStop()" *ngFor="let item of ( klwalt ? klw12alt : ( klwcaps ? klw12caps : klw12 ) )">{{item}}</div>
-  <div class="btn btn-primary szeroki" (click)="onFun('&back')" (mousedown)="onFunNext(zwloka, '&back')" (mouseup)="onStop()"><mat-icon *ngIf="!klwalt" class="icon">backspace</mat-icon><mat-icon *ngIf="klwalt" class="icon">delete</mat-icon></div>
+  <div class="btn btn-primary szeroki" (click)="onFun(klwalt ? '&del' : '&back')" (mousedown)="onFunNext(zwloka, klwalt ? '&del' : '&back')" (mouseup)="onStop()"><mat-icon *ngIf="!klwalt" class="icon">backspace</mat-icon><mat-icon *ngIf="klwalt" class="icon">delete</mat-icon></div>
   </div>
 <div class="row col-12">
   <div class="btn btn-primary szeroki" (click)="klwshift = !klwshift; klwcaps = !klwcaps; shiftraz = true">Shift</div>

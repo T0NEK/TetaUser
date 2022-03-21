@@ -16,7 +16,8 @@
     }
 .imput
 {
-    cursor: text;    
+    cursor: text;  
+    padding-left: 10px;  
 }    
 .kursor
 {
@@ -25,6 +26,10 @@
     animation-name: kursorek;
     animation: kursorek 1000ms linear infinite;
 }
+.spacje
+  {
+    white-space: pre;
+  }  
 @keyframes kursorek
     {
         0% { color: yellow; }
