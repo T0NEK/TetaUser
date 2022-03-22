@@ -39,7 +39,8 @@ private odczytaj_osoby(stan: number)
 
     this.http.post(this.komunikacja.getURL() + 'zalogowani/', data, httpOptions).subscribe( 
       data =>  {
-        let wynik = JSON.parse(JSON.stringify(data));    
+        let wynik = JSON.parse(JSON.stringify(data));   
+       // console.log(wynik) 
         if (wynik.wynik == true) 
         {
           /*
@@ -58,14 +59,13 @@ private odczytaj_osoby(stan: number)
         }
         else
         {
-          this.OdczytajOsoby.next('');
+          //this.OdczytajOsoby.next('');
           setTimeout(() => {this.odczytaj_osoby(stan)}, 1000)
         }
                         
                },
       error => {
-                
-                this.OdczytajOsoby.next('');
+                //this.OdczytajOsoby.next('');
                 setTimeout(() => {this.odczytaj_osoby(stan)}, 1000)
                }
                )      
