@@ -24,7 +24,11 @@ constructor(private all: AppComponent, private osoby: OsobyService)
     this.width = all.szerokoscZalogowani;
     //console.log(this.height)
     this.osobysubscribe_zu = osoby.OdczytajOsoby$.subscribe
-    ( data => { this.tablicaosoby = data; } )
+    ( data => 
+      {
+         this.tablicaosoby = data; 
+      //console.log( this.tablicaosoby[7].id, this.tablicaosoby[7].zalogowany )
+      } )
    //this.gosciesubscribe_zu = osoby.OdczytajGoscie$.subscribe
    // ( data => { this.tablicagoscie = data; } )
   }

@@ -75,16 +75,10 @@ private odczytaj_osoby(stan: string)
           this.OdczytajOsoby.next(wynik.osoby);
         }
         else
-        {
-          setTimeout(() =>  {
-                            if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_osoby(stan)}
-                            }, 1000)
-        }
+        { if (this.funkcje.getZalogowany().zalogowany != 0) { setTimeout(() =>  { this.odczytaj_osoby(stan) }, 1000) } }
                },
       error => {
-                setTimeout(() =>  {
-                                  if (this.funkcje.getZalogowany().zalogowany != 0) {this.odczytaj_osoby(stan)}
-                                  }, 1000)
+          if (this.funkcje.getZalogowany().zalogowany != 0) { setTimeout(() =>  { this.odczytaj_osoby(stan)} , 1000)}
                }
                )      
   }

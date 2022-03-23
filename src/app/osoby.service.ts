@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { KomunikacjaService } from './komunikacja.service';
 import { Osoby } from './definicje';
+import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 
 
 @Injectable({ providedIn: 'root'})
@@ -10,7 +11,7 @@ import { Osoby } from './definicje';
 export class OsobyService 
 {
     
-constructor(private komunikacja: KomunikacjaService, private http: HttpClient)
+constructor(private komunikacja: KomunikacjaService, private http: HttpClient, private funkcje: FunkcjeWspolneService)
 {
   //console.log('osoby con');
 }
@@ -37,6 +38,8 @@ private odczytaj_osoby(stan: number)
   var data = JSON.stringify({ "stan": stan})  
     
 
+  if (this.funkcje.getZalogowany().zalogowany != 0)
+  {
     this.http.post(this.komunikacja.getURL() + 'zalogowani/', data, httpOptions).subscribe( 
       data =>  {
         let wynik = JSON.parse(JSON.stringify(data));   
@@ -55,21 +58,26 @@ private odczytaj_osoby(stan: number)
           //  this.OdczytajOsoby.next(osoby);
           this.OdczytajOsoby.next(wynik.osoby);
           } 
-          setTimeout(() => {this.odczytaj_osoby(stan)}, 1000)  
+           setTimeout(() => {this.odczytaj_osoby(stan)}, 1000) 
         }
         else
         {
           //this.OdczytajOsoby.next('');
-          setTimeout(() => {this.odczytaj_osoby(stan)}, 1000)
+           setTimeout(() => {this.odczytaj_osoby(stan)}, 1000) 
         }
                         
                },
       error => {
                 //this.OdczytajOsoby.next('');
-                setTimeout(() => {this.odczytaj_osoby(stan)}, 1000)
+                 setTimeout(() => {this.odczytaj_osoby(stan)}, 1000) 
                }
                )      
   }
+  else
+  {
+    this.OdczytajOsoby.next([]);
+  }
+}  
 /* (end) osoby*/
 
 }
