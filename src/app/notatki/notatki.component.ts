@@ -32,13 +32,16 @@ export class NotatkiComponent implements OnDestroy {
  //wersja: number;
  notatkaLenght: any;
 
+
+
 constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, private notatki: NotatkiService)
   {
-    this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj-150) + 'px';
+    this.height = (all.wysokoscNawigacja - all.wysokoscNawigacjaNag - 80 ) + 'px';
     this.notatkaTytul = 'Wczytaj notatkę';
     this.notatkaEdycja = false;
     this.notatkaEdytowana = 'inherit';
     this.notatkaLenght = {"obecna": 0, "max": 1024};
+
 
     this.fokus_subscribe_no = funkcje.PoleNotatki$.subscribe 
     ( data =>
@@ -92,7 +95,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
   {
     this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
     this.notatki.setNotatkaZmiana(this.PoleNotatki.nativeElement.value != this.notatki.getNotatkaTresc());
-    this.notatkaEdytowana = (this.notatki.getNotatkaZmiana() ? 'red' : 'inherit')
+    this.notatkaEdytowana = (this.notatki.getNotatkaZmiana() ? ( (this.notatkaLenght.obecna >= this.PoleNotatki.nativeElement.value.length) ? 'red' : 'blueviolet') : 'inherit')
     this.notatki.setNotatkaTrescNew(this.PoleNotatki.nativeElement.value);
   }
 

@@ -3,7 +3,8 @@
     --odstep: 1px;  
     --wysokosc_przycisk: 34px;
     --szerokosc_przycisk: 32px;
-    padding: 9px;
+    margin: auto;
+    padding: 4px 12px;
 }
 .cyfra
 {

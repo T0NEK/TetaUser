@@ -39,7 +39,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
 
   constructor(private all: AppComponent, private wiadomosci: WiadomosciService, private funkcje: FunkcjeWspolneService, private czas: CzasService, private komunikacja: KomunikacjaService, private changeDetectorRef: ChangeDetectorRef) 
   { 
-    this.height = (all.wysokoscNawigacja - all.wysokoscDialogMin) + 'px' ;
+    this.height = (all.wysokoscNawigacja - all.wysokoscNawigacjaNag - all.wysokoscPrzewijaj) + 'px' ;
     this.width = all.szerokoscWiadOsoby + 'px';
     this.width1 = (all.szerokoscAll - all.szerokoscZalogowani - all.szerokoscWiadOsoby - 10) + 'px';
 
@@ -59,8 +59,8 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
             }
             else
             {
-            //this.wiadomosci.wczytajOsoby(this.funkcje.getZalogowany().zalogowany);
-            //this.wiadomosci.OdczytajWiadomosci( this.funkcje.getZalogowany().zalogowany );
+            this.wiadomosci.wczytajOsoby();
+            this.wiadomosci.OdczytajWiadomosci();
             }
           { if (this.checked) { this.Przewin()} }
          }

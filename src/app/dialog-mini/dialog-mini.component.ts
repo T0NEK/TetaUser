@@ -16,11 +16,13 @@ export class DialogMiniComponent implements OnInit {
   tablicazawartosci: Wiersze [] = [];  
   @ViewChild('scrollViewportUstawienia') VSVUstawienia!: CdkVirtualScrollViewport;
   height: any;
+  height1: any;
 
 
   constructor(private all: AppComponent, private funkcje: FunkcjeWspolneService,private changeDetectorRef: ChangeDetectorRef)
   {
     this.height = all.wysokoscDialogMin + 'px';
+    this.height1 = all.wysokoscDialogMin - 6 + 'px';
        this.tablicazawartoscisubscribe = funkcje.LiniaKomunikatu$.subscribe
     ( data => 
       { 
