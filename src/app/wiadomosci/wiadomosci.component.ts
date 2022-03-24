@@ -75,6 +75,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
         this.tablicaosoby.forEach((element, index) => { this.tablicaosobywybrane[index] = -1; });
       } 
     )
+
     this.wiadomoscisubscribe = wiadomosci.Wiadomosci$.subscribe
     ( data => 
       { 
@@ -212,23 +213,32 @@ AktualizujOsobyNoweWiadomosci(tabela: OsobyWiadomosci[], nadawcy: number[]): Oso
   return tabela;
 }
 
-AktualizujPrzeczytane(tabela: Wiadomosci[])
+AktualizujPrzeczytane(wiadomoscid: number, index: number = 0)
 {
+  if (wiadomoscid == 0)
+  {
   let tabelawynik = '0';
   let odczytane = 0;
-  for (let index = 0; index < tabela.length; index++) 
+  for (let index = 0; index < this.tablicawiadomosci.length; index++) 
   {
-    if ((tabela[index].przeczytana == false)&&(tabela[index].wyslana==false))
+    if ((this.tablicawiadomosci[index].przeczytana == false)&&(this.tablicawiadomosci[index].wyslana==false))
     { 
       odczytane++;
-      tabelawynik = tabelawynik + ',' + tabela[index].id.toString(); 
+      tabelawynik = tabelawynik + ',' + this.tablicawiadomosci[index].id.toString(); 
     }
   }
   if (odczytane != 0)
   { 
     this.wiadomosci.AktualizujPrzeczytane(tabelawynik, this.funkcje.getZalogowany().zalogowany,odczytane); 
   }  
-  
+  }
+  else
+  {
+    if ((this.tablicawiadomosci[index].przeczytana == false)&&(this.tablicawiadomosci[index].wyslana==false))
+    {
+      this.wiadomosci.AktualizujPrzeczytane(wiadomoscid.toString(), this.funkcje.getZalogowany().zalogowany,1); 
+    }
+  }
 }
 
 
@@ -266,7 +276,7 @@ AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
       this.tablicaosobywybrane[wszystkie] = (!all ? (1*this.tablicaosoby[wszystkie].id) : -1);
     }
   this.tablicawiadomosci = this.AktualizujWybraneOsoby(this.tablicawiadomosciorg);
-  this.AktualizujPrzeczytane(this.tablicawiadomosci);
+  //this.AktualizujPrzeczytane();
   }
 
   onClick(kto: string)

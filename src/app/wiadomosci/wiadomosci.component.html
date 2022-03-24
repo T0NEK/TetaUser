@@ -4,8 +4,16 @@
     <div *ngFor="let item of tablicaosoby; let i = index"  class="example-mat-card, text-success">
       <mat-slide-toggle (toggleChange)="Przelacz(i,item.wybrany)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny"><span [ngClass]="{'text-warning':item.nowe}">{{item.imie}} &nbsp;{{item.nazwisko}}</span></mat-slide-toggle>
     </div>
-    <div ><mat-slide-toggle #wszyscy (change)="Przelacz(-1,true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span></div>
-    <div ><mat-slide-toggle #nikt (change)="Przelacz(-1,false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
+    <div >
+      <mat-slide-toggle #wszyscy (change)="Przelacz(-1,true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span>
+    </div>
+    <div >
+      <mat-slide-toggle #nikt (change)="Przelacz(-1,false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
+    <div>
+      <br>
+      <div class="text-success kursor" (click)="AktualizujPrzeczytane(0)"><strong> Przeczytane</strong></div>
+    </div>
+    
 </div>
 <div>
   <mat-slide-toggle (toggleChange)="Przewijaj()" [(ngModel)]="checked" (change)="onClick('slide-toggle')"><span [ngClass]="{'text-success':checked, 'text-danger':!checked}">{{ checked ? "przewijaj" : "nie przewijaj"}}</span></mat-slide-toggle>
@@ -15,9 +23,9 @@
 
 <div>
   <cdk-virtual-scroll-viewport #scrollViewportDialog appendOnly [itemSize]="44" minBufferPx="200" maxBufferPx="400" class="example-viewport" [ngStyle]="{'width': width1, 'min-width': width1,'height': height}" autosize>
-    <div *cdkVirtualFor="let item of tablicawiadomosci"  class="example-item, text-success">
-      <div class="example-item-detail1" [ngClass]="{'text-info': !item.wyslana}" [ngStyle]="{'font-weight': ((item.przeczytana)||(item.wyslana) ? 'normal' : 'bold')}">{{item.czas}} &nbsp;{{ item.autorText }} &#10140; {{ item.odbiorcaText }}</div>
-      <div *ngFor="let item2 of item.tresc" class="example-item-detail2" [ngClass]="{'text-info': !item.wyslana}" [ngStyle]="{'font-weight': ((item.przeczytana)||(item.wyslana) ? 'normal' : 'bold')}">{{item2}}</div>
+    <div *cdkVirtualFor="let item of tablicawiadomosci, let i=index"  class="example-item, text-success" [ngClass]="{'text-info': !item.wyslana}" [ngStyle]="{'font-weight': ((item.przeczytana)||(item.wyslana) ? 'normal' : 'bold')}" (click)="AktualizujPrzeczytane(item.id,i)">
+      <div class="example-item-detail1" [ngClass]="{'kursor': (!item.przeczytana)&&(!item.wyslana)}">{{item.czas}} &nbsp;{{ item.autorText }} &#10140; {{ item.odbiorcaText }}</div>
+      <div *ngFor="let item2 of item.tresc" class="example-item-detail2" >{{item2}}</div>
     </div>
   </cdk-virtual-scroll-viewport>
 </div>

@@ -151,9 +151,7 @@ private odczytaj_osoby(stan: string)
 
   AktualizujPrzeczytane(przeczytane: string, odbiorca: number, odczytane: number)
   {
-    setTimeout(() => {
-                        this.set_wiadomosci(2, 'prze', przeczytane, odbiorca, odczytane, '', '', '')
-                      }, 2000) ;
+      this.set_wiadomosci(2, 'prze', przeczytane, odbiorca, odczytane, '', '', '')
   }
   
   WyslijWiadomosci(odbiorcy: string, odbiorca: number, tresc: string, czas: string)
