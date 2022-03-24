@@ -32,6 +32,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
   width1: any;
   checkedW = true;
   checkedN = false;
+  zalogowany: number;
 
   checked = true;
   @ViewChild('scrollViewportDialog') VSVDialog!: CdkVirtualScrollViewport;
@@ -42,11 +43,12 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     this.height = (all.wysokoscNawigacja - all.wysokoscNawigacjaNag - all.wysokoscPrzewijaj) + 'px' ;
     this.width = all.szerokoscWiadOsoby + 'px';
     this.width1 = (all.szerokoscAll - all.szerokoscZalogowani - all.szerokoscWiadOsoby - 10) + 'px';
-
+    this.zalogowany = this.funkcje.getZalogowany().zalogowany;
     this.zakladkasubscribe = funkcje.ZakladkaDialogu$.subscribe
     (
       data =>
       {
+        this.zalogowany = this.funkcje.getZalogowany().zalogowany;
           if (data == 2) 
           {
             if (this.funkcje.getZalogowany().zalogowany == 0)
