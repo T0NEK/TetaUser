@@ -38,6 +38,11 @@ div.row
   .example-item-detail2
   {
     height: 24px;
-    font-size: 20px;
+    font-size: 18px;
     padding-left: 5px;
   }  
+  .odstep
+  {
+    height: 4px;
+    max-height: 4px;
+  }

@@ -1,6 +1,6 @@
 <div [ngStyle]="{'width': width +'px', 'max-width': width +'px'}">
 <div class="btn btn-primary">Zalogowani</div>
 <div *ngFor="let item of tablicaosoby"  class="example-mat-card">
-  <div [class]="item.zalogowany == true ? 'text-success' : 'text-muted'"><span class="liniakomend kursor">{{item.imie}}</span>&nbsp;<span class="liniakomend kursor">{{item.nazwisko}}</span><span class="male">&nbsp;&nbsp;({{item.funkcja}})</span></div>
+  <div [class]="((item.zalogowany == true)||(item.id == zalogowany) ) ? 'text-success' : 'text-muted'"><span class="liniakomend kursor">{{item.imie}}</span>&nbsp;<span class="liniakomend kursor">{{item.nazwisko}}</span><span class="male">&nbsp;&nbsp;({{item.funkcja}})</span></div>
 </div>
 </div>

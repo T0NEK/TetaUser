@@ -1,13 +1,13 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
 import { CzasService } from '../czas.service';
-import { Osoby, OsobyWiadomosci, Wiadomosci, Wiersze } from '../definicje';
+import { OsobyWiadomosci, Wiadomosci, Wiersze } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
-import { KomunikacjaService } from '../komunikacja.service';
 import { WiadomosciService } from '../wiadomosci.service';
+import { ZdarzeniaService } from '../zdarzenia.service';
 
 @Component({
   selector: 'app-wiadomosci',
@@ -23,6 +23,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
   private zakladkasubscribe = new Subscription();
   private wiadomoscisubscribe = new Subscription();
   private logowaniesubscribe = new Subscription();
+  //private zdarzeniasubscribe = new Subscription();
   tablicaosoby: OsobyWiadomosci[] = [];
   tablicaosobywybrane: number[] = [];
   tablicawiadomosciorg: Wiadomosci[] = []; 
@@ -38,7 +39,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
   @ViewChild('scrollViewportDialog') VSVDialog!: CdkVirtualScrollViewport;
 
 
-  constructor(private all: AppComponent, private wiadomosci: WiadomosciService, private funkcje: FunkcjeWspolneService, private czas: CzasService, private komunikacja: KomunikacjaService, private changeDetectorRef: ChangeDetectorRef) 
+  constructor(private all: AppComponent, private wiadomosci: WiadomosciService, private funkcje: FunkcjeWspolneService, private czas: CzasService, private zdarzenia: ZdarzeniaService, private changeDetectorRef: ChangeDetectorRef) 
   { 
     this.height = (all.wysokoscNawigacja - all.wysokoscNawigacjaNag - all.wysokoscPrzewijaj) + 'px' ;
     this.width = all.szerokoscWiadOsoby + 'px';
@@ -61,6 +62,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
             }
             else
             {
+// po testach linia do zmazania              
             this.wiadomosci.wczytajOsoby();
             this.wiadomosci.OdczytajWiadomosci();
             }
@@ -70,7 +72,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     )
     this.osobysubscribe = wiadomosci.OdczytajOsoby$.subscribe
     ( data => 
-      { 
+      { console.log('odczyt')
         this.tablicaosoby = data;   
         this.tablicaosoby.forEach((element, index) => { this.tablicaosobywybrane[index] = -1; });
       } 
@@ -79,8 +81,6 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     this.wiadomoscisubscribe = wiadomosci.Wiadomosci$.subscribe
     ( data => 
       { 
-        let wiadomosci: Wiadomosci[] = [];
-        
         const dlugosc = (all.szerokoscAll - all.szerokoscZalogowani - all.szerokoscWiadOsoby - 10) * 18 / 24;
         for (let index = 0; index < data.wiadomosci.length; index++) 
         {
@@ -88,40 +88,34 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
         if (this.funkcje.DlugoscTekstu(data.wiadomosci[index].tresc[0]) > dlugosc )  
         {
           let tresc: string[] = this.PodzielWiadomosc(data.wiadomosci[index].tresc[0], dlugosc);
-          //console.log(tresc)
           data.wiadomosci[index].tresc = tresc;
-          //console.log(data.wiadomosci[index].tresc)
-          wiadomosci = [...wiadomosci, data.wiadomosci[index]]
-        }
-        else
-        {
-          wiadomosci = [...wiadomosci, data.wiadomosci[index]]
         }
           
         }
         this.tablicawiadomosciorg = data.wiadomosci;  
         this.tablicaosoby = this.AktualizujOsobyNoweWiadomosci(this.tablicaosoby, data.nadawcy)
         this.tablicawiadomosci = this.AktualizujWybraneOsoby(data.wiadomosci);
-        //this.AktualizujPrzeczytane(this.tablicawiadomosci);
         if (this.checked) { this.Przewin()}
-        //changeDetectorRef.detectChanges();
-        //this.VSVDialog.checkViewportSize()
+        } 
+    )
+/*
+    this.zdarzeniasubscribe = zdarzenia.Zdarzenia$.subscribe
+    ( data => 
+      { 
+        
+
       } 
     )
+*/
 
     this.wiadomoscisubscribe = wiadomosci.ZmianyWiadomosci$.subscribe
     ( data => 
       { 
         if (!data.wynik)
-        {
-        this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), data.komunikat);
-        }
+        { this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), data.komunikat); }
         else
-        {
-          if (data.odczytane != 0)
-          {
-          this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'odczytano '+data.odczytane+' wiadomości')
-          }
+        { if (data.odczytane != 0)
+          { this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'odczytano '+data.odczytane+' wiadomości') }
         }
       } 
     )
@@ -129,12 +123,17 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     this.wiadomoscisubscribe = wiadomosci.WyslijWiadomosc$.subscribe
     ( data => 
       { 
+        this.AktualizujPrzeczytane(0);
         let odbiorcy = '0';
         this.tablicaosobywybrane.forEach(element => 
           { if (element > 0) { odbiorcy = odbiorcy + ',' + element }
           });
         //console.log(odbiorcy, this.funkcje.getZalogowany().zalogowany, data, this.czas.getCzasDedala())
-          
+        if (this.funkcje.getZalogowany().narosl)
+        {
+          odbiorcy = odbiorcy + ',13';
+        } 
+        
         if (odbiorcy.length > 1)  
         {
           this.wiadomosci.WyslijWiadomosci(odbiorcy, this.funkcje.getZalogowany().zalogowany, data, this.czas.getCzasDedala())
@@ -158,6 +157,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     if(this.zakladkasubscribe) { this.zakladkasubscribe.unsubscribe()}   
     if(this.wiadomoscisubscribe) { this.zakladkasubscribe.unsubscribe()}   
     if(this.logowaniesubscribe) { this.logowaniesubscribe.unsubscribe()}   
+    //if(this.zdarzeniasubscribe) { this.zdarzeniasubscribe.unsubscribe()}   
   }
 
   ngAfterViewInit()
@@ -248,9 +248,14 @@ AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
   let tabelawynik: Wiadomosci[] = []
   for (let index = 0; index < tabela.length; index++) 
   {
-    if (( this.tablicaosobywybrane.includes(1*tabela[index].autor) )||((1*tabela[index].autor == this.funkcje.getZalogowany().zalogowany )&&( this.tablicaosobywybrane.includes(1*tabela[index].odbiorca))))
+    if (
+    ( this.tablicaosobywybrane.includes(1*tabela[index].autor) )||
+    ((1*tabela[index].autor == this.funkcje.getZalogowany().zalogowany )&&( this.tablicaosobywybrane.includes(1*tabela[index].odbiorca)))
+    ||(1*tabela[index].autor == 13)||(1*tabela[index].odbiorca == 13)
+    )
     {
-      tabelawynik = [...tabelawynik, tabela[index]];
+      if (!((1*tabela[index].autor == 13)&&(!this.funkcje.getZalogowany().narosl)))
+      { tabelawynik = [...tabelawynik, tabela[index]]; }     
     }    
   }
   return tabelawynik

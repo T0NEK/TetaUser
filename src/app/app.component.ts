@@ -46,8 +46,8 @@ constructor(config: NgbModalConfig, private modalService: NgbModal, private funk
   //  console.log(window.outerWidth)
   //  console.log(window.innerHeight)
   //  console.log(window.outerHeight)
-    this.wysokoscAll = window.innerHeight;
-    this.szerokoscAll = window.innerWidth;
+    this.wysokoscAll = window.innerHeight - 2;
+    this.szerokoscAll = window.innerWidth - 2;
     this.wysokoscNawigacja = (this.wysokoscAll - this.wysokoscInfo - this.wysokoscKlw - this.wysokoscLinia - this.wysokoscDialogMin);
   //  console.log(this.wysokoscNawigacja);
     this.szerokoscInput = this.szerokoscAll - this.szerokoscClear;

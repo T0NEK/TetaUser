@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
 import { Osoby } from '../definicje';
 import { OsobyService } from '../osoby.service';
+import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 
 @Component({
   selector: 'app-zalogowani-uzytkownicy',
@@ -17,8 +18,9 @@ export class ZalogowaniUzytkownicyComponent implements OnDestroy {
   //tablicagoscie: Osoby[] = [];
   height: any;
   width: any;
+  zalogowany: number = 0;
 
-constructor(private all: AppComponent, private osoby: OsobyService) 
+constructor(private all: AppComponent, private osoby: OsobyService, private funkcje: FunkcjeWspolneService) 
   {
     this.height = all.wysokoscNawigacja;
     this.width = all.szerokoscZalogowani;
@@ -26,7 +28,25 @@ constructor(private all: AppComponent, private osoby: OsobyService)
     this.osobysubscribe_zu = osoby.OdczytajOsoby$.subscribe
     ( data => 
       {
-         this.tablicaosoby = data; 
+        data.forEach((element: Osoby) => 
+        { 
+          //console.log('1 ',element.id)
+          //console.log('2 ',this.funkcje.getZalogowany().zalogowany)
+          //console.log('3 ',element.zalogowany)
+          if ((element.id == this.funkcje.getZalogowany().zalogowany)&&(!element.zalogowany))
+          { this.funkcje.setWylogowany(funkcje.getZalogowany().zalogowany) ;
+            this.zalogowany = funkcje.getZalogowany().zalogowany;
+            //console.log('                     coś')
+          }
+          else
+          if ((element.id == this.funkcje.getZalogowany().zalogowany)&&(element.zalogowany))
+          { this.funkcje.setWylogowany(0);
+            this.zalogowany = 0;
+            //console.log('zero')
+          }
+        }
+        );
+        this.tablicaosoby = data; 
       //console.log( this.tablicaosoby[7].id, this.tablicaosoby[7].zalogowany )
       } )
    //this.gosciesubscribe_zu = osoby.OdczytajGoscie$.subscribe

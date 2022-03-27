@@ -4,13 +4,14 @@
     <div *ngFor="let item of tablicaosoby; let i = index"  class="example-mat-card, text-success">
       <mat-slide-toggle (toggleChange)="Przelacz(i,item.wybrany)" [(ngModel)]="item.wybrany" *ngIf="item.widoczny"><span [ngClass]="{'text-warning':item.nowe}">{{item.imie}} &nbsp;{{item.nazwisko}}</span></mat-slide-toggle>
     </div>
+    <div class="odstep"></div>
     <div >
       <mat-slide-toggle #wszyscy (change)="Przelacz(-1,true)" class="kursor"  [(ngModel)]="checkedW"></mat-slide-toggle><span class="kursor"> Wszyscy</span>
     </div>
     <div >
       <mat-slide-toggle #nikt (change)="Przelacz(-1,false)" [(ngModel)]="checkedN" ></mat-slide-toggle><span class="kursor"> Nikt</span></div>
+    <div class="odstep"></div>
     <div>
-      <br>
       <div class="text-success kursor" (click)="AktualizujPrzeczytane(0)"><strong> Przeczytane</strong></div>
     </div>
     

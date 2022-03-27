@@ -328,8 +328,11 @@ PokazHistorie(kierunek: number)
 
 WybranoEnter(linia: string)
 {
+console.log(this.funkcje.getWylogowany())  
+if (this.funkcje.getWylogowany() == 0 )
+{
  // console.log(linia)
-  if ((this.funkcje.getNrZakladki() == 2 )&&(this.funkcje.getZalogowany().zalogowany != 0))
+  if ((this.funkcje.getNrZakladki() == 2 )&&((this.funkcje.getZalogowany().zalogowany != 0)))
   {
     this.wiadomosci.WyslijWiadomosc.next(linia);
   }
@@ -363,6 +366,19 @@ WybranoEnter(linia: string)
         }, this.stanpolecenia.czas);
       }   
   }
+}
+else
+{
+  this.funkcje.ZablokujLinieDialogu({"liniaL": "", "liniaP": ""})
+  setTimeout(() => 
+      {
+        this.funkcje.ZablokujLinieDialogu({"liniaL": "problem z komunikacją", "liniaP": ""}, true);
+        setTimeout(() =>  {
+                          this.funkcje.OdblokujLinieDialogu({"liniaL": linia, "liniaP": ""});
+                          },5000);
+      },3000);
+  
+}
 }
 
 

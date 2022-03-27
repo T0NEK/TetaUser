@@ -67,6 +67,7 @@ export interface Zalogowany
       nazwisko: string;
       funkcja: string;
       rodzaj: string;
+      narosl: boolean;
       kolor: string;
   }
 

@@ -9,6 +9,7 @@ import { Sprawdz } from './definicje';
 import { PetlaService } from './petla.service';
 import { PoleceniaService } from './polecenia.service';
 import { NotatkiService } from './notatki.service';
+import { ZdarzeniaService } from './zdarzenia.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class CzasService implements OnDestroy
   private czas1000 = 100;
   
     
-  constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService, private notatki: NotatkiService) 
+  constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService, private notatki: NotatkiService, private zdarzenia: ZdarzeniaService) 
   {
   //console.log('czas con');
   setTimeout(() => {
@@ -51,7 +52,7 @@ export class CzasService implements OnDestroy
       {
           if (data.stan == true)
           {
-              this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), data.imie + ' ' + data.nazwisko + " - " + data.error);
+              this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), data.imie + ' ' + data.nazwisko + " " + data.error);
               this.funkcje.zalogujOsoba(data);
               this.ZmianyPoLogowaniu();
           }    
@@ -133,6 +134,7 @@ PetlaStart(licznik: number)
                                   this.taktujCzasDedala();  
                                   this.taktujDedalaUplyw();          
                                   this.osoby.wczytajOsoby(this.funkcje.getZalogowany().zalogowany);
+                                  this.zdarzenia.OdczytujZdarzenia();
                                   //pętla !!
                                   this.funkcje.OdblokujAll('');
                                 }

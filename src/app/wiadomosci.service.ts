@@ -29,6 +29,7 @@ this.logowaniesubscribe = komunikacja.logowanieUsera$.subscribe
       }      
     } 
   )
+  
 this.osobysubscribe = this.OdczytajOsoby$.subscribe
   ( data => 
     { 
