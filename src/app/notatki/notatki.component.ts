@@ -63,14 +63,24 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
     this.notatkaTresc_subscribe_no = notatki.OdczytajTresc$.subscribe 
     ( data =>
       { 
-        //console.log(data)
-        //console.log(this.notatki.getNotatkaCzyWczytana())
         if (this.notatki.getNotatkaCzyWczytana())
         {
+        if (data.notatka[1*data.wersja].stan)
+        {  
         this.notatkaTytul = 'Notatka: ' + this.notatki.getNotatkaTytul() + '   (id: ' + this.notatki.getNotatkaIdentyfikator() + ' ver: ' + this.notatki.getNotatkaWersja() + ')';
         this.PoleNotatki.nativeElement.value = this.notatki.getNotatkaTresc();
         this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
         this.notatkaEdytowana = (this.notatki.getNotatkaZmiana() ? 'red' : 'inherit')
+        }
+        else
+        {
+        this.notatkaTytul = 'Notatka: ' + this.notatki.getNotatkaTytul() + '   (id: ' + this.notatki.getNotatkaIdentyfikator() + ' ver: ' + this.notatki.getNotatkaWersja() + ')';          
+        this.PoleNotatki.nativeElement.value = '';
+        this.notatkaEdycja = false;
+        this.notatkaEdytowana = 'inherit';
+        this.notatkaLenght = {"obecna": 0, "max": 1024};
+        this.funkcje.addLiniaKomunikatuInfo(funkcje.getDedal(),'notatk w ver: ' + data.notatka[data.wersja].wersja + ' jest: ' + data.notatka[data.wersja].stanText );
+        }
         }
         else
         {
@@ -93,6 +103,7 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
 
   Zmiana()
   {
+    this.funkcje.ZablokujLinieDialogu({"liniaL": "", "liniaP": ""})
     this.notatkaLenght.obecna = this.PoleNotatki.nativeElement.value.length;
     this.notatki.setNotatkaZmiana(this.PoleNotatki.nativeElement.value != this.notatki.getNotatkaTresc());
     this.notatkaEdytowana = (this.notatki.getNotatkaZmiana() ? ( (this.notatkaLenght.obecna >= this.PoleNotatki.nativeElement.value.length) ? 'red' : 'blueviolet') : 'inherit')
@@ -105,10 +116,10 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
     console.log(event)
    if (this.notatki.getNotatkaCzyEdycja())
    { 
-   if (event) 
-   { this.funkcje.ZablokujLinieDialogu({"liniaL": "", "liniaP": ""}) }
-   else
-   { this.funkcje.OdblokujLinieDialogu({"liniaL": "", "liniaP": ""}) }
+    if (event) 
+    { this.funkcje.ZablokujLinieDialogu({"liniaL": "", "liniaP": ""}) }
+    else
+    { this.funkcje.OdblokujLinieDialogu({"liniaL": "", "liniaP": ""}) }
    } 
   }
 

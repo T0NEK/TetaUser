@@ -275,7 +275,7 @@ ClearLinia()
 /* (end) funkcje lini Input*/
 
 /* (start) historia poleceń */
-private linie = Array ('pomoc', 'zapisz', 'zamknij', '1644743771H5V129934757909', 'edytuj', 'notatka','notatki','wersja','john','liu','zaloguj');
+private linie = Array ('pomoc', 'zapisz', 'zamknij', '1646500108H53E69153004536', 'edytuj', 'notatka','notatki','wersja','john','zaloguj');
 private linie_wskaznik = this.linie.length;
 
 DodajHistorie(linia: string)

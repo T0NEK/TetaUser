@@ -231,7 +231,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
 
   setNotatkaWersja(wersja: number)
   {
-    console.log('wersja',wersja)
+    //console.log('wersja',wersja)
     this.notatkaStan.wersja = wersja;
     this.notatkaStan.zmiany = false;
     this.notatkaStan.tresc = "";
@@ -249,6 +249,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
       this.notatkaStan = {"wczytana": false, "edycja": false, "notatka": {"id":0, "identyfikator": "", "czas": "", "stan": false, "stanText": "", "tytul": "", "wlasciciel": 0, "wlascicielText":""}, "wersja": 0, "zmiany": false, "tresc": ""};
       this.odczytaj_notatki_tresc(5, stan, dowykonania, notatka);
   }
+
 
   private OdczytajTresc = new Subject<any>();
   OdczytajTresc$ = this.OdczytajTresc.asObservable()
