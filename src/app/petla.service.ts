@@ -123,11 +123,11 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                        this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);   
             break;
       case 'logowanie': this.bufordane = [...this.bufordane,0];
-                        this.komunikacja.Zaloguj(this.bufordane);
+                        this.komunikacja.Zaloguj(this.bufordane, this.czasy.getCzasDedala());
                         this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
             break;  
       case 'wylogowanie': this.bufordane = ['', '', this.funkcje.getZalogowany().zalogowany];
-                          this.komunikacja.Zaloguj(this.bufordane);
+                          this.komunikacja.Zaloguj(this.bufordane, this.czasy.getCzasDedala());
                           this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
             break;              
       case 'bad': 

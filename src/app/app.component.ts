@@ -32,7 +32,7 @@ export class AppComponent implements OnDestroy
   public szerokoscZalogowani = 280;
   public szerokoscWiadOsoby = 190;
   public szerokoscNawigacja: any;
-  
+
   @ViewChild('content') content!: ElementRef;
   @HostListener('click',['$event']) onClick1(event: any) { this.onClick(event)}
   @HostListener('window:keydown',['$event']) onKey1(event: any) { this.onKey(event) }

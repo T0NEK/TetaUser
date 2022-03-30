@@ -83,6 +83,7 @@ export class CzasService implements OnDestroy
 
 ZmianyPoLogowaniu()
 {
+  //this.tablica_sprawdzajaca.stanSQL = false;
    this.tablica_sprawdzajaca.stanRejestracja = false;
    this.tablica_sprawdzajaca.stanPolecenia = false;
    this.tablica_sprawdzajaca.stanDzialania = false; 

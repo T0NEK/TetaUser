@@ -12,8 +12,7 @@ export class ZdarzeniaService {
 
 constructor(private funkcje: FunkcjeWspolneService , private komunikacja: KomunikacjaService, private http: HttpClient) 
  {
-    console.log("zdarzenia")
-    this.OdczytujZdarzenia()
+  //  this.OdczytujZdarzenia()
  }
 
  OdczytujZdarzenia()
@@ -35,7 +34,7 @@ private Zdarzenia = new Subject<any>();
       };
       
     var data = JSON.stringify({"zalogowany": this.funkcje.getZalogowany().zalogowany })  
-      
+
     this.http.post(this.komunikacja.getURL() + 'zdarzenia/', data, httpOptions).subscribe( 
       data =>  {
         let wynik = JSON.parse(JSON.stringify(data));    
@@ -47,17 +46,14 @@ private Zdarzenia = new Subject<any>();
         }
         else
         {
-          this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(),'Błąd odczytu Załoga - ponawiam: ');
           setTimeout(() => {this.odczytuj_zdarzenia()}, 1000)
         }
                         
                },
       error => {
-                this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(),'Błąd połączenia Załoga  - ponawiam:');
                 setTimeout(() => {this.odczytuj_zdarzenia()}, 1000)
                }
                )      
   }
-
 
 }

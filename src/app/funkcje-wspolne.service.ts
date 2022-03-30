@@ -26,7 +26,7 @@ constructor ()
   this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '', 'narosl': false, 'kolor': "white"} 
   this.wylogowany = 0;
   //do skasowania i wiadomosci.component.ts ~65 do skasowania: this.wiadomosci.wczytajOsoby();
-  this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
+  //this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
 
   this.znaki = this.znaki.concat('',' ',this.klw11,this.klw11alt,this.klw12,this.klw12alt,this.klw12caps,this.klw21,this.klw21caps,this.klw22,this.klw22caps,this.klw22alt,this.klw22capsalt)
   this.dluznaki = this.dluznaki.concat(0,2.45,this.dlu11,this.dlu11alt,this.dlu12,this.dlu12alt,this.dlu12caps,this.dlu21,this.dlu21caps,this.dlu22,this.dlu22caps,this.dlu22alt,this.dlu22capsalt)
