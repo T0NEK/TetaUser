@@ -9,7 +9,6 @@ export class FunkcjeWspolneService {
 
 private dedal = 'dadal';
 private osoba: Zalogowany;
-private wylogowany: number;
 private kolory: Kolory;
 public iloscZnakowwKomend = 40;
 
@@ -23,8 +22,8 @@ constructor ()
   
   this.kolory = {"info": "", "alert": "rgb(199, 100, 43)", "krytyczny": "red", "liniakomend": "rgb(00, 123, 255)", "zalogowany": "rgb(230, 255, 0)", "wylogowany": "white"}
   
-  this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '', 'narosl': false, 'kolor': "white"} 
-  this.wylogowany = 0;
+  this.osoba =  { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '', 'narosl': false, "polecenia": true, 'kolor': "white"} 
+
   //do skasowania i wiadomosci.component.ts ~65 do skasowania: this.wiadomosci.wczytajOsoby();
   //this.zalogujOsoba({'zalogowany': 2, 'imie': 'John', 'nazwisko': 'Spow', 'funkcja': 'Kapitan', 'rodzaj': 'M','kolor': this.kolory.zalogowany})    
 
@@ -47,7 +46,7 @@ getZalogowany() { return this.osoba };
 
 wylogujOsoba(): Zalogowany
 {
-  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '', 'narosl': false, 'kolor': this.getKolor().wylogowany} 
+  return { 'zalogowany': 0, 'imie': '', 'nazwisko': '', 'funkcja': '', 'rodzaj': '', 'narosl': false, "polecenia": true, 'kolor': this.getKolor().wylogowany} 
 }
 
 zalogujOsoba(data : any)
@@ -58,8 +57,8 @@ zalogujOsoba(data : any)
   this.osoba.funkcja = data.funkcja;
   this.osoba.rodzaj = data.rodzaj;
   this.osoba.narosl = data.narosl;
+  this.osoba.polecenia = data.polecenia;
   this.osoba.kolor = (data.zalogowany == 0 ? this.getKolor().wylogowany : this.getKolor().zalogowany);
-  this.setWylogowany(0);
 }
 
 setOsobaNarosl(stan: boolean)
@@ -67,8 +66,8 @@ setOsobaNarosl(stan: boolean)
   this.osoba.narosl = stan;
 }
 
-getWylogowany() { return this.wylogowany }
-setWylogowany(stan: number) { this.wylogowany = stan}
+getPolecenia() { return this.osoba.polecenia }
+setPolecenia(stan: boolean) { this.osoba.polecenia = stan}
 /* (end) funkcje zalogowanego */ 
 
 /* (start) dodanie lini komunikatu */

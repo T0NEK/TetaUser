@@ -72,7 +72,8 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     )
     this.osobysubscribe = wiadomosci.OdczytajOsoby$.subscribe
     ( data => 
-      { console.log('odczyt')
+      {
+        //console.log('odczyt')
         this.tablicaosoby = data;   
         this.tablicaosoby.forEach((element, index) => { this.tablicaosobywybrane[index] = -1; });
       } 

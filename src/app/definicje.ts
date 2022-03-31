@@ -32,6 +32,7 @@ export interface Osoby
       nazwisko: string;
       funkcja: string;
       zalogowany: boolean;
+      polecenia: boolean;
       blokada: boolean;
       osoby: boolean;
   }
@@ -68,6 +69,7 @@ export interface Zalogowany
       funkcja: string;
       rodzaj: string;
       narosl: boolean;
+      polecenia: boolean;
       kolor: string;
   }
 

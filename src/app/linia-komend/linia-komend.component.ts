@@ -328,8 +328,8 @@ PokazHistorie(kierunek: number)
 
 WybranoEnter(linia: string)
 {
-console.log(this.funkcje.getWylogowany())  
-if (this.funkcje.getWylogowany() == 0 )
+//console.log(this.funkcje.getPolecenia())  
+if (this.funkcje.getPolecenia())
 {
  // console.log(linia)
   if ((this.funkcje.getNrZakladki() == 2 )&&((this.funkcje.getZalogowany().zalogowany != 0)))

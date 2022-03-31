@@ -18,7 +18,7 @@ export class ZalogowaniUzytkownicyComponent implements OnDestroy {
   //tablicagoscie: Osoby[] = [];
   height: any;
   width: any;
-  zalogowany: number = 0;
+  //zalogowany: number = 0;
 
 constructor(private all: AppComponent, private osoby: OsobyService, private funkcje: FunkcjeWspolneService) 
   {
@@ -33,17 +33,13 @@ constructor(private all: AppComponent, private osoby: OsobyService, private funk
           //console.log('1 ',element.id)
           //console.log('2 ',this.funkcje.getZalogowany().zalogowany)
           //console.log('3 ',element.zalogowany)
-          if ((element.id == this.funkcje.getZalogowany().zalogowany)&&(!element.zalogowany))
-          { this.funkcje.setWylogowany(funkcje.getZalogowany().zalogowany) ;
-            this.zalogowany = funkcje.getZalogowany().zalogowany;
+          if ((element.id == this.funkcje.getZalogowany() .zalogowany))
+          { 
+            this.funkcje.setPolecenia(element.polecenia) ;
+            //this.zalogowany = funkcje.getZalogowany().zalogowany;
             //console.log('                     coś')
           }
-          else
-          if ((element.id == this.funkcje.getZalogowany().zalogowany)&&(element.zalogowany))
-          { this.funkcje.setWylogowany(0);
-            this.zalogowany = 0;
-            //console.log('zero')
-          }
+          
         }
         );
         this.tablicaosoby = data; 

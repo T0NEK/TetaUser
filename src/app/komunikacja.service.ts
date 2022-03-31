@@ -73,9 +73,9 @@ var data = JSON.stringify({ "czas": moment().format('YYYY-MM-DD HH:mm:ss')})
   
   this.http.post(this.getURL() + 'rejestracja/', data, httpOptions).subscribe( 
     data =>  {
-      console.log(data)
+      //console.log(data)
             let wynik = JSON.parse(JSON.stringify(data));
-      console.log(wynik)            
+      //console.log(wynik)            
             if (wynik.wynik == true) 
             {
               this.idhost = wynik.id;
@@ -116,17 +116,17 @@ private loguj(licznik: number, parametry: any, czas: string)
     })
   };
 
-  console.log('host ',this.getHost() )  
+//console.log('host ',this.getHost() )  
 var data = JSON.stringify({ "login": parametry[0], "pass": parametry[1], "zalogowany": parametry[2], "nazwa": this.getHost(), "hostid": this.getHostId(), "idhost": this.idhost, "czas": czas})  
 
-console.log('loguje ',data )
+//console.log('loguje ',data )
 if (licznik == 0) 
 { this.logowanieUsera.next( { "wynik":false, "stan":false, "error":"Problem z logowaniem" } ) }
 else
 {
   this.http.post(this.getURL() + 'logowanie/', data, httpOptions).subscribe( 
     data =>  {
-      console.log('logowanie ',data)
+      //console.log('logowanie ',data)
             let wynik = JSON.parse(JSON.stringify(data));
             if (wynik.wynik == true) 
             {
@@ -138,7 +138,7 @@ else
             }
               },
     error => {
-      console.log('logowanie error ',error) 
+      //console.log('logowanie error ',error) 
               setTimeout(() => {this.loguj(--licznik, parametry, czas)}, 1000) 
              }
              )      
