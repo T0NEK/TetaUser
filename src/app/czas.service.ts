@@ -27,12 +27,12 @@ export class CzasService implements OnDestroy
   constructor(private http: HttpClient, @Inject(LOCALE_ID) private locate : string, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private osoby: OsobyService, private polecenia: PoleceniaService, private notatki: NotatkiService, private zdarzenia: ZdarzeniaService) 
   {
   //console.log('czas con');
+  this.funkcje.ZablokujAll('');
   setTimeout(() => {
     this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), 'Uruchomiono terminal');
     this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(),'Łączę z serwerem - czekaj');
       setTimeout(() => {
         this.komunikacja.StartKomunikacja();
-        this.funkcje.ZablokujAll('');
         this.PetlaStart(this.licznikBlad);  
         }, this.czas500);
 }, this.czas500);
@@ -52,9 +52,10 @@ export class CzasService implements OnDestroy
       {
           if (data.stan == true)
           {
-              this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), data.imie + ' ' + data.nazwisko + " " + data.error);
-              this.funkcje.zalogujOsoba(data);
-              this.ZmianyPoLogowaniu();
+            this.funkcje.ZablokujAll('');  
+            this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), data.imie + ' ' + data.nazwisko + " " + data.error);
+            this.funkcje.zalogujOsoba(data);
+            this.ZmianyPoLogowaniu();
           }    
           else
           {
