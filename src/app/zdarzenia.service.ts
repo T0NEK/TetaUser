@@ -22,7 +22,7 @@ constructor(private funkcje: FunkcjeWspolneService , private komunikacja: Komuni
 
 
 private Zdarzenia = new Subject<any>();
-  Zdarzenia$ = this.Zdarzenia.asObservable()
+Zdarzenia$ = this.Zdarzenia.asObservable()
   private odczytuj_zdarzenia()
   {
     const httpOptions = {
@@ -37,6 +37,7 @@ private Zdarzenia = new Subject<any>();
 
     this.http.post(this.komunikacja.getURL() + 'zdarzenia/', data, httpOptions).subscribe( 
       data =>  {
+     //console.log(data)   
         let wynik = JSON.parse(JSON.stringify(data));    
         if (wynik.wynik == true) 
         {
@@ -51,6 +52,7 @@ private Zdarzenia = new Subject<any>();
                         
                },
       error => {
+      //console.log(error)
                 setTimeout(() => {this.odczytuj_zdarzenia()}, 1000)
                }
                )      

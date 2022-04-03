@@ -122,14 +122,14 @@ Wczytajnotatki(stan: number, dowykonania: any)
     }
   }
 
-  Udostepnijnotatki(stan: number, identyfikator: string, osoba: string[], dowykonania: any)
+  Udostepnijnotatki(stan: number, identyfikator: string, osoba: string[], dowykonania: any, czas: string)
   {
-      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "udo", osoba, "");
+      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "udo", osoba, czas);
   }
 
-  Usunnotatki(stan: number, identyfikator: string, dowykonania: any)
+  Usunnotatki(stan: number, identyfikator: string, dowykonania: any, czas: string)
   {
-      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "del", [], "");
+      this.zapisz_notatki(5, stan, identyfikator, dowykonania, "del", [], czas);
   }
 
   Zapisznotatki(stan: number, tytul: string, dowykonania: any, czas: string)
@@ -150,7 +150,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
     };
     
   var data = JSON.stringify({"kierunek": del, "stan": stan, "tytul": tytul, "imie": osoba[0], "nazwisko": osoba[1], "czas": czas})  
-  console.log(czas)
+  //console.log(czas)
   if (licznik > 0 )
     {
       --licznik;

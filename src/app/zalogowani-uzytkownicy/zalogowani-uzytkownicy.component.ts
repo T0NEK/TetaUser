@@ -18,7 +18,7 @@ export class ZalogowaniUzytkownicyComponent implements OnDestroy {
   //tablicagoscie: Osoby[] = [];
   height: any;
   width: any;
-  //zalogowany: number = 0;
+  zalogowany: number = 0;
 
 constructor(private all: AppComponent, private osoby: OsobyService, private funkcje: FunkcjeWspolneService) 
   {
@@ -36,7 +36,7 @@ constructor(private all: AppComponent, private osoby: OsobyService, private funk
           if ((element.id == this.funkcje.getZalogowany() .zalogowany))
           { 
             this.funkcje.setPolecenia(element.polecenia) ;
-            //this.zalogowany = funkcje.getZalogowany().zalogowany;
+            this.zalogowany = funkcje.getZalogowany().zalogowany;
             //console.log('                     coś')
           }
           

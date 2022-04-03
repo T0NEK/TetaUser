@@ -50,9 +50,10 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
       data =>
       {
         this.zalogowany = this.funkcje.getZalogowany().zalogowany;
-          if (data == 2) 
+
+          if (data.toString() == '2') 
           {
-            if (this.funkcje.getZalogowany().zalogowany == 0)
+            if (this.funkcje.getZalogowany().zalogowany.toString() == '0')
             {
               this.tablicaosoby = [];
               this.tablicaosobywybrane = [];
@@ -63,7 +64,7 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
             else
             {
 // po testach linia do zmazania              
-            this.wiadomosci.wczytajOsoby();
+//            this.wiadomosci.wczytajOsoby();
             this.wiadomosci.OdczytajWiadomosci();
             }
           { if (this.checked) { this.Przewin()} }
@@ -74,8 +75,12 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
     ( data => 
       {
         //console.log('odczyt')
-        this.tablicaosoby = data;   
-        this.tablicaosoby.forEach((element, index) => { this.tablicaosobywybrane[index] = -1; });
+        if (this.funkcje.getZalogowany().zalogowany.toString() != '0')
+            {
+            this.tablicaosoby = data;   
+            this.tablicaosoby.forEach((element, index) => { this.tablicaosobywybrane = [...this.tablicaosobywybrane, -1]; });
+            }
+        //console.log(this.tablicaosoby)
       } 
     )
 
@@ -126,14 +131,15 @@ export class WiadomosciComponent implements OnDestroy, AfterViewInit {
       { 
         this.AktualizujPrzeczytane(0);
         let odbiorcy = '0';
+        if (this.funkcje.getPolecenia())
+        {
         this.tablicaosobywybrane.forEach(element => 
           { if (element > 0) { odbiorcy = odbiorcy + ',' + element }
           });
+        }  
         //console.log(odbiorcy, this.funkcje.getZalogowany().zalogowany, data, this.czas.getCzasDedala())
         if (this.funkcje.getZalogowany().narosl)
-        {
-          odbiorcy = odbiorcy + ',13';
-        } 
+        { odbiorcy = odbiorcy + ',13'; } 
         
         if (odbiorcy.length > 1)  
         {
@@ -252,10 +258,9 @@ AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
     if (
     ( this.tablicaosobywybrane.includes(1*tabela[index].autor) )||
     ((1*tabela[index].autor == this.funkcje.getZalogowany().zalogowany )&&( this.tablicaosobywybrane.includes(1*tabela[index].odbiorca)))
-    ||(1*tabela[index].autor == 13)||(1*tabela[index].odbiorca == 13)
+    ||(((1*tabela[index].autor == 13)||(1*tabela[index].odbiorca == 13))&&(this.funkcje.getZalogowany().narosl))
     )
     {
-      if (!((1*tabela[index].autor == 13)&&(!this.funkcje.getZalogowany().narosl)))
       { tabelawynik = [...tabelawynik, tabela[index]]; }     
     }    
   }
@@ -263,14 +268,17 @@ AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
 }
 
 
-  Przelacz(wszystkie: number, all: boolean)
+  Przelacz(wszystkie: number, all: boolean, wybrany: number = -1, stan: boolean = false )
   {
     if (wszystkie == -1)
     {
       this.tablicaosoby.forEach((element, index) => 
         { 
+          if (((element.widoczny )||(this.funkcje.getZalogowany().narosl)))
+          {
           element.wybrany = all;
           this.tablicaosobywybrane[index] = (all ? 1*element.id : -1);
+          }
         });
         
       if (!this.checkedW) { this.wszyscy.toggle() };
@@ -282,7 +290,20 @@ AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
       this.tablicaosobywybrane[wszystkie] = (!all ? (1*this.tablicaosoby[wszystkie].id) : -1);
     }
   this.tablicawiadomosci = this.AktualizujWybraneOsoby(this.tablicawiadomosciorg);
+  if (wybrany != -1)
+    {
+      this.tablicaosoby[wybrany].wybrany = stan;
+      this.tablicaosobywybrane[wybrany] = (stan ? (1*this.tablicaosoby[wybrany].id) : -1);
+    }
   //this.AktualizujPrzeczytane();
+  }
+
+  PrzelaczIdOsoba(id: number): number
+  {
+    let numer: number = 0;
+    for (let index = 0; index < this.tablicaosoby.length; index++) 
+    { if (this.tablicaosoby[index].id == id) { numer = index; break; } };
+    return numer;
   }
 
   onClick(kto: string)
@@ -303,4 +324,10 @@ AktualizujWybraneOsoby(tabela: Wiadomosci[]): Wiadomosci[]
     this.VSVDialog.scrollToIndex((count), 'smooth'); 
   }
   
+  Odpowiedz(autor: number)
+  {
+    //console.log(autor, odbiorca)
+    this.Przelacz(-1, false, this.PrzelaczIdOsoba(autor), true)
+  }
+
 }

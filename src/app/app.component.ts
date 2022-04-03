@@ -29,7 +29,7 @@ export class AppComponent implements OnDestroy
   public szerokoscAll: any;
   public szerokoscInput: any;
   public szerokoscClear = 46;
-  public szerokoscZalogowani = 280;
+  public szerokoscZalogowani = 210;
   public szerokoscWiadOsoby = 190;
   public szerokoscNawigacja: any;
 

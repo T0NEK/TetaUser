@@ -6,7 +6,6 @@ import { KomunikacjaService } from './komunikacja.service';
 import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { OsobyService } from './osoby.service';
 import { Sprawdz } from './definicje';
-import { PetlaService } from './petla.service';
 import { PoleceniaService } from './polecenia.service';
 import { NotatkiService } from './notatki.service';
 import { ZdarzeniaService } from './zdarzenia.service';
@@ -85,6 +84,7 @@ export class CzasService implements OnDestroy
 ZmianyPoLogowaniu()
 {
   //this.tablica_sprawdzajaca.stanSQL = false;
+   //this.funkcje.setzakladkadialogu(1)
    this.tablica_sprawdzajaca.stanRejestracja = false;
    this.tablica_sprawdzajaca.stanPolecenia = false;
    this.tablica_sprawdzajaca.stanDzialania = false; 

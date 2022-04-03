@@ -101,12 +101,12 @@ var data = JSON.stringify({ "czas": moment().format('YYYY-MM-DD HH:mm:ss')})
 /* (start) logowanie */
 Zaloguj(parametry: any, czas: string)
 {
-  this.loguj(5,parametry, czas)
+  this.loguj(5,parametry, czas, '')
 }
 
 private logowanieUsera = new Subject<any>();
 logowanieUsera$ = this.logowanieUsera.asObservable()
-private loguj(licznik: number, parametry: any, czas: string)
+private loguj(licznik: number, parametry: any, czas: string, powod: string)
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -121,7 +121,7 @@ var data = JSON.stringify({ "login": parametry[0], "pass": parametry[1], "zalogo
 
 //console.log('loguje ',data )
 if (licznik == 0) 
-{ this.logowanieUsera.next( { "wynik":false, "stan":false, "error":"Problem z logowaniem" } ) }
+{ this.logowanieUsera.next( { "wynik":false, "stan":false, "error":powod } ) }
 else
 {
   this.http.post(this.getURL() + 'logowanie/', data, httpOptions).subscribe( 
@@ -130,16 +130,16 @@ else
             let wynik = JSON.parse(JSON.stringify(data));
             if (wynik.wynik == true) 
             {
-              this.logowanieUsera.next(wynik)
+              this.logowanieUsera.next(wynik);
             }
             else
             {
-              setTimeout(() => {this.loguj(--licznik, parametry, czas)}, 1000) 
+              setTimeout(() => {this.loguj(--licznik, parametry, czas, wynik.error)}, 1000) 
             }
               },
     error => {
       //console.log('logowanie error ',error) 
-              setTimeout(() => {this.loguj(--licznik, parametry, czas)}, 1000) 
+              setTimeout(() => {this.loguj(--licznik, parametry, czas, powod)}, 1000) 
              }
              )      
 }             

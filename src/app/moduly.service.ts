@@ -21,36 +21,17 @@ this.modulyStan = false;
 getModuly() { return this.moduly; }
 getModulyStan() { return this.modulyStan; } 
 
-sprawdzModuly(polecenie: string)
-{
-  let wynik = <Modul> {"nazwa": '', "symbol": "", "producent": "", "opis": "", "id": 0}
-  for (let index = 0; index < this.moduly.length; index++) 
-  {
-    if ( this.moduly[index].nazwa == polecenie )
-    {
-       wynik = {"nazwa": this.moduly[index].nazwa,
-                "symbol": this.moduly[index].symbol, 
-                "producent": this.moduly[index].producent,
-                "opis": this.moduly[index].opis,
-                "id": this.moduly[index].id,
-         } 
-       //this.poleceniePomoc();        
-       break;        
-    }       
-  }
-return wynik  
-}
 
-Wczytajmoduly(stan: number, dowykonania: any)
+Wczytajmoduly(stan: number, dowykonania: any, czas: string)
 {
     this.modulyStan = false;
     this.moduly = [];
-    this.odczytaj_moduly(5, stan, dowykonania);
+    this.odczytaj_moduly(5, stan, dowykonania,'',czas);
 }
 
 private OdczytajModuly = new Subject<any>();
 OdczytajModuly$ = this.OdczytajModuly.asObservable()
-private odczytaj_moduly(licznik: number, stan: number, dowykonania: any)
+private odczytaj_moduly(licznik: number, stan: number, dowykonania: any, powod: string, czas: string)
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -60,7 +41,7 @@ private odczytaj_moduly(licznik: number, stan: number, dowykonania: any)
     })
   };
   
-var data = JSON.stringify({ "stan": stan})  
+var data = JSON.stringify({ "stan": stan, "czas": czas})  
 
 if (licznik > 0 )
   {
@@ -73,41 +54,36 @@ if (licznik > 0 )
               {
                 if (wynik.stan == true)
                 {  
-                for (let index = 0; index < wynik.moduly.length; index++) 
-                {
-                  
-                      this.moduly = [...this.moduly, {
-                        "nazwa": wynik.moduly[index].nazwa, 
-                        "symbol": wynik.moduly[index].symbol, 
-                        "producent": wynik.moduly[index].producent,
-                        "opis": wynik.moduly[index].opis,
-                        "id": wynik.moduly[index].id
-                        }]
-                }  
+                this.moduly = wynik.moduly
+                this.moduly.forEach(element => 
+                  {
+                  if (element.czasbadania)
+                  {}
+                  });  
                 this.modulyStan = true;
                 this.OdczytajModuly.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
         //console.log(this.moduly)
                 }
                 else
                 {//stan false
-                  this.modulyStan = true;
+                  this.modulyStan = false;
                   this.OdczytajModuly.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
                 }
               }
               else
               {
-                setTimeout(() => {this.odczytaj_moduly(licznik, stan, dowykonania)}, 1000) 
+                setTimeout(() => {this.odczytaj_moduly(licznik, stan, dowykonania, wynik.error, czas)}, 1000) 
               }
                 },
       error => {
         //console.log(error)
-                setTimeout(() => {this.odczytaj_moduly(licznik, stan, dowykonania)}, 1000) 
+                setTimeout(() => {this.odczytaj_moduly(licznik, stan, dowykonania, error.error, czas)}, 1000) 
               }
               )      
   }
   else
   {
-    this.OdczytajModuly.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": "problem z odczytem"})
+    this.OdczytajModuly.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": powod})
   }
 }
 

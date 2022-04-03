@@ -275,7 +275,8 @@ ClearLinia()
 /* (end) funkcje lini Input*/
 
 /* (start) historia poleceń */
-private linie = Array ('pomoc', 'zapisz', 'zamknij', '1646500108H53E69153004536', 'edytuj', 'notatka','notatki','wersja','john','zaloguj');
+//private linie = Array ('pomoc', 'zapisz', 'zamknij', '1646500108H53E69153004536', 'edytuj', 'notatka','notatki','wersja','john','zaloguj');
+private linie = Array ('john','zaloguj','moduły','zespoły','zespoły wszystkie');
 private linie_wskaznik = this.linie.length;
 
 DodajHistorie(linia: string)
@@ -328,8 +329,11 @@ PokazHistorie(kierunek: number)
 
 WybranoEnter(linia: string)
 {
-//console.log(this.funkcje.getPolecenia())  
-if (this.funkcje.getPolecenia())
+//console.log("linia ", linia, "  polecenia ", this.funkcje.getPolecenia(), "  zakładka ", this.funkcje.getNrZakladki(), "  zalogowany ", this.funkcje.getZalogowany().zalogowany, "  narosl ", this.funkcje.getZalogowany().narosl)  
+if (
+  (this.funkcje.getPolecenia())
+  || ( (!this.funkcje.getPolecenia())&&(this.funkcje.getZalogowany().narosl)&&(this.funkcje.getNrZakladki() == 2 )&&((this.funkcje.getZalogowany().zalogowany != 0)) )
+  )
 {
  // console.log(linia)
   if ((this.funkcje.getNrZakladki() == 2 )&&((this.funkcje.getZalogowany().zalogowany != 0)))

@@ -78,9 +78,25 @@ export interface Modul
     id: number;  
     nazwa :string;
     symbol: string;
-    producent: string;
+    stan: string;
+    czasbadania: string
     opis: string;
   }
+
+export interface Zespol
+  {
+    id: number;  
+    nazwa :string;
+    symbol: string;
+    moduly: string;
+    stan: number;
+    stanwynik: string;
+    imie: string; 
+    nazwisko: string;
+    czasbadania: string;
+    opis: string;
+  }
+
 
 export interface Notatka
   {
