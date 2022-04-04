@@ -19,7 +19,8 @@ export class PetlaService implements OnDestroy
 
 private zdarzeniasubscribe_p = new Subscription();
 private modulysubscribe_p = new Subscription();
-private zesplysubscribe_p = new Subscription();
+private zespolysubscribe_p = new Subscription();
+private zespolsubscribe_p = new Subscription();
 private poleceniasubscribe_p = new Subscription();
 private dzialaniasubscribe_p = new Subscription();
 private notatkisubscribe_p = new Subscription();
@@ -51,7 +52,9 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
   
   this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
-  this.zesplysubscribe_p = this.zespoly.OdczytajZespoly$.subscribe
+  this.zespolysubscribe_p = this.zespoly.OdczytajZespoly$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
+  this.zespolsubscribe_p = this.zespoly.OdczytajZespol$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
   this.notatkisubscribe_p = this.notatki.OdczytajNotatki$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
@@ -70,7 +73,8 @@ ngOnDestroy()
   {
    if(this.zdarzeniasubscribe_p) { this.zdarzeniasubscribe_p.unsubscribe(); }   
    if(this.modulysubscribe_p) { this.modulysubscribe_p.unsubscribe(); }   
-   if(this.zesplysubscribe_p) { this.zesplysubscribe_p.unsubscribe(); }   
+   if(this.zespolysubscribe_p) { this.zespolysubscribe_p.unsubscribe(); }   
+   if(this.zespolsubscribe_p) { this.zespolsubscribe_p.unsubscribe(); }   
    if(this.poleceniasubscribe_p) { this.poleceniasubscribe_p.unsubscribe(); }   
    if(this.dzialaniasubscribe_p) { this.dzialaniasubscribe_p.unsubscribe(); }   
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
@@ -335,11 +339,20 @@ Lista(dowykonania: any, tekst: string)
                       "",
                       tekst); 
           break;
+    case 'zespol': this.wyswietlLista( 0, false, this.zespoly.getZespol(), dowykonania,
+                      "", 
+                      [this.funkcje.setNazwaLinia('Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
+                      this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
+                      this.funkcje.setNazwaLinia(" stan: ", [this.funkcje.setTextNazwa("", "stanText", "", "", "")], ""),
+                      ],
+                      "",
+                      tekst); 
+          break;
     case 'zespoly': this.wyswietlLista( 0, false, this.zespoly.getZespoly(), dowykonania,
                       "", 
                       [this.funkcje.setNazwaLinia('Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
-                      this.funkcje.setNazwaLinia(" stan: [ ", [this.funkcje.setTextNazwa("", "stanText", "", this.funkcje.getKolor().liniakomend, "")], " ]"),
+                      this.funkcje.setNazwaLinia(" stan: ", [this.funkcje.setTextNazwa("", "stanText", "", "", "")], ""),
                       ],
                       "",
                       tekst); 
@@ -386,6 +399,7 @@ GetSet(dowykonania: any)
   {
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.czasy.getCzasDedala()); break;
+          case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespoly': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespolyW': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, ['all'], this.czasy.getCzasDedala()); break;
           case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;
