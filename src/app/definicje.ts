@@ -90,6 +90,7 @@ export interface Zespol
     symbol: string;
     moduly: string;
     stan: number;
+    czaswykonania: number;
     stanwynik: string;
     imie: string; 
     nazwisko: string;

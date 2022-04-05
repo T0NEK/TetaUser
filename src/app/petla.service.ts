@@ -326,6 +326,7 @@ Testy(dowykonania: any, tekst: string)
   switch (dowykonania.komunikat) 
   {
     case 'zespol': this.funkcje.addDodajInformacje(this.zespoly.getZespol(), false); break;
+    case 'test': this.funkcje.addDodajTest(this.zespoly.getZespol(), false); break;
   }
   this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst)
 }

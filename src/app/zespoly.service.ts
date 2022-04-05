@@ -78,6 +78,7 @@ if (licznik > 0 )
 
 WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string)
 {
+    console.log()
     this.zespol = [];
     this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], '', czas);
 }

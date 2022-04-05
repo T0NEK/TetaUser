@@ -180,6 +180,12 @@ addDodajInformacje(dane: any, clear: boolean)
  this.DodajInformacje.next({"dane": dane, "clear": clear})
 }
 
+private DodajTest = new Subject<any>();
+DodajTest$ = this.DodajTest.asObservable();
+addDodajTest(dane: any, clear: boolean)
+{
+ this.DodajTest.next({"dane": dane, "clear": clear})
+}
 
 
 private LiniaKomunikatu = new Subject<any>();
