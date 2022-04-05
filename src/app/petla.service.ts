@@ -85,7 +85,7 @@ ngOnDestroy()
 
 poleceniaWykonaj(polecenie: string, tekst: string)
 {
- console.log('działanie ',polecenie)
+ //console.log('działanie ',polecenie)
  //console.log('tekst: ',tekst)
  //console.log('bufordane: ',this.bufordane)
   if (polecenie != 'end')
@@ -125,6 +125,11 @@ poleceniaWykonaj(polecenie: string, tekst: string)
             break;      
       case 'linie': setTimeout(() => {  
                                 this.Lista(dowykonania, tekst)    
+                              //  this.polecenieWyswietl(dowykonania);
+                                }, dowykonania.czas);
+            break;
+      case 'testy': setTimeout(() => {  
+                                this.Testy(dowykonania, tekst)    
                               //  this.polecenieWyswietl(dowykonania);
                                 }, dowykonania.czas);
             break;
@@ -314,6 +319,17 @@ sprawdzWarunek(warunek: Polecenia): string
 return wynik;
 }
 
+
+Testy(dowykonania: any, tekst: string)
+{
+  //console.log(dowykonania)
+  switch (dowykonania.komunikat) 
+  {
+    case 'zespol': this.funkcje.addDodajInformacje(this.zespoly.getZespol(), false); break;
+  }
+  this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst)
+}
+
 Lista(dowykonania: any, tekst: string)
 {
   //console.log(dowykonania)
@@ -339,15 +355,6 @@ Lista(dowykonania: any, tekst: string)
                       "",
                       tekst); 
           break;
-    case 'zespol': this.wyswietlLista( 0, false, this.zespoly.getZespol(), dowykonania,
-                      "", 
-                      [this.funkcje.setNazwaLinia('Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
-                      this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
-                      this.funkcje.setNazwaLinia(" stan: ", [this.funkcje.setTextNazwa("", "stanText", "", "", "")], ""),
-                      ],
-                      "",
-                      tekst); 
-          break;
     case 'zespoly': this.wyswietlLista( 0, false, this.zespoly.getZespoly(), dowykonania,
                       "", 
                       [this.funkcje.setNazwaLinia('Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
@@ -360,7 +367,7 @@ Lista(dowykonania: any, tekst: string)
     case 'zespolyW': this.wyswietlLista( 0, false, this.zespoly.getZespoly(), dowykonania,
                       "", 
                       [
-                      this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "symbolModul", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
+                      this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "modulSymbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(' Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
                       ],
@@ -465,7 +472,8 @@ wyswietlLista(licznik: number, wszystkie: boolean, lista: any, polecenie: any, p
                               linia[indexL].sufix
                         )]
         }
-        this.funkcje.addLiniaKomunikatu("", this.funkcje.getDedal(), "", "", liniaNew, "");
+       
+          this.funkcje.addLiniaKomunikatu("", this.funkcje.getDedal(), "", "", liniaNew, "")
       }
       this.wyswietlLista(++licznik, wszystkie, lista, polecenie,prefix, linia,  sufix, tekst)
     }

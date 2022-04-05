@@ -224,7 +224,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
   
   Zmiana(event: any)
   {
-  //  console.log('ZMIANA', event) 
+   //console.log('ZMIANA', event) 
   /* 
     console.log('ZMIANA', event) 
     console.log('ZMIANA', event.key)
@@ -276,7 +276,7 @@ ClearLinia()
 
 /* (start) historia poleceń */
 //private linie = Array ('pomoc', 'zapisz', 'zamknij', '1646500108H53E69153004536', 'edytuj', 'notatka','notatki','wersja','john','zaloguj');
-private linie = Array ('john','zaloguj','moduły','zespoły','zespoły wszystkie');
+private linie = Array ('john','zaloguj','moduły','zespoły','zespoły wszystkie','zespół','lab','ZU');
 private linie_wskaznik = this.linie.length;
 
 DodajHistorie(linia: string)

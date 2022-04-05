@@ -171,7 +171,17 @@ setLiniaDialoguClear()
 {
   this.LiniaKomunikatu.next({'przed': '', 'name': '', 'po': '', 'prefix': '', 'linia': '', 'sufix': '', 'clear': true});
 }
-  
+
+
+private DodajInformacje = new Subject<any>();
+DodajInformacje$ = this.DodajInformacje.asObservable();
+addDodajInformacje(dane: any, clear: boolean)
+{
+ this.DodajInformacje.next({"dane": dane, "clear": clear})
+}
+
+
+
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();
 addLiniaKomunikatu(przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string)

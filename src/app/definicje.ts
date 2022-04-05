@@ -95,6 +95,8 @@ export interface Zespol
     nazwisko: string;
     czasbadania: string;
     opis: string;
+    modulSymbol: string;
+    modulNazwa: string;
   }
 
 

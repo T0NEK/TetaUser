@@ -198,7 +198,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
 
   getNotatkaPozycja(wersja: number)  //pozycja w tabeli wersji notatek
   { let wynik = 0; for (let index = 0; index < this.notatka.length; index++) { if (this.notatka[index].wersja == wersja) { wynik =  index; break; }} return wynik;  }
-  getNotatkaTresc() { return this.notatka[this.getNotatkaPozycja(this.getNotatkaWersja())].tresc; } //treść aktualnej wersji notatki
+  getNotatkaTresc() { if (this.notatka.length > 0) {return this.notatka[this.getNotatkaPozycja(this.getNotatkaWersja())].tresc;} else {return ""} } //treść aktualnej wersji notatki
   getNotatkaTrescNew() { return this.notatkaStan.tresc; } //treść aktualnej wersji notatki
   setNotatkaTrescNew(notatka: string) { this.notatkaStan.tresc = notatka; } // treść edytowanej notatki
   getNotatkaWlasciciel() { return this.notatkaStan.notatka.wlascicielText; } //właściciel notatki
@@ -207,7 +207,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
   getNotatkaTytul() { return this.notatkaStan.notatka.tytul; } //tytuł notatki
   getNotatkaCzyWczytana() { return this.notatkaStan.wczytana; } //czy wczytana
   getNotatkaCzyEdycja() { return this.notatkaStan.edycja; } //czy w edycji
-  getNotatkaCzyDostepna(numer: number) { return (this.notatka[numer].stan ? true : this.notatka[numer].stanText); } //czy dostępna
+  getNotatkaCzyDostepna(numer: number) { if (this.notatka.length > 0) {return (this.notatka[numer].stan ? true : this.notatka[numer].stanText);}else{return ''} } //czy dostępna
   getNotatkaWczytanaId() { return this.notatkaStan.notatka.id; } //id wczytanej notatki
   getNotatkaWersja() { return this.notatkaStan.wersja; } //wersja wczytanej notatki
   getNotatkaWersjaMax() { return this.notatka.length -1; } //wersja wczytanej notatki

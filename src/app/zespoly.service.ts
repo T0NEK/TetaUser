@@ -53,19 +53,13 @@ if (licznik > 0 )
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
-                if (wynik.stan == true)
-                {  
                 this.zespoly =  wynik.zespoly
                 this.OdczytajZespoly.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
-                }
-                else
-                {//stan false
-                  this.OdczytajZespoly.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
-                }
+               
               }
               else
               {
-                setTimeout(() => {this.odczytaj_zespoly(licznik, stan, dowykonania, modul, wynik.error, czas)}, 1000) 
+                this.OdczytajZespoly.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error})
               }
                 },
       error => {
@@ -111,19 +105,12 @@ if (licznik > 0 )
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
-                if (wynik.stan == true)
-                {  
                 this.zespol =  wynik.zespol
                 this.OdczytajZespol.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
-                }
-                else
-                {//stan false
-                  this.OdczytajZespol.next({"nastepny": dowykonania.nastepnyFalse, "komunikat": wynik.error})
-                }
               }
               else
               {
-                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, wynik.error, czas)}, 1000) 
+                this.OdczytajZespol.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error})
               }
                 },
       error => {
