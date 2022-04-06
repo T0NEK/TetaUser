@@ -1,10 +1,11 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Component,  OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, OnDestroy, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component,  OnInit, ChangeDetectorRef, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CzasService } from '../czas.service';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service'; 
-import { Linia, Nazwa, Wiersze } from '../definicje';
+import { Wiersze, Zespol } from '../definicje';
 import { AppComponent } from '../app.component';
+import { TestyService } from '../testy.service';
 
 
 @Component({
@@ -15,12 +16,13 @@ import { AppComponent } from '../app.component';
 })
 export class TestyComponent implements OnInit {
 
+  private zakladkasubscribe = new Subscription();
   private informacjasubscribe = new Subscription();
   private testsubscribe = new Subscription();
+  private zapisztestsubscribe = new Subscription();
   tablicazawartosci: Wiersze[] = [];  
   wskaznik: boolean = true;
   @ViewChild('scrollViewportDialog') VSVDialog!: CdkVirtualScrollViewport;
-  private zakladkasubscribe = new Subscription();
   checked = true;
   height: any;
   width1: any;
@@ -31,7 +33,7 @@ export class TestyComponent implements OnInit {
   //@Input() : any;
   //@Output() raport = new EventEmitter<string>();
   
-  constructor(private hostElement: ElementRef, private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent) 
+  constructor(private hostElement: ElementRef, private czasy: CzasService, private funkcje: FunkcjeWspolneService, private changeDetectorRef: ChangeDetectorRef, private all: AppComponent, private testy: TestyService) 
   {
     //this.height = (all.wysokoscAll - all.wysokoscInfo - all.wysokoscKlw - all.wysokoscLinia - all.wysokoscDialogMin - all.wysokoscPrzewijaj - 100) + 'px';
     this.height = (all.wysokoscNawigacja - all.wysokoscPrzewijaj - all.wysokoscNawigacjaNag ) + 'px';
@@ -68,7 +70,7 @@ export class TestyComponent implements OnInit {
             for (let index = 0; index < ilosc; index++) { this.tablicazawartosci = this.tablicazawartosci.concat() }  
             //console.log(this.tablicazawartosci);
             this.wskaznik = true;
-            this.Wypelnij(start, ilosc, wiersze, 0)
+            this.Wypelnij(start, ilosc, wiersze, 0, 0)
           }
           else
           {
@@ -100,8 +102,7 @@ export class TestyComponent implements OnInit {
             for (let index = 0; index < ilosc; index++) { this.tablicazawartosci = this.tablicazawartosci.concat() }  
             //console.log(this.tablicazawartosci);
             this.wskaznik = true;
-            this.Wypelnij(start, ilosc, wiersze, 0)
-            this.Testuj(start + 3, data.dane[0].czaswykonania, data.dane[0].czaswykonania )
+            this.Wypelnij(start, ilosc, wiersze, 0, data)
           }
           else
           {
@@ -109,6 +110,64 @@ export class TestyComponent implements OnInit {
           }
           }
           if (this.checked) { this.Przewin() }
+      }
+    );   
+
+    this.testsubscribe = testy.ZapiszTesty$.subscribe
+    ( data => 
+      { 
+        if (data.wynik)
+        {
+          this.tablicazawartosci[data.numer] = this.funkcje.setLiniaWiersz('', '', '' , '    Badanie stop: ', '',
+          [
+            this.funkcje.setNazwaLinia('',
+                                      [
+                                      this.funkcje.setTextNazwa(' ', data.czasend ,'',this.funkcje.getKolor().zalogowany,'')
+                                      ],
+                                      '')
+          ],
+                    '');
+          this.tablicazawartosci[data.numer + 1] = this.funkcje.setLiniaWiersz('', '', '' , '    Wynik testu:  ', '',
+                                          [
+                                            this.funkcje.setNazwaLinia(' ',
+                                                                      [
+                                                                      this.funkcje.setTextNazwa('', data.stanText ,'', (data.stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().krytyczny),'')
+                                                                      ],
+                                                                      '')
+                                          ],
+                                                    '')
+          this.tablicazawartosci = this.tablicazawartosci.concat(this.Pusta())
+          this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
+          this.changeDetectorRef.detectChanges();
+          this.VSVDialog.checkViewportSize();
+        }
+        else
+        {
+          this.tablicazawartosci[data.numer] = this.funkcje.setLiniaWiersz('', '', '' , '    Badanie stop: ', '',
+          [
+            this.funkcje.setNazwaLinia('',
+                                      [
+                                      this.funkcje.setTextNazwa(' ', ' error' ,'',this.funkcje.getKolor().zalogowany,'')
+                                      ],
+                                      '')
+          ],
+                    '');
+          this.tablicazawartosci[data.numer + 1] = this.funkcje.setLiniaWiersz('', '', '' , '    Wynik testu:  ', '',
+                    [
+                      this.funkcje.setNazwaLinia(' ',
+                                                [
+                                                this.funkcje.setTextNazwa('', data.error ,'', (data.stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().krytyczny),'')
+                                                ],
+                                                '')
+                    ],
+                              '')
+          this.tablicazawartosci = this.tablicazawartosci.concat(this.Pusta())
+          this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
+          this.changeDetectorRef.detectChanges();
+          this.VSVDialog.checkViewportSize();
+        }
+        //console.log('test')
+        
       }
     );   
   }
@@ -151,19 +210,35 @@ export class TestyComponent implements OnInit {
   if(this.informacjasubscribe) {this.informacjasubscribe.unsubscribe()};
   if(this.testsubscribe) {this.testsubscribe.unsubscribe()};
   if(this.zakladkasubscribe) {this.zakladkasubscribe.unsubscribe()};
+  if(this.zapisztestsubscribe) {this.zapisztestsubscribe.unsubscribe()};
   }
 
 
-  Testuj(numer: number, czaswykonania: number, czas: number)
+  Random(min: number, max: number)
   {
-    console.log(numer, czaswykonania, czas) 
-    if (czas > 0)    
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  Testuj(numer: number, czaswykonania: number, czaspozostaly: number, procent: number, data: any)
+  {
+    console.log(procent, czaswykonania, czaspozostaly ) 
+    switch (procent) {
+      case 0:   czaswykonania = Math.round( 1000 * data.dane[0].czaswykonania / this.Random(1,100)); czaspozostaly = 1000 * data.dane[0].czaswykonania - czaswykonania * 3; break;
+      case 12:   czaswykonania = Math.round( czaspozostaly / this.Random(1,80)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 17:   czaswykonania = Math.round( czaspozostaly / this.Random(1,100)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 32:   czaswykonania = Math.round( czaspozostaly / this.Random(1,60)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 42:   czaswykonania = Math.round( czaspozostaly / this.Random(1,80)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 57:   czaswykonania = Math.round( czaspozostaly / this.Random(1,40)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 64:   czaswykonania = Math.round( czaspozostaly / this.Random(1,40)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 74:   czaswykonania = Math.round( czaspozostaly / this.Random(1,20)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 80:   czaswykonania = Math.round( czaspozostaly / this.Random(1,10)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 89:   czaswykonania = Math.round( czaspozostaly / this.Random(1,5)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+      case 97:   czaswykonania = Math.round( czaspozostaly / this.Random(1,20)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
+    }
+    if (procent < 100)    
     {
       setTimeout(() => 
         {
-        let procent = Math.round(czas * 100 / czaswykonania);
-        console.log(procent) 
-    
         this.tablicazawartosci[numer] = this.funkcje.setLiniaWiersz('', '', '' , '    Badanie stop: ', '',
         [
           this.funkcje.setNazwaLinia('',
@@ -177,14 +252,31 @@ export class TestyComponent implements OnInit {
         this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
         this.changeDetectorRef.detectChanges();
         this.VSVDialog.checkViewportSize();
-        czas = czas - 500;
-        this.Testuj(numer, czaswykonania, czas)
-          }, 5000);          
+        this.Testuj(numer, czaswykonania, czaspozostaly, ++procent, data)
+          }, czaswykonania);          
+    }
+    else
+    {
+      this.tablicazawartosci[numer] = this.funkcje.setLiniaWiersz('', '', '' , '    Badanie stop: ', '',
+      [
+        this.funkcje.setNazwaLinia('',
+                                  [
+                                  this.funkcje.setTextNazwa(' ', '100' ,'%',this.funkcje.getKolor().zalogowany,'')
+                                  ],
+                                  '')
+      ],
+                '');
+      this.tablicazawartosci = this.tablicazawartosci.concat(this.Pusta())
+      this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
+      this.changeDetectorRef.detectChanges();
+      this.VSVDialog.checkViewportSize();
+      //console.log(data)
+      this.testy.ZapiszTest(this.funkcje.getZalogowany().zalogowany, data.dane[0].idmodul, data.dane[0].id, data.dane[0].czasbadania, this.czasy.getCzasDedala(), numer)
     }
 
   }
 
-  Wypelnij(start: number, ilosc: number, wiersze: any, licznik: number)
+  Wypelnij(start: number, ilosc: number, wiersze: any, licznik: number, data: any)
   {
     //console.log(start, ilosc, wiersze, licznik)
     if (licznik < ilosc)    
@@ -196,15 +288,21 @@ export class TestyComponent implements OnInit {
         this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
         this.changeDetectorRef.detectChanges();
         this.VSVDialog.checkViewportSize();
-        this.Wypelnij(start, ilosc, wiersze, ++licznik)
+        if (this.checked) { this.Przewin() }
+        this.Wypelnij(start, ilosc, wiersze, ++licznik, data)
           }, 300);          
+    }
+    else
+    if (data.dane[0].czaswykonania != 0)
+    {
+      this.Testuj(start + 3, 0, 0, 0, data )
     }
     
   }
 
 Pusta():Wiersze[]
 {
-  return  [this.funkcje.setLiniaWiersz('', '', '' , '', '',[ this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa('','','','','')],'')],'')]
+  return  [this.funkcje.setLiniaWiersz('', '', '' , '', '',[ this.funkcje.setNazwaLinia('', [this.funkcje.setTextNazwa('','',' ','','')],'')],'')]
 }
 
 Test(data: any): Wiersze[]
@@ -215,12 +313,12 @@ Test(data: any): Wiersze[]
                           [
                             this.funkcje.setNazwaLinia('nazwa: ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].nazwa ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ''),
-                            this.funkcje.setNazwaLinia('    symbol: [ ',
+                            this.funkcje.setNazwaLinia(' symbol: [ ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].symbol ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ' ]')                                                          
                           ],
@@ -231,23 +329,25 @@ Test(data: any): Wiersze[]
                           [
                             this.funkcje.setNazwaLinia('nazwa: ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].modulNazwa ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ''),
-                            this.funkcje.setNazwaLinia('    symbol: [ ',
+                            this.funkcje.setNazwaLinia(' symbol: [ ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].modulSymbol ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ' ]')                                                          
                           ],
                                     '')
       ]; 
+      let czasstart = this.czasy.getCzasDedala();
+      data.dane[0].czasbadania = czasstart;
       tablica = [...tablica, 
         this.funkcje.setLiniaWiersz('', '', '' , '    Badanie start: ', '',
                             [
                               this.funkcje.setNazwaLinia('',
                                                         [
-                                                        this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,' ',this.funkcje.getKolor().liniakomend,'')
+                                                        this.funkcje.setTextNazwa('', czasstart ,'',this.funkcje.getKolor().liniakomend,'')
                                                         ],
                                                         '')
                             ],
@@ -269,7 +369,7 @@ Test(data: any): Wiersze[]
                                 [
                                   this.funkcje.setNazwaLinia(' ',
                                                             [
-                                                            this.funkcje.setTextNazwa(' ', 'w trakcie badania' ,' ', this.funkcje.getKolor().zalogowany,'mrugaj')
+                                                            this.funkcje.setTextNazwa('', 'w trakcie badania' ,'', this.funkcje.getKolor().zalogowany,'mrugaj')
                                                             ],
                                                             '')
                                 ],
@@ -299,7 +399,7 @@ Informacja(data: any): Wiersze[]
                           [
                             this.funkcje.setNazwaLinia('',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,' ',this.funkcje.getKolor().liniakomend,'')
                                                       ],
                                                       '')
                           ],
@@ -310,12 +410,12 @@ Informacja(data: any): Wiersze[]
                           [
                             this.funkcje.setNazwaLinia('nazwa: ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].nazwa ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ''),
-                            this.funkcje.setNazwaLinia('    symbol: [ ',
+                            this.funkcje.setNazwaLinia(' symbol: [ ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].symbol ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ' ]')                                                          
                           ],
@@ -326,12 +426,12 @@ Informacja(data: any): Wiersze[]
                           [
                             this.funkcje.setNazwaLinia('nazwa: ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].modulNazwa ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ''),
-                            this.funkcje.setNazwaLinia('    symbol: [ ',
+                            this.funkcje.setNazwaLinia(' symbol: [ ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].modulSymbol ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                                       ],
                                                       ' ]')                                                          
                           ],
@@ -340,26 +440,39 @@ Informacja(data: any): Wiersze[]
       tablica = [...tablica, 
       this.funkcje.setLiniaWiersz('', '', '' , '    Ostatni wykonany test:  ', '',
                           [
-                            this.funkcje.setNazwaLinia('data: ',
+                            this.funkcje.setNazwaLinia('start: ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].czasbadania ,' ',this.funkcje.getKolor().liniakomend,'')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].czasbadania ,'',this.funkcje.getKolor().liniakomend,'')
                                                       ],
                                                       ''),
-                            this.funkcje.setNazwaLinia(' wykonał: ',
+                            this.funkcje.setNazwaLinia(' koniec: ',
                                                       [
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].imie,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
-                                                      this.funkcje.setTextNazwa(' ', data.dane[0].nazwisko ,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                      this.funkcje.setTextNazwa('', data.dane[0].czaszakonczenia ,'',this.funkcje.getKolor().liniakomend,'')
                                                       ],
-                                                      '')                                                          
+                                                      ''),
+                            
                           ],
                                     '')
       ]; 
       tablica = [...tablica, 
+        this.funkcje.setLiniaWiersz('', '', '' , '    Wykonał:  ', '',
+                            [
+                              this.funkcje.setNazwaLinia(' ',
+                                                        [
+                                                        this.funkcje.setTextNazwa('', data.dane[0].imie,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                                        this.funkcje.setTextNazwa('', ' ','',this.funkcje.getKolor().liniakomend,''),
+                                                        this.funkcje.setTextNazwa('', data.dane[0].nazwisko ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                                        ],
+                                                        '')                                                          
+                            ],
+                                      '')
+        ]; 
+        tablica = [...tablica, 
         this.funkcje.setLiniaWiersz('', '', '' , '    Wynik testu:  ', '',
                             [
                               this.funkcje.setNazwaLinia(' ',
                                                         [
-                                                        this.funkcje.setTextNazwa(' ', data.dane[0].stanText ,' ',(data.dane[0].stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().alert),'')
+                                                        this.funkcje.setTextNazwa('', data.dane[0].stanText ,'',(data.dane[0].stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().alert),'')
                                                         ],
                                                         '')
                             ],

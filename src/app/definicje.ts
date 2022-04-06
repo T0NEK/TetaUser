@@ -88,13 +88,14 @@ export interface Zespol
     id: number;  
     nazwa :string;
     symbol: string;
-    moduly: string;
+    idmodul: string;
     stan: number;
     czaswykonania: number;
     stanwynik: string;
     imie: string; 
     nazwisko: string;
     czasbadania: string;
+    czaszakonczenia: string;
     opis: string;
     modulSymbol: string;
     modulNazwa: string;
