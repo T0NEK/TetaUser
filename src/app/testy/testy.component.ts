@@ -223,7 +223,7 @@ export class TestyComponent implements OnInit {
   {
     console.log(procent, czaswykonania, czaspozostaly ) 
     switch (procent) {
-      case 0:   czaswykonania = Math.round( 1000 * data.dane[0].czaswykonania / this.Random(1,100)); czaspozostaly = 1000 * data.dane[0].czaswykonania - czaswykonania * 3; break;
+      case 0:   czaswykonania = Math.round( ((1*data.dane[0].stanNr) == 0 ? 1 : 2) * 500 * data.dane[0].czaswykonania / this.Random(1,100)); czaspozostaly = 1000 * data.dane[0].czaswykonania - czaswykonania * 3; break;
       case 12:   czaswykonania = Math.round( czaspozostaly / this.Random(1,80)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
       case 17:   czaswykonania = Math.round( czaspozostaly / this.Random(1,100)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
       case 32:   czaswykonania = Math.round( czaspozostaly / this.Random(1,60)); czaspozostaly = czaspozostaly - czaswykonania * 3; break;
@@ -270,6 +270,7 @@ export class TestyComponent implements OnInit {
       this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
       this.changeDetectorRef.detectChanges();
       this.VSVDialog.checkViewportSize();
+      //console.log('data')
       //console.log(data)
       this.testy.ZapiszTest(this.funkcje.getZalogowany().zalogowany, data.dane[0].idmodul, data.dane[0].id, data.dane[0].czasbadania, this.czasy.getCzasDedala(), numer)
     }
