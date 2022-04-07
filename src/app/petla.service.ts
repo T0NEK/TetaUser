@@ -239,6 +239,8 @@ Wykonaj(warunek: Polecenia): string
                                 break;
                           case 'notatka': this.notatki.setNotatkaClear(); wynik = warunek.nastepnyTrue; 
                                 break;
+                          case 'informacje': this.funkcje.setLiniaInformacjeClear(); wynik = warunek.nastepnyTrue; 
+                                break;
                           default: wynik = 'bad';                              
                             break;
                           }

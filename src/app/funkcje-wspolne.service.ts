@@ -172,6 +172,10 @@ setLiniaDialoguClear()
   this.LiniaKomunikatu.next({'przed': '', 'name': '', 'po': '', 'prefix': '', 'linia': '', 'sufix': '', 'clear': true});
 }
 
+setLiniaInformacjeClear()
+{
+  this.DodajInformacje.next({'dane': '', 'clear': true});
+}
 
 private DodajInformacje = new Subject<any>();
 DodajInformacje$ = this.DodajInformacje.asObservable();
@@ -322,6 +326,8 @@ private blokadaLiniaStanPolecen(stan: any)
 {
   this.LiniaDialoguStanPolecen.next(stan);
 }
+
+
 
 setLiniaKomunikatuHistoriaClear()
 { this.liniakomunikatuHistoriaStan('') }
