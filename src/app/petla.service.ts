@@ -53,9 +53,9 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
   this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
   this.zespolysubscribe_p = this.zespoly.OdczytajZespoly$.subscribe
-    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
   this.zespolsubscribe_p = this.zespoly.OdczytajZespol$.subscribe
-    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
   this.notatkisubscribe_p = this.notatki.OdczytajNotatki$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
   this.notatkitrescsubscribe_p = this.notatki.OdczytajNotatkiTresc$.subscribe
@@ -83,7 +83,7 @@ ngOnDestroy()
    if(this.zapisznotatkitrescsubscribe_p) { this.zapisznotatkisubscribe_p.unsubscribe(); }   
   }
 
-poleceniaWykonaj(polecenie: string, tekst: string)
+poleceniaWykonaj(polecenie: string, tekst: string, data: any = {})
 {
  //console.log('działanie ',polecenie)
  //console.log('tekst: ',tekst)
@@ -124,12 +124,12 @@ poleceniaWykonaj(polecenie: string, tekst: string)
                                 }, dowykonania.czas);
             break;      
       case 'linie': setTimeout(() => {  
-                                this.Lista(dowykonania, tekst)    
+                                this.Lista(dowykonania, tekst, data)    
                               //  this.polecenieWyswietl(dowykonania);
                                 }, dowykonania.czas);
             break;
       case 'testy': setTimeout(() => {  
-                                this.Testy(dowykonania, tekst)    
+                                this.Testy(dowykonania, tekst, data)    
                               //  this.polecenieWyswietl(dowykonania);
                                 }, dowykonania.czas);
             break;
@@ -322,18 +322,19 @@ return wynik;
 }
 
 
-Testy(dowykonania: any, tekst: string)
+Testy(dowykonania: any, tekst: string, data: any)
 {
   //console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
-    case 'zespol': this.funkcje.addDodajInformacje(this.zespoly.getZespol(), false); break;
-    case 'test': this.funkcje.addDodajTest(this.zespoly.getZespol(), false); break;
+    case 'zespol': this.funkcje.addDodajInformacje(data, false); break;
+    case 'test': this.funkcje.addDodajTest(data, false); break;
+    case 'reset': this.funkcje.addDodajReset(data, false); break;
   }
   this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst)
 }
 
-Lista(dowykonania: any, tekst: string)
+Lista(dowykonania: any, tekst: string, data: any = {})
 {
   //console.log(dowykonania)
   switch (dowykonania.komunikat) 
@@ -358,7 +359,7 @@ Lista(dowykonania: any, tekst: string)
                       "",
                       tekst); 
           break;
-    case 'zespoly': this.wyswietlLista( 0, false, this.zespoly.getZespoly(), dowykonania,
+    case 'zespoly': this.wyswietlLista( 0, false, data, dowykonania,
                       "", 
                       [this.funkcje.setNazwaLinia('Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
@@ -367,7 +368,7 @@ Lista(dowykonania: any, tekst: string)
                       "",
                       tekst); 
           break;
-    case 'zespolyW': this.wyswietlLista( 0, false, this.zespoly.getZespoly(), dowykonania,
+    case 'zespolyW': this.wyswietlLista( 0, false, data, dowykonania,
                       "", 
                       [
                       this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "modulSymbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
@@ -409,7 +410,8 @@ GetSet(dowykonania: any)
   {
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.czasy.getCzasDedala()); break;
-          case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
+          case 'reset': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(),'reset'); break;
+          case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(),'zespol'); break;
           case 'zespoly': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespolyW': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, ['all'], this.czasy.getCzasDedala()); break;
           case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;

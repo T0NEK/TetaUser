@@ -2,7 +2,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Zespol } from './definicje'
 import { KomunikacjaService } from './komunikacja.service';
 
 @Injectable({
@@ -10,8 +9,8 @@ import { KomunikacjaService } from './komunikacja.service';
 })
 export class ZespolyService {
 
-private zespoly: Zespol[] = [];  
-private zespol: Zespol[] = [];  
+//private zespoly: Zespol[] = [];  
+//private zespol: Zespol[] = [];  
 
 
 constructor(private http: HttpClient, private komunikacja: KomunikacjaService)
@@ -20,13 +19,13 @@ constructor(private http: HttpClient, private komunikacja: KomunikacjaService)
 }
 
 
-getZespol() { return this.zespol; }
-getZespoly() { return this.zespoly; }
+//getZespol() { return this.zespol; }
+//getZespoly() { return this.zespoly; }
 
 
 WczytajZespoly(stan: number, dowykonania: any, bufor: any, czas: string)
 {
-    this.zespoly = [];
+    //this.zespoly = [];
     this.odczytaj_zespoly(5, stan, dowykonania, bufor[0], '', czas);
 }
 
@@ -53,13 +52,13 @@ if (licznik > 0 )
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
-                this.zespoly =  wynik.zespoly
-                this.OdczytajZespoly.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
+                //this.zespoly =  wynik.zespoly
+                this.OdczytajZespoly.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error, "data": wynik.zespoly})
                
               }
               else
               {
-                this.OdczytajZespoly.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error})
+                this.OdczytajZespoly.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error, "data": wynik.zespoly})
               }
                 },
       error => {
@@ -76,16 +75,16 @@ if (licznik > 0 )
 
 
 
-WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string)
+WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string, rodzaj: string)
 {
-    console.log()
-    this.zespol = [];
-    this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], '', czas);
+    //console.log()
+    //this.zespol = [];
+    this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], '', czas, rodzaj);
 }
 
 private OdczytajZespol = new Subject<any>();
 OdczytajZespol$ = this.OdczytajZespol.asObservable()
-private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: string, zespol: string, powod: string, czas: string)
+private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: string, zespol: string, powod: string, czas: string, rodzaj: string)
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -95,7 +94,7 @@ private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: 
     })
   };
   
-var data = JSON.stringify({ "stan": stan, "modul": modul, "zespol": zespol, "czas": czas})  
+var data = JSON.stringify({ "stan": stan, "modul": modul, "zespol": zespol, "czas": czas, "rodzaj": rodzaj})  
 
 if (licznik > 0 )
   {
@@ -106,17 +105,17 @@ if (licznik > 0 )
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
-                this.zespol =  wynik.zespol
-                this.OdczytajZespol.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error})
+               // this.zespol =  wynik.zespol
+                this.OdczytajZespol.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error, "data": wynik.zespol})
               }
               else
               {
-                this.OdczytajZespol.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error})
+                this.OdczytajZespol.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error, "data": wynik.zespol})
               }
                 },
       error => {
         console.log(error)
-                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, '', czas)}, 1000) 
+                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, '', czas, rodzaj)}, 1000) 
               }
               )      
   }

@@ -91,7 +91,9 @@ export interface Zespol
     idmodul: string;
     stan: number;
     czaswykonania: number;
+    elementy: number;
     stanwynik: string;
+    naprawaporeset: number;
     imie: string; 
     nazwisko: string;
     czasbadania: string;

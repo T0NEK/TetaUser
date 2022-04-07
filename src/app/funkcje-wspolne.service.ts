@@ -191,6 +191,13 @@ addDodajTest(dane: any, clear: boolean)
  this.DodajTest.next({"dane": dane, "clear": clear})
 }
 
+private DodajReset = new Subject<any>();
+DodajReset$ = this.DodajReset.asObservable();
+addDodajReset(dane: any, clear: boolean)
+{
+ this.DodajReset.next({"dane": dane, "clear": clear})
+}
+
 
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();

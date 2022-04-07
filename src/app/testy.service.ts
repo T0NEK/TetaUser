@@ -47,7 +47,7 @@ if (licznik > 0 )
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
-                this.ZapiszTesty.next({"wynik": wynik.wynik, "stan": wynik.stan, "stanNr": wynik.stanNr, "stanText": wynik.stanText, "czasend": wynik.czasend, "numer": numer})
+                this.ZapiszTesty.next({"wynik": wynik.wynik, "stan": wynik.stan, "stanNr": wynik.stanNr, "stanText": wynik.stanText, "uszkodzenia": wynik.uszkodzenia, "czasend": wynik.czasend, "numer": numer})
               }
               else
               {
