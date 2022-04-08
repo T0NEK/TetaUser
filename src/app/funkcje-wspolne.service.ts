@@ -184,6 +184,13 @@ addDodajInformacje(dane: any, clear: boolean)
  this.DodajInformacje.next({"dane": dane, "clear": clear})
 }
 
+private DodajUszkodzenia = new Subject<any>();
+DodajUszkodzenia$ = this.DodajUszkodzenia.asObservable();
+addDodajUszkodzenia(dane: any, clear: boolean)
+{
+ this.DodajUszkodzenia.next({"dane": dane, "clear": clear})
+}
+
 private DodajTest = new Subject<any>();
 DodajTest$ = this.DodajTest.asObservable();
 addDodajTest(dane: any, clear: boolean)

@@ -21,6 +21,7 @@ private zdarzeniasubscribe_p = new Subscription();
 private modulysubscribe_p = new Subscription();
 private zespolysubscribe_p = new Subscription();
 private zespolsubscribe_p = new Subscription();
+private uszkodzeniasubscribe_p = new Subscription();
 private poleceniasubscribe_p = new Subscription();
 private dzialaniasubscribe_p = new Subscription();
 private notatkisubscribe_p = new Subscription();
@@ -56,6 +57,8 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
   this.zespolsubscribe_p = this.zespoly.OdczytajZespol$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
+  this.uszkodzeniasubscribe_p = this.zespoly.OdczytajUszkodzenia$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
   this.notatkisubscribe_p = this.notatki.OdczytajNotatki$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )      
   this.notatkitrescsubscribe_p = this.notatki.OdczytajNotatkiTresc$.subscribe
@@ -75,6 +78,7 @@ ngOnDestroy()
    if(this.modulysubscribe_p) { this.modulysubscribe_p.unsubscribe(); }   
    if(this.zespolysubscribe_p) { this.zespolysubscribe_p.unsubscribe(); }   
    if(this.zespolsubscribe_p) { this.zespolsubscribe_p.unsubscribe(); }   
+   if(this.uszkodzeniasubscribe_p) { this.zespolsubscribe_p.unsubscribe(); }   
    if(this.poleceniasubscribe_p) { this.poleceniasubscribe_p.unsubscribe(); }   
    if(this.dzialaniasubscribe_p) { this.dzialaniasubscribe_p.unsubscribe(); }   
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
@@ -328,6 +332,7 @@ Testy(dowykonania: any, tekst: string, data: any)
   switch (dowykonania.komunikat) 
   {
     case 'zespol': this.funkcje.addDodajInformacje(data, false); break;
+    case 'uszkodzenia': this.funkcje.addDodajUszkodzenia(data, false); break;
     case 'test': this.funkcje.addDodajTest(data, false); break;
     case 'reset': this.funkcje.addDodajReset(data, false); break;
   }
@@ -354,7 +359,7 @@ Lista(dowykonania: any, tekst: string, data: any = {})
     case 'moduly': this.wyswietlLista( 0, false, this.moduly.getModuly(), dowykonania,
                       "", 
                       [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
-                       this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
+                       this.funkcje.setNazwaLinia(" (symbol: ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ")"),
                       ],
                       "",
                       tekst); 
@@ -362,8 +367,8 @@ Lista(dowykonania: any, tekst: string, data: any = {})
     case 'zespoly': this.wyswietlLista( 0, false, data, dowykonania,
                       "", 
                       [this.funkcje.setNazwaLinia('Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
-                      this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
-                      this.funkcje.setNazwaLinia(" stan: ", [this.funkcje.setTextNazwa("", "stanText", "", "", "")], ""),
+                      this.funkcje.setNazwaLinia(" (symbol: ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ")"),
+                      this.funkcje.setNazwaLinia(" - ", [this.funkcje.setTextNazwa("", "stanText", "", "", "")], ""),
                       ],
                       "",
                       tekst); 
@@ -373,7 +378,7 @@ Lista(dowykonania: any, tekst: string, data: any = {})
                       [
                       this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "modulSymbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(' Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
-                      this.funkcje.setNazwaLinia(" symbol: [ ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], " ]"),
+                      this.funkcje.setNazwaLinia(" (symbol: ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ")"),
                       ],
                       "",
                       tekst); 
@@ -411,6 +416,7 @@ GetSet(dowykonania: any)
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.czasy.getCzasDedala()); break;
           case 'reset': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(),'reset'); break;
+          case 'uszkodzenia': this.zespoly.WczytajUszkodzenia(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane); break;
           case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(),'zespol'); break;
           case 'zespoly': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespolyW': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, ['all'], this.czasy.getCzasDedala()); break;
