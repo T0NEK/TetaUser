@@ -165,8 +165,7 @@ export class TestyComponent implements OnInit {
           [
             this.funkcje.setNazwaLinia(' ',
                                       [
-                                      this.funkcje.setTextNazwa('', data.stanText ,'', (data.stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().krytyczny),''),
-                                      this.funkcje.setTextNazwa(' - ', data.uszkodzenia ,'', (data.stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().krytyczny),'')
+                                      this.funkcje.setTextNazwa('', data.stanText ,'', (data.stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().krytyczny),'')
                                       ],
                                       '')
           ],
@@ -324,7 +323,15 @@ export class TestyComponent implements OnInit {
     if (procent > skok)
     {
       skok = skok + <number>elementy[5]
-      if  (<number>elementy[0] == 4) { elementy[0] = 1; elementy[6] = <number>elementy[6] + 1} else { elementy[0] = <number>elementy[0] + 1} ;
+      if  (<number>elementy[0] == 4) 
+          {
+          elementy[0] = 1; 
+          elementy[6] = <number>elementy[6] + ( <number>elementy[6] == data.dane[0].elementy ?  0:1 );
+          }
+          else
+          {
+          elementy[0] = <number>elementy[0] + 1
+          } ;
     }
     else
     if (<number>elementy[0] == 1)
@@ -362,7 +369,8 @@ export class TestyComponent implements OnInit {
         this.funkcje.setNazwaLinia('',
                                   [
                                   this.funkcje.setTextNazwa(' ', '99' ,'%',this.funkcje.getKolor().zalogowany,''),
-                                  this.funkcje.setTextNazwa('', (elementy[4]).toString(), '' ,this.funkcje.getKolor().zalogowany,'')
+                                  this.funkcje.setTextNazwa('', (elementy[4]).toString(), '' ,this.funkcje.getKolor().zalogowany,''),
+                                  this.funkcje.setTextNazwa(' element nr: ', (<number>elementy[6]).toString(), '' ,this.funkcje.getKolor().zalogowany,'')
                                   ],
                                   '')
       ],
@@ -399,7 +407,7 @@ export class TestyComponent implements OnInit {
       case 'info': break;
       case 'testy': this.Testuj(start + 3, 0, 0, data, [1, ' - wysyłam zapytanie', ' - czekam', ' - odbieram',' - analizuję element', Math.round ( 50 / data.dane[0].elementy), 1], 0); break;
       case 'reset':   data.dane[0].czasbadania = this.czasy.getCzasDedala();
-                      this.Resetuj(start + 3, 0, 0, data, [1, ' - wysyłam reset', ' - czekam', ' - odbieram',' - analizuję', Math.round ( 50 / data.dane[0].elementy), 1], 0); 
+                      this.Resetuj(start + 2, 0, 0, data, [1, ' - wysyłam reset', ' - czekam', ' - odbieram',' - analizuję', Math.round ( 50 / data.dane[0].elementy), 1], 0); 
                       break;
     } 
   }
@@ -414,71 +422,60 @@ Reset(data: any): Wiersze[]
   {
     let tablica: Wiersze[] = [];
     tablica = [...tablica, 
-      this.funkcje.setLiniaWiersz('', '', '' , '    POLECENIE:  ', '',
-          [
-            this.funkcje.setNazwaLinia('',
-                                      [
-                                      this.funkcje.setTextNazwa('', ' RESET' ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                      ],
-                                      '')
-          ],
-          '')                      
-    ]; 
-    tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    ZESPÓŁ:  ', '',
-          [
-            this.funkcje.setNazwaLinia('nazwa: ',
-                                      [
-                                      this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                      ],
-                                      ''),
-            this.funkcje.setNazwaLinia(' symbol: [ ',
-                                      [
-                                      this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                      ],
-                                      ' ]')                                                          
-          ],
-                    '')
-      ]; 
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    MODUŁ:   ', '',
-                          [
-                            this.funkcje.setNazwaLinia('nazwa: ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ''),
-                            this.funkcje.setNazwaLinia(' symbol: [ ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ' ]')                                                          
-                          ],
-                                    '')
-      ]; 
-        tablica = [...tablica, 
-          this.funkcje.setLiniaWiersz('', '', '' , '    Wykonuję: ', '',
-          [
-            this.funkcje.setNazwaLinia('',
-                                      [
-                                      this.funkcje.setTextNazwa('', ' ' ,'',this.funkcje.getKolor().zalogowany,''),
-                                      this.funkcje.setTextNazwa('', ' ', '' ,this.funkcje.getKolor().zalogowany,'')
-                                      ],
-                                      '')
-          ],
-                    '')
-          ];
-          tablica = [...tablica, 
-            this.funkcje.setLiniaWiersz('', '', '' , '--- koniec danych ---', '',
+      this.funkcje.setLiniaWiersz('', '', '' , '--- start polecenie', '',
+      [
+        this.funkcje.setNazwaLinia('',
                                   [
-                                    this.funkcje.setNazwaLinia('',
-                                                              [
-                                                              this.funkcje.setTextNazwa('', '' ,'','','')
-                                                              ],
-                                                              '')
+                                  this.funkcje.setTextNazwa('', ' reset' ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                  this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,'', '','')
                                   ],
-                                            '')
-              ];        
+                                  '')
+      ],
+    ''), 
+    this.funkcje.setLiniaWiersz('', '', '' , '', '',
+      [
+        this.funkcje.setNazwaLinia('    ZESPÓŁ:   ',
+                                  [
+                                  this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                  ],
+                                  ''),
+        this.funkcje.setNazwaLinia('  (symbol: ',
+                                  [
+                                  this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                  ],
+                                  ')'),
+        this.funkcje.setNazwaLinia('    MODUŁ:   ',
+                                  [
+                                  this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                  ],
+                                  ''),
+        this.funkcje.setNazwaLinia('  (symbol: ',
+                                  [
+                                  this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                  ],
+                                  ')')                                                          
+      ],
+    ''),
+    this.funkcje.setLiniaWiersz('', '', '' , '    Wykonuję: ', '',
+      [
+        this.funkcje.setNazwaLinia('',
+                                  [
+                                  this.funkcje.setTextNazwa('', ' ' ,'',this.funkcje.getKolor().zalogowany,''),
+                                  this.funkcje.setTextNazwa('', ' ', '' ,this.funkcje.getKolor().zalogowany,'')
+                                  ],
+                                  '')
+      ],
+    ''), 
+    this.funkcje.setLiniaWiersz('', '', '' , '--- koniec', '',
+      [
+        this.funkcje.setNazwaLinia('',
+                                  [
+                                  this.funkcje.setTextNazwa('', '' ,'','','')
+                                  ],
+                                  '')
+      ],
+                '')
+      ];        
   return tablica            
   }
 
@@ -487,42 +484,44 @@ Reset(data: any): Wiersze[]
 Test(data: any): Wiersze[]
   {
     let tablica: Wiersze[] = [];
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    ZESPÓŁ:  ', '',
-                          [
-                            this.funkcje.setNazwaLinia('nazwa: ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ''),
-                            this.funkcje.setNazwaLinia(' symbol: [ ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ' ]')                                                          
-                          ],
-                                    '')
-      ]; 
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    MODUŁ:   ', '',
-          [
-            this.funkcje.setNazwaLinia('nazwa: ',
-                                      [
-                                      this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                      ],
-                                      ''),
-            this.funkcje.setNazwaLinia(' symbol: [ ',
-                                      [
-                                      this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                      ],
-                                      ' ]')                                                          
-          ],
-                                    '')
-      ]; 
-      let czasstart = this.czasy.getCzasDedala();
-      data.dane[0].czasbadania = czasstart;
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    Badanie start: ', '',
+    let czasstart = this.czasy.getCzasDedala();
+    data.dane[0].czasbadania = czasstart;
+    tablica = [...tablica, 
+      this.funkcje.setLiniaWiersz('', '', '' , '--- start polecenie', '',
+            [
+              this.funkcje.setNazwaLinia('',
+                                        [
+                                        this.funkcje.setTextNazwa('', ' test' ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                        this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,'', '','')
+                                        ],
+                                        '')
+            ],
+      ''), 
+      this.funkcje.setLiniaWiersz('', '', '' , '', '',
+            [
+              this.funkcje.setNazwaLinia('    ZESPÓŁ:   ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ''),
+              this.funkcje.setNazwaLinia('  (symbol: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ')'),
+              this.funkcje.setNazwaLinia('    MODUŁ:   ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ''),
+              this.funkcje.setNazwaLinia('  (symbol: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ')')                                                          
+            ],
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '    Badanie start: ', '',
           [
             this.funkcje.setNazwaLinia('',
                                       [
@@ -530,10 +529,8 @@ Test(data: any): Wiersze[]
                                       ],
                                       '')
           ],
-                    '')
-        ];
-        tablica = [...tablica, 
-          this.funkcje.setLiniaWiersz('', '', '' , '    Badanie stop: ', '',
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '    Badanie stop: ', '',
           [
             this.funkcje.setNazwaLinia('',
               [
@@ -543,29 +540,25 @@ Test(data: any): Wiersze[]
               ],
               '')
           ],
-                    '')
-          ];
-          tablica = [...tablica, 
-            this.funkcje.setLiniaWiersz('', '', '' , '    Wynik testu:  ', '',
-                                [
-                                  this.funkcje.setNazwaLinia(' ',
-                                                            [
-                                                            this.funkcje.setTextNazwa('', 'w trakcie badania' ,'', this.funkcje.getKolor().zalogowany,'mrugaj')
-                                                            ],
-                                                            '')
-                                ],
-                                          '')
-          ]; 
-          tablica = [...tablica, 
-            this.funkcje.setLiniaWiersz('', '', '' , '--- koniec danych ---', '',
-                                  [
-                                    this.funkcje.setNazwaLinia('',
-                                                              [
-                                                              this.funkcje.setTextNazwa('', '' ,'','','')
-                                                              ],
-                                                              '')
-                                  ],
-                                            '')
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '    Wynik testu:  ', '',
+          [
+            this.funkcje.setNazwaLinia(' ',
+                                      [
+                                      this.funkcje.setTextNazwa('', 'w trakcie badania' ,'', this.funkcje.getKolor().zalogowany,'mrugaj')
+                                      ],
+                                      '')
+          ],
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '--- koniec ', '',
+          [
+            this.funkcje.setNazwaLinia('',
+                                      [
+                                      this.funkcje.setTextNazwa('', '' ,'','','')
+                                      ],
+                                      '')
+          ],
+      '')
               ];        
   return tablica            
   }
@@ -576,99 +569,75 @@ Informacja(data: any): Wiersze[]
   {
     let tablica: Wiersze[] = [];
       tablica = [...tablica, 
-      this.funkcje.setLiniaWiersz('', '', '' , '    Stan wyświetlony z dnia: ', '',
-                          [
-                            this.funkcje.setNazwaLinia('',
-                                                      [
-                                                      this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,' ',this.funkcje.getKolor().liniakomend,'')
-                                                      ],
-                                                      '')
-                          ],
-                                    '')
-      ];
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    ZESPÓŁ:  ', '',
-                          [
-                            this.funkcje.setNazwaLinia('nazwa: ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ''),
-                            this.funkcje.setNazwaLinia(' symbol: [ ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ' ]')                                                          
-                          ],
-                                    '')
-      ]; 
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    MODUŁ:   ', '',
-                          [
-                            this.funkcje.setNazwaLinia('nazwa: ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ''),
-                            this.funkcje.setNazwaLinia(' symbol: [ ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                      ],
-                                                      ' ]')                                                          
-                          ],
-                                    '')
-      ]; 
-      tablica = [...tablica, 
-      this.funkcje.setLiniaWiersz('', '', '' , '    Ostatni wykonany test:  ', '',
-                          [
-                            this.funkcje.setNazwaLinia('start: ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].czasbadania ,'',this.funkcje.getKolor().liniakomend,'')
-                                                      ],
-                                                      ''),
-                            this.funkcje.setNazwaLinia(' koniec: ',
-                                                      [
-                                                      this.funkcje.setTextNazwa('', data.dane[0].czaszakonczenia ,'',this.funkcje.getKolor().liniakomend,'')
-                                                      ],
-                                                      ''),
-                            
-                          ],
-                                    '')
-      ]; 
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    Wykonał:  ', '',
-                            [
-                              this.funkcje.setNazwaLinia(' ',
-                                                        [
-                                                        this.funkcje.setTextNazwa('', data.dane[0].imie,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
-                                                        this.funkcje.setTextNazwa('', ' ','',this.funkcje.getKolor().liniakomend,''),
-                                                        this.funkcje.setTextNazwa('', data.dane[0].nazwisko ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                                        ],
-                                                        '')                                                          
-                            ],
-                                      '')
-        ]; 
-        tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '    Wynik testu:  ', '',
-                            [
-                              this.funkcje.setNazwaLinia(' ',
-                                                        [
-                                                        this.funkcje.setTextNazwa('', data.dane[0].stanText ,'',(data.dane[0].stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().alert),'')
-                                                        ],
-                                                        '')
-                            ],
-                                      '')
-      ]; 
-      tablica = [...tablica, 
-        this.funkcje.setLiniaWiersz('', '', '' , '--- koniec danych ---', '',
-                              [
-                                this.funkcje.setNazwaLinia('',
-                                                          [
-                                                          this.funkcje.setTextNazwa('', '' ,'','','')
-                                                          ],
-                                                          '')
-                              ],
+      this.funkcje.setLiniaWiersz('', '', '' , '--- start polecenie', '',
+            [
+              this.funkcje.setNazwaLinia('',
+                                        [
+                                        this.funkcje.setTextNazwa('', ' zespół' ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                        this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,'', '','')
+                                        ],
                                         '')
+            ],
+      ''), 
+      this.funkcje.setLiniaWiersz('', '', '' , '', '',
+            [
+              this.funkcje.setNazwaLinia('    ZESPÓŁ:   ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ''),
+              this.funkcje.setNazwaLinia('  (symbol: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ')'),
+              this.funkcje.setNazwaLinia('    MODUŁ:   ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ''),
+              this.funkcje.setNazwaLinia('  (symbol: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ')')                                                          
+            ],
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '', '',
+            [
+              this.funkcje.setNazwaLinia('    Ostatni wykonany test z dnia: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[0].czaszakonczenia ,'',this.funkcje.getKolor().liniakomend,'')
+                                        ],
+                                        ''),
+              
+              this.funkcje.setNazwaLinia('    Wykonał: ',
+                                          [
+                                          this.funkcje.setTextNazwa('', data.dane[0].imie,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                          this.funkcje.setTextNazwa('', ' ','',this.funkcje.getKolor().liniakomend,''),
+                                          this.funkcje.setTextNazwa('', data.dane[0].nazwisko ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                          ],
+                                          '')                                                          
+              ],
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '', '',
+          [
+            this.funkcje.setNazwaLinia('    Wynik testu:  ',
+                                      [
+                                      this.funkcje.setTextNazwa('', data.dane[0].stanText ,'',(data.dane[0].stanNr == 1 ? this.funkcje.getKolor().info : this.funkcje.getKolor().alert),'')
+                                      ],
+                                      '')
+          ],
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '--- koniec', '',
+          [
+            this.funkcje.setNazwaLinia('',
+                                      [
+                                      this.funkcje.setTextNazwa('', '' ,'','','')
+                                      ],
+                                      '')
+          ],
+      '')
           ];
   return tablica            
   }
