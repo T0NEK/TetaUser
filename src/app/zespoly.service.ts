@@ -75,16 +75,16 @@ if (licznik > 0 )
 
 
 
-WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string, rodzaj: string)
+WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string)
 {
     //console.log()
     //this.zespol = [];
-    this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], '', czas, rodzaj);
+    this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], '', czas);
 }
 
 private OdczytajZespol = new Subject<any>();
 OdczytajZespol$ = this.OdczytajZespol.asObservable()
-private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: string, zespol: string, powod: string, czas: string, rodzaj: string)
+private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: string, zespol: string, powod: string, czas: string)
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -94,7 +94,7 @@ private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: 
     })
   };
   
-var data = JSON.stringify({ "stan": stan, "modul": modul, "zespol": zespol, "czas": czas, "rodzaj": rodzaj})  
+var data = JSON.stringify({ "stan": stan, "modul": modul, "zespol": zespol, "czas": czas})  
 
 if (licznik > 0 )
   {
@@ -115,7 +115,7 @@ if (licznik > 0 )
                 },
       error => {
         console.log(error)
-                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, '', czas, rodzaj)}, 1000) 
+                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, '', czas)}, 1000) 
               }
               )      
   }
@@ -126,52 +126,7 @@ if (licznik > 0 )
 }
 
 
-WczytajUszkodzenia(stan: number, dowykonania: any, bufor: any)
-{
-   this.odczytaj_uszkodzenia(5, stan, dowykonania, bufor[0],'');
-}
 
-private OdczytajUszkodzenia = new Subject<any>();
-OdczytajUszkodzenia$ = this.OdczytajUszkodzenia.asObservable()
-private odczytaj_uszkodzenia(licznik: number, stan: number, dowykonania: any, symbol: string, powod: string)
-{
-  const httpOptions = {
-    headers: new HttpHeaders({
-      'Access-Control-Allow-Origin':'*',
-      'content-type': 'application/json',
-      Authorization: 'my-auth-token'
-    })
-  };
-  
-var data = JSON.stringify({ "osoba": stan, "symbol": symbol})  
-
-if (licznik > 0 )
-  {
-    --licznik;
-    this.http.post(this.komunikacja.getURL() + 'uszkodzenia/', data, httpOptions).subscribe( 
-      data =>  {
-        console.log(data)
-              let wynik = JSON.parse(JSON.stringify(data));
-              if (wynik.wynik == true) 
-              {
-                this.OdczytajUszkodzenia.next({"nastepny":dowykonania.nastepnyTrue, "komunikat": wynik.error, "data": wynik.uszkodzenia})
-              }
-              else
-              {
-                this.OdczytajUszkodzenia.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": wynik.error, "data": wynik.uszkodzenia})
-              }
-                },
-      error => {
-        console.log(error)
-                setTimeout(() => {this.odczytaj_uszkodzenia(licznik, stan, dowykonania, symbol, '')}, 1000) 
-              }
-              )      
-  }
-  else
-  {
-    this.OdczytajUszkodzenia.next({"nastepny":dowykonania.nastepnyFalse, "komunikat": powod})
-  }
-}
 
 
 }

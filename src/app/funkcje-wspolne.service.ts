@@ -205,6 +205,13 @@ addDodajReset(dane: any, clear: boolean)
  this.DodajReset.next({"dane": dane, "clear": clear})
 }
 
+private DodajNaprawa = new Subject<any>();
+DodajNaprawa$ = this.DodajNaprawa.asObservable();
+addDodajNaprawa(dane: any, clear: boolean)
+{
+ this.DodajNaprawa.next({"dane": dane, "clear": clear})
+}
+
 
 private LiniaKomunikatu = new Subject<any>();
 LiniaKomunikatu$ = this.LiniaKomunikatu.asObservable();

@@ -78,7 +78,7 @@ export interface Modul
     id: number;  
     nazwa :string;
     symbol: string;
-    stan: string;
+    stan: number;
     czasbadania: string
     opis: string;
   }
@@ -91,6 +91,8 @@ export interface Zespol
     idmodul: string;
     stan: number;
     czaswykonania: number;
+    czasreset: number;
+    czasnaprawa: number;
     elementy: number;
     stanwynik: string;
     naprawaporeset: number;
