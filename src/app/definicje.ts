@@ -79,6 +79,7 @@ export interface Modul
     nazwa :string;
     symbol: string;
     stan: number;
+    ilosczespoly: number;
     czasbadania: string
     opis: string;
   }

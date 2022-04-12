@@ -356,6 +356,7 @@ Lista(dowykonania: any, tekst: string, data: any = {})
                       "", 
                       [this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                        this.funkcje.setNazwaLinia(" (symbol: ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ")"),
+                       this.funkcje.setNazwaLinia(" (ilość zespołów: ", [this.funkcje.setTextNazwa("", "ilosczespoly", "", this.funkcje.getKolor().liniakomend, "")], ")"),
                       ],
                       "",
                       tekst); 
@@ -375,6 +376,7 @@ Lista(dowykonania: any, tekst: string, data: any = {})
                       this.funkcje.setNazwaLinia('Moduł: "', [this.funkcje.setTextNazwa("", "modulSymbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(' Zespół: "', [this.funkcje.setTextNazwa("", "nazwa", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], '"'),
                       this.funkcje.setNazwaLinia(" (symbol: ", [this.funkcje.setTextNazwa("", "symbol", "", this.funkcje.getKolor().liniakomend, "liniakomend kursor")], ")"),
+                      this.funkcje.setNazwaLinia(" (ilość elementów: ", [this.funkcje.setTextNazwa("", "elementy", "", this.funkcje.getKolor().liniakomend, "")], ")"),
                       ],
                       "",
                       tekst); 

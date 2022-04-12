@@ -236,7 +236,7 @@ export class TestyComponent implements OnInit {
             setTimeout(() => 
               {
                 this.testy.NaprawaStop(this.funkcje.getZalogowany().zalogowany, data.dane.dane[0].idmodul, data.dane.dane[0].id, data.naprawakod)
-              }, 1000 * data.dane.dane[0].czasreset);
+              }, 1000 * data.dane.dane[0].czasnaprawa);
           }
           else
           {
@@ -550,30 +550,30 @@ Bad2(numer: number, czaswykonania: number, procent: number, data: any, elementy:
   }
 
   
-    Testuj(numer: number, czaswykonania: number, procent: number, data: any, elementy: (number|string)[], skok: number, nrtestu: number)
+    Testuj(numer: number, czaswykonania: number, procent: number, data: any, elementy: (number|string)[], skok: number, nrtestu: number, uplyw: number)
   {
     //console.log(procent, czaswykonania, skok, <number>elementy[0] ) 
     //console.log(data)
     switch (procent) {
-      case 0:    czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,70) ); break;
-      case 12:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,50) ); break;
-      case 17:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,60) ); break;
-      case 32:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,80) ); break;
-      case 42:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,70) ); break;
-      case 57:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,60) ); break;
-      case 64:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,80) ); break;
-      case 74:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,70) ); break;
-      case 80:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,60) ); break;
-      case 89:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,90) ); break;
-      case 97:   czaswykonania = Math.round( ((1*data.dane[0].uszkodzeniailosc) == 0 ? 1 : 2) * data.dane[0].czaswykonania * this.Random(1,100) ); break;
+      case 0:    czaswykonania = Math.round( ((100 * data.dane[0].czaswykonania) / 1000) * this.Random(1,10) ); break;
+      case 12:   uplyw = uplyw + 12 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 880 ) * this.Random(1,9) ); break;
+      case 17:   uplyw = uplyw + 5 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 830 ) * this.Random(1,11) ); break;
+      case 32:   uplyw = uplyw + 15 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 680 ) * this.Random(1,8) ); break;
+      case 42:   uplyw = uplyw + 10 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 580 ) * this.Random(1,12) ); break;
+      case 57:   uplyw = uplyw + 15 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 430 ) * this.Random(1,10) ); break;
+      case 64:   uplyw = uplyw + 7 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 360 ) * this.Random(1,8) ); break;
+      case 74:   uplyw = uplyw + 10 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 260 ) * this.Random(1,12) ); break;
+      case 80:   uplyw = uplyw + 6 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 200 ) * this.Random(1,12) ); break;
+      case 89:   uplyw = uplyw + 9 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 110 ) * this.Random(1,8) ); break;
+      case 97:   uplyw = uplyw + 8 * czaswykonania; czaswykonania = Math.round( ((1000 * data.dane[0].czaswykonania - uplyw) / 30 ) * this.Random(1,10) ); break;
     }
+    
     if (procent > skok)
     {
-      skok = skok + <number>elementy[5]
+      skok = skok + procent * <number>elementy[5]
       if  (<number>elementy[0] == 4) 
           {
           elementy[0] = 1; 
-          elementy[6] = <number>elementy[6] + ( <number>elementy[6] == data.dane[0].elementy ?  0:1 );
           }
           else
           {
@@ -587,6 +587,10 @@ Bad2(numer: number, czaswykonania: number, procent: number, data: any, elementy:
     if (<number>elementy[0] == 3)
     { elementy[0] = 4 }
 
+
+
+    elementy[6] = Math.round( procent * data.dane[0].elementy / 100 );
+    
     if (procent < 99)    
     {
       setTimeout(() => 
@@ -606,7 +610,7 @@ Bad2(numer: number, czaswykonania: number, procent: number, data: any, elementy:
         this.tablicazawartosci.splice(this.tablicazawartosci.length-1,1)
         this.changeDetectorRef.detectChanges();
         this.VSVDialog.checkViewportSize();
-        this.Testuj(numer, czaswykonania, ++procent, data, elementy, skok, nrtestu)
+        this.Testuj(numer, czaswykonania, ++procent, data, elementy, skok, nrtestu, uplyw)
           }, czaswykonania);          
     }
     else
@@ -653,7 +657,7 @@ Bad2(numer: number, czaswykonania: number, procent: number, data: any, elementy:
     else
     switch (rodzaj) {
       case 'info': break;
-      case 'testy': this.Testuj(start + 3, 0, 0, data, [1, ' - wysyłam zapytanie', ' - czekam', ' - odbieram',' - analizuję element', Math.round ( 50 / data.dane[0].elementy), 1], 0, nrtestu); break;
+      case 'testy': this.Testuj(start + 3, 0, 0, data, [1, ' - wysyłam zapytanie', ' - czekam', ' - odbieram',' - analizuję element', ( data.dane[0].elementy / 100), 1], 0, nrtestu, 0); break;
       case 'reset': this.testy.ResetStart(this.funkcje.getZalogowany().zalogowany, data.dane[0].idmodul, data.dane[0].id,start, data)
                    break;
       case 'naprawa': this.testy.NaprawaStart(this.funkcje.getZalogowany().zalogowany, data.dane[0].idmodul, data.dane[0].id,start, data)
@@ -783,40 +787,8 @@ Informacja(data: any): Wiersze[]
   {
     let tablica: Wiersze[] = [];
       tablica = [...tablica, 
-      this.funkcje.setLiniaWiersz('', '', '' , '-- start polecenie', '',
-            [
-              this.funkcje.setNazwaLinia('',
-                                        [
-                                        this.funkcje.setTextNazwa('', ' zespół' ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
-                                        this.funkcje.setTextNazwa(' ', this.czasy.getCzasDedala() ,'', '','')
-                                        ],
-                                        '')
-            ],
-      ''), 
-      this.funkcje.setLiniaWiersz('', '', '' , '', '',
-            [
-              this.funkcje.setNazwaLinia('    ZESPÓŁ:   ',
-                                        [
-                                        this.funkcje.setTextNazwa('', data.dane[0].nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                        ],
-                                        ''),
-              this.funkcje.setNazwaLinia('  (symbol: ',
-                                        [
-                                        this.funkcje.setTextNazwa('', data.dane[0].symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                        ],
-                                        ')'),
-              this.funkcje.setNazwaLinia('    MODUŁ:   ',
-                                        [
-                                        this.funkcje.setTextNazwa('', data.dane[0].modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                        ],
-                                        ''),
-              this.funkcje.setNazwaLinia('  (symbol: ',
-                                        [
-                                        this.funkcje.setTextNazwa('', data.dane[0].modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
-                                        ],
-                                        ')')                                                          
-            ],
-      ''),
+        this.StartPolecenie('zespół'), 
+        this.Zespol(data.dane[0]), 
       this.funkcje.setLiniaWiersz('', '', '' , '', '',
             [
               this.funkcje.setNazwaLinia('    Ostatni wykonany test z dnia: ',
@@ -884,7 +856,12 @@ Informacja(data: any): Wiersze[]
                                 [
                                 this.funkcje.setTextNazwa('', dane.modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                 ],
-                                ')')                                                          
+                                ')'),
+      this.funkcje.setNazwaLinia('  (ilość elementów: ',
+                                [
+                                this.funkcje.setTextNazwa('', dane.elementy ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                ],
+                                ')')                                                                                                                    
     ],
     '')
   }
