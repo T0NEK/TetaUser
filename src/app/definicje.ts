@@ -104,6 +104,7 @@ export interface Zespol
     opis: string;
     modulSymbol: string;
     modulNazwa: string;
+    wazny: string;
   }
 
 

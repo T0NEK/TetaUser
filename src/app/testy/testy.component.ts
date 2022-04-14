@@ -782,13 +782,21 @@ Test(data: any, nrtestu: number): Wiersze[]
   }
 
 
+FormatCzas(czassekund: number):string
+  {
+    let godziny = Math.trunc(czassekund / 3600);
+    let minuty = Math.trunc((czassekund - godziny * 3600) / 60);
+    let sekundy = Math.trunc(czassekund - godziny * 3600 - minuty * 60); 
+    return (godziny != 0 ? godziny.toString() + 'h ' : '') + (minuty != 0 ? minuty.toString() + 'm ' : '') + (sekundy != 0 ? sekundy.toString() + ' s' : ''); 
+  }
+
 
 Informacja(data: any): Wiersze[]
   {
     let tablica: Wiersze[] = [];
       tablica = [...tablica, 
         this.StartPolecenie('zespół'), 
-        this.Zespol(data.dane[0]), 
+        this.ZespolI(data.dane[0]), 
       this.funkcje.setLiniaWiersz('', '', '' , '', '',
             [
               this.funkcje.setNazwaLinia('    Ostatni wykonany test z dnia: ',
@@ -811,6 +819,20 @@ Informacja(data: any): Wiersze[]
             this.funkcje.setNazwaLinia('    Wynik testu:  ',
                                       [
                                       this.funkcje.setTextNazwa('', data.dane[0].stanText ,'',(data.dane[0].uszkodzeniailosc == 0 ? this.funkcje.getKolor().info : this.funkcje.getKolor().alert),'')
+                                      ],
+                                      '')
+          ],
+      ''),
+      this.funkcje.setLiniaWiersz('', '', '' , '', '',
+          [
+            this.funkcje.setNazwaLinia('    Przybliżone czasy wykonania: ',
+                                      [
+                                        this.funkcje.setTextNazwa(' ', 'reset'  ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),  
+                                        this.funkcje.setTextNazwa(' ~ ', this.FormatCzas(data.dane[0].czasreset), '', this.funkcje.getKolor().liniakomend,''),
+                                        this.funkcje.setTextNazwa(' ', ',naprawa'  ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),  
+                                        this.funkcje.setTextNazwa(' ~ ', this.FormatCzas(data.dane[0].czasnaprawa), '', this.funkcje.getKolor().liniakomend,''),
+                                        this.funkcje.setTextNazwa('', ', test ważny: ' ,'','',''),
+                                        this.funkcje.setTextNazwa('', data.dane[0].wazny ,'',this.funkcje.getKolor().liniakomend,''),
                                       ],
                                       '')
           ],
@@ -856,16 +878,46 @@ Informacja(data: any): Wiersze[]
                                 [
                                 this.funkcje.setTextNazwa('', dane.modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                 ],
-                                ')'),
-      this.funkcje.setNazwaLinia('  (ilość elementów: ',
+                                ')')                                                                                                       
+    ],
+    '')
+  }
+  
+  ZespolI(dane: any):Wiersze
+  {
+    return this.funkcje.setLiniaWiersz('', '', '' , '', '',
+    [
+      this.funkcje.setNazwaLinia('    ZESPÓŁ:   ',
                                 [
-                                this.funkcje.setTextNazwa('', dane.elementy ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                this.funkcje.setTextNazwa('', dane.nazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                ],
+                                ''),
+      this.funkcje.setNazwaLinia('  (symbol: ',
+                                [
+                                this.funkcje.setTextNazwa('', dane.symbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                ],
+                                ')'),
+      this.funkcje.setNazwaLinia('    MODUŁ:   ',
+                                [
+                                this.funkcje.setTextNazwa('', dane.modulNazwa ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                ],
+                                ''),
+      this.funkcje.setNazwaLinia('  (symbol: ',
+                                [
+                                this.funkcje.setTextNazwa('', dane.modulSymbol ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                ],
+                                ')'),
+      this.funkcje.setNazwaLinia('  (ilość elementów zespołu: ',
+                                [
+                                this.funkcje.setTextNazwa('', dane.elementy ,'',this.funkcje.getKolor().liniakomend,'liniakomend')
                                 ],
                                 ')')                                                                                                                    
     ],
     '')
   }
-  
+
+
+
   StartPolecenie(polecenie: string):Wiersze
   {
     return this.funkcje.setLiniaWiersz('', '', '' , '-- start polecenie', '',
