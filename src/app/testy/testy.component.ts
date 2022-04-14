@@ -442,8 +442,8 @@ export class TestyComponent implements OnInit {
                                           this.funkcje.setTextNazwa('', ' wysłano polecenie', '', this.funkcje.getKolor().info,''),
                                           this.funkcje.setTextNazwa('',' naprawa', '', this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
                                           this.funkcje.setTextNazwa(' do ', (<number>elementy[6] -1).toString() ,' elementów', this.funkcje.getKolor().info,''),
-                                          this.funkcje.setTextNazwa('', ', czas naprawy - około: ' ,'', this.funkcje.getKolor().info,''),
-                                          this.funkcje.setTextNazwa('',data.dane[0].czasnaprawa, ' s', this.funkcje.getKolor().liniakomend,''),
+                                          this.funkcje.setTextNazwa('', ', czas naprawy ~ ' ,'', this.funkcje.getKolor().info,''),
+                                          this.funkcje.setTextNazwa('', this.FormatCzas(this.Random(1,data.dane[0].czasnaprawa / 10) + data.dane[0].czasnaprawa), '', this.funkcje.getKolor().liniakomend,''),
                                           ],
                                           '')
               ],
@@ -537,7 +537,9 @@ Bad2(numer: number, czaswykonania: number, procent: number, data: any, elementy:
                                           [
                                           this.funkcje.setTextNazwa('', ' wysłano polecenie', '', this.funkcje.getKolor().info,''),
                                           this.funkcje.setTextNazwa('',' reset', '', this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
-                                          this.funkcje.setTextNazwa(' do ', (<number>elementy[6] -1).toString() ,' elementów', this.funkcje.getKolor().info,'')
+                                          this.funkcje.setTextNazwa(' do ', (<number>elementy[6] -1).toString() ,' elementów', this.funkcje.getKolor().info,''),
+                                          this.funkcje.setTextNazwa('', ', czas resetu ~ ' ,'', this.funkcje.getKolor().info,''),
+                                          this.funkcje.setTextNazwa('', this.FormatCzas(this.Random(1,data.dane[0].czasreset / 10) + data.dane[0].czasreset), '', this.funkcje.getKolor().liniakomend,''),
                                           ],
                                           '')
               ],

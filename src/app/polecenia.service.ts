@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { CzasService } from './czas.service';
 import { Polecenia } from './definicje';
+import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { KomunikacjaService } from './komunikacja.service';
 
 @Injectable({
@@ -28,7 +30,8 @@ sprawdzPolecenie(polecenie: string)
   {
     if ( this.polecenia[index].nazwa.toLowerCase() == polecenie.toLowerCase() )
     {
-       wynik = {"nazwa": this.polecenia[index].nazwa,
+       wynik = {"id": this.polecenia[index].id,
+                "nazwa": this.polecenia[index].nazwa,
                 "czas": this.polecenia[index].czas,
                 "prefix": this.polecenia[index].prefix, 
                 "komunikat": this.polecenia[index].komunikat, 
@@ -38,7 +41,8 @@ sprawdzPolecenie(polecenie: string)
                 "nastepnyTrue": this.polecenia[index].nastepnyTrue,
                 "nastepnyFalse": this.polecenia[index].nastepnyFalse
          } 
-       //this.poleceniePomoc();        
+       //this.poleceniePomoc(); 
+       
        break;        
     }       
   }
@@ -74,6 +78,7 @@ var data = JSON.stringify({ "stan": stan})
               {
                 
                     this.polecenia = [...this.polecenia, {
+                      "id": wynik.polecenia[index].id,
                       "nazwa": wynik.polecenia[index].nazwa, 
                       "czas": wynik.polecenia[index].czas, 
                       "prefix": wynik.polecenia[index].prefix, 
@@ -98,20 +103,65 @@ var data = JSON.stringify({ "stan": stan})
              )      
 }
 
+HistoriaPolecen(polecenie: number,zalogowany: number, czaswykonania: string, terminal: string)
+{
+  this.zapisz_historia_polecen(5, polecenie, zalogowany, czaswykonania, terminal)  
+}
+
+zapisz_historia_polecen(licznik: number,polecenie: number,zalogowany: number, czaswykonania: string, terminal: string, modul: number = 0, zespol: number = 0)
+{
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin':'*',
+        'content-type': 'application/json',
+        Authorization: 'my-auth-token'
+      })
+    };
+    
+  var data = JSON.stringify({"kierunek": "historia",  "osoba": zalogowany, "modul": modul, "zespol": zespol, "polecenie": polecenie, "czaswykonania": czaswykonania, "terminal": terminal})  
+  
+  if (licznik > 0 )
+    {
+      --licznik;
+      this.http.post(this.komunikacja.getURL() + 'historia/', data, httpOptions).subscribe( 
+        data =>  {
+          console.log(data)
+                let wynik = JSON.parse(JSON.stringify(data));
+                if (wynik.wynik == true) 
+                {
+                  //ok
+                }
+                else
+                {
+                  setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, zalogowany, czaswykonania, terminal, modul, zespol )}, 500) 
+                }
+                  },
+        error => {
+          console.log(error)
+          setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, zalogowany, czaswykonania, terminal, modul, zespol )}, 1000) 
+                }
+                )      
+    }
+    else
+    {
+      //zaniechaj
+    }
+  }
 
 /* (start) działania*/
 getDzialania (){ return this.dzialania; }
 
 sprawdzDzialania(dzialanie: string)
 {
-  let wynik = <Polecenia>{"nazwa": dzialanie, "czas": 2000, "prefix": "", "komunikat": "Wystąpił błąd wykonania", "sufix": "", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}
+  let wynik = <Polecenia>{"id": 0,"nazwa": dzialanie, "czas": 2000, "prefix": "", "komunikat": "Wystąpił błąd wykonania", "sufix": "", "dzialanie":"komunikat", "autoryzacja": false, "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}
   for (let index = 0; index < this.dzialania.length; index++) 
   {
     //console.log(this.dzialania[index].nazwa,' == ',dzialanie)
     if ( this.dzialania[index].nazwa == dzialanie )
     {
       //console.log('jest')
-       wynik = {"nazwa": this.dzialania[index].nazwa,
+       wynik = {"id": this.dzialania[index].id,
+                "nazwa": this.dzialania[index].nazwa,
                 "czas": this.dzialania[index].czas,
                 "prefix": this.dzialania[index].prefix, 
                 "komunikat": this.dzialania[index].komunikat, 
@@ -129,7 +179,7 @@ return wynik
 
 WczytajDzialania(stan: number)
 {
-    this.dzialania = [{"nazwa": "bad", "czas": 2000, "prefix": "", "komunikat": "Nieznane polecenie", "sufix": "", "dzialanie":"komunikat", "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
+    this.dzialania = [{"id":0,"nazwa": "bad", "czas": 2000, "prefix": "", "komunikat": "Nieznane polecenie", "sufix": "", "dzialanie":"komunikat", "polecenie": true, "nastepnyTrue": "end", "nastepnyFalse": "end"}];
     this.odczytaj_dzialania(stan);
 }
 
@@ -157,6 +207,7 @@ var data = JSON.stringify({ "stan": stan})
               for (let index = 0; index < wynik.polecenia.length; index++) 
               {
               this.dzialania = [...this.dzialania, {
+                      "id": wynik.polecenia[index].id,
                       "nazwa": wynik.polecenia[index].nazwa, 
                       "czas": wynik.polecenia[index].czas, 
                       "prefix": wynik.polecenia[index].prefix, 

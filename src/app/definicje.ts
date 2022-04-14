@@ -50,6 +50,7 @@ export interface Sprawdz
 
 export interface Polecenia
   {
+      id: number
       nazwa: string;
       czas: number;
       dzialanie: string;

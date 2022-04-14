@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
+import { CzasService } from '../czas.service';
 import { Polecenia } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
+import { KomunikacjaService } from '../komunikacja.service';
 import { PetlaService } from '../petla.service';
 import { PoleceniaService } from '../polecenia.service';
 import { WiadomosciService } from '../wiadomosci.service';
@@ -39,10 +41,10 @@ dlugoscInput: any;
 wysokoscInput = 42;
 maxLenght: number;
 
-constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private wiadomosci: WiadomosciService, private changeDetectorRef: ChangeDetectorRef )
+constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private wiadomosci: WiadomosciService, private changeDetectorRef: ChangeDetectorRef, private czasy: CzasService, private komunikacja: KomunikacjaService )
   {
     //console.log('con linia kom')
-      this.stanpolecenia = {"nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
+      this.stanpolecenia = {"id":0, "nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
       this.szerokoscInput = all.szerokoscAll - all.szerokoscClear;   
       this.dlugoscInput = this.szerokoscInput * 0.9 * 18 / 24; 
       this.maxLenght = funkcje.iloscZnakowwKomend;
@@ -356,6 +358,7 @@ if (
     if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
       {
         polecenie = this.polecenia.sprawdzPolecenie(linia);
+        this.polecenia.HistoriaPolecen(polecenie.id, this.funkcje.getZalogowany().zalogowany, this.czasy.getCzasDedala(), this.komunikacja.getHost());
         setTimeout(() => {
                 this.petla.poleceniaWykonaj(polecenie.dzialanie, '');
       //         this.funkcje.OdblokujLinieDialogu('');
