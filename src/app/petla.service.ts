@@ -10,6 +10,7 @@ import { NotatkiService } from './notatki.service';
 import { CzasService } from './czas.service'
 import { ZdarzeniaService } from './zdarzenia.service';
 import { ZespolyService } from './zespoly.service';
+import { DedalService } from './dedal.service';
 
 
 @Injectable({ providedIn: 'root'})
@@ -31,7 +32,7 @@ private bufordane = Array();
 
 
 
-constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private polecenia: PoleceniaService, private moduly: ModulyService, private notatki: NotatkiService, private czasy: CzasService, private zdarzenia: ZdarzeniaService, private zespoly: ZespolyService)
+constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private polecenia: PoleceniaService, private moduly: ModulyService, private notatki: NotatkiService, private czasy: CzasService, private zdarzenia: ZdarzeniaService, private zespoly: ZespolyService, private dedal: DedalService)
 {
     //console.log('con polecenia')
 
@@ -310,12 +311,29 @@ sprawdzWarunek(warunek: Polecenia): string
                           }    
           break;                  
     case 'zdecyduj': switch (warunek.sufix) {          
-                          case 'taknie': if ( decyzjeT.indexOf(this.bufordane[0]) != -1 )
-                                        { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
-                          break;
-                          default: wynik = 'bad'; break;
-                          }    
-          break;          
+            case 'taknie': if ( decyzjeT.indexOf(this.bufordane[0]) != -1 )
+                          { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
+            break;
+            default: wynik = 'bad'; break;
+            }    
+            break;     
+    case 'polecenie':   let polecenie = this.polecenia.sprawdzPolecenie(this.bufordane[0]);
+                        if (polecenie.id != 0)
+                        {
+                          wynik = warunek.nastepnyFalse;
+                          setTimeout(() => {
+                            this.poleceniaWykonaj(polecenie.dzialanie, '')
+                          }, polecenie.czas);  
+                        }
+                        else
+                        {
+                          wynik = warunek.nastepnyTrue;
+                          setTimeout(() => {
+                          }, polecenie.czas);
+
+                        }
+                        break; 
+
     default: wynik = 'bad'; break;
   }
 return wynik;

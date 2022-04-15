@@ -28,9 +28,10 @@ import { LiniaKomendComponent } from './linia-komend/linia-komend.component';
 import { ZalogowaniUzytkownicyComponent } from './zalogowani-uzytkownicy/zalogowani-uzytkownicy.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PoleceniaComponent } from './polecenia/polecenia.component';
 
 @NgModule({
-  declarations: [																	
+  declarations: [																		
     AppComponent,
       InformacjeComponent,
       NawigacjaComponent,
@@ -41,7 +42,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       TestyComponent,
       KlawiaturaComponent,
       LiniaKomendComponent,
-      ZalogowaniUzytkownicyComponent
+      ZalogowaniUzytkownicyComponent,
+      PoleceniaComponent
    ],
   imports: [
     BrowserModule,

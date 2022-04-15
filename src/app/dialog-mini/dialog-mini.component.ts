@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Wiersze } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 import { AppComponent } from '../app.component';
+import { CzasService } from '../czas.service';
 
 @Component({
   selector: 'app-dialog-mini',
@@ -19,7 +20,7 @@ export class DialogMiniComponent implements OnInit {
   height1: any;
 
 
-  constructor(private all: AppComponent, private funkcje: FunkcjeWspolneService,private changeDetectorRef: ChangeDetectorRef)
+  constructor(private all: AppComponent, private funkcje: FunkcjeWspolneService,private changeDetectorRef: ChangeDetectorRef, private czasy: CzasService)
   {
     this.height = all.wysokoscDialogMin + 'px';
     this.height1 = all.wysokoscDialogMin - 6 + 'px';
@@ -34,7 +35,7 @@ export class DialogMiniComponent implements OnInit {
         }
         else
         {
-        let wiersze = this.funkcje.addLiniaKomunikatuFormat(data.przed, data.name, data.po ,data.prefix, data.linia, data.sufix, all.szerokoscInput - 20)
+        let wiersze = this.funkcje.addLiniaKomunikatuFormat(this.czasy.getCzasDedala(),data.przed, data.name, data.po ,data.prefix, data.linia, data.sufix, all.szerokoscInput - 20)
         for (let index = 0; index < wiersze.length; index++) 
         {
           //console.log('wiersz ',index,' = ',wiersze[index])

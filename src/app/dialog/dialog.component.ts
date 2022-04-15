@@ -56,7 +56,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         else
         {
-        let wiersze = this.funkcje.addLiniaKomunikatuFormat(data.przed, data.name, data.po ,data.prefix, data.linia, data.sufix, all.szerokoscNawigacja - 20)
+        let wiersze = this.funkcje.addLiniaKomunikatuFormat(this.czasy.getCzasDedala(),data.przed, data.name, data.po ,data.prefix, data.linia, data.sufix, all.szerokoscNawigacja - 20)
         for (let index = 0; index < wiersze.length; index++) 
         {
           //console.log('wiersz ',index,' = ',wiersze[index])

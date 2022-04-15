@@ -25,7 +25,7 @@ constructor(private http: HttpClient, private komunikacja: KomunikacjaService)
 getPolecenia (){ return this.polecenia; }
 sprawdzPolecenie(polecenie: string)
 {
-  let wynik = <Polecenia> {"nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
+  let wynik = <Polecenia> {"id":0, "nazwa": polecenie, "czas": 2000, "komunikat": "Nieznane polecenie: '" + polecenie + "'", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
   for (let index = 0; index < this.polecenia.length; index++) 
   {
     if ( this.polecenia[index].nazwa.toLowerCase() == polecenie.toLowerCase() )
@@ -103,12 +103,12 @@ var data = JSON.stringify({ "stan": stan})
              )      
 }
 
-HistoriaPolecen(polecenie: number,zalogowany: number, czaswykonania: string, terminal: string)
+HistoriaPolecen(polecenie: number, polecenieText: string, zalogowany: number, zalogowanyText: string, czaswykonania: string, terminal: string)
 {
-  this.zapisz_historia_polecen(5, polecenie, zalogowany, czaswykonania, terminal)  
+  this.zapisz_historia_polecen(5, polecenie, polecenieText, zalogowany, zalogowanyText, czaswykonania, terminal)  
 }
 
-zapisz_historia_polecen(licznik: number,polecenie: number,zalogowany: number, czaswykonania: string, terminal: string, modul: number = 0, zespol: number = 0)
+zapisz_historia_polecen(licznik: number, polecenie: number, polecenieText: string , zalogowany: number, zalogowanyText: string, czaswykonania: string, terminal: string, modul: number = 0, zespol: number = 0)
 {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -118,7 +118,7 @@ zapisz_historia_polecen(licznik: number,polecenie: number,zalogowany: number, cz
       })
     };
     
-  var data = JSON.stringify({"kierunek": "historia",  "osoba": zalogowany, "modul": modul, "zespol": zespol, "polecenie": polecenie, "czaswykonania": czaswykonania, "terminal": terminal})  
+  var data = JSON.stringify({"kierunek": "historia", "osoba": zalogowany, "osobaText": zalogowanyText, "modul": modul, "zespol": zespol, "polecenieText": polecenieText, "polecenie": polecenie, "czaswykonania": czaswykonania, "terminal": terminal})  
   
   if (licznik > 0 )
     {
@@ -133,12 +133,12 @@ zapisz_historia_polecen(licznik: number,polecenie: number,zalogowany: number, cz
                 }
                 else
                 {
-                  setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, zalogowany, czaswykonania, terminal, modul, zespol )}, 500) 
+                  setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, polecenieText, zalogowany, zalogowanyText, czaswykonania, terminal )}, 500) 
                 }
                   },
         error => {
           console.log(error)
-          setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, zalogowany, czaswykonania, terminal, modul, zespol )}, 1000) 
+          setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, polecenieText, zalogowany, zalogowanyText, czaswykonania, terminal)}, 1000) 
                 }
                 )      
     }

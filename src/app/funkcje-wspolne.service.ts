@@ -220,7 +220,7 @@ addLiniaKomunikatu(przed: string, name: string, po: string, prefix: string, lini
  this.LiniaKomunikatu.next({'przed': przed, 'name': name, 'po': po, 'prefix': prefix, 'linia': linia, 'sufix': sufix, 'clear': false})
 }
 
-addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string, szerokosc: number): Wiersze[]
+addLiniaKomunikatuFormat(data: string, przed: string, name: string, po: string, prefix: string, linia: Linia[], sufix: string, szerokosc: number): Wiersze[]
 {
   let wynik: Wiersze[] = []
   przed = (przed === "" ? ', ' : przed);
@@ -230,7 +230,8 @@ addLiniaKomunikatuFormat(przed: string, name: string, po: string, prefix: string
   let spacje = '          ';
   let wiersz: Wiersze;
   for (let index = 0; index < linia.length; index++) { dlugosc = dlugosc + linia[index].dlugosc }
-  let data = ' ' + (moment()).format('YYYY-MM-DD HH:mm:ss');
+  //let data = ' ' + (moment()).format('YYYY-MM-DD HH:mm:ss');
+  if (typeof data != 'string') { data = '1900-01-01 00:00:01'}
   if ( ( this.DlugoscTekstu(data + przed + name + po + prefix + sufix) + dlugosc) < szerokosc)
   {
   wiersz = this.setLiniaWiersz (data, przed, name, po, prefix, linia, sufix);  

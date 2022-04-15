@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '
 import { Subscription } from 'rxjs';
 import { AppComponent } from '../app.component';
 import { CzasService } from '../czas.service';
+import { DedalService } from '../dedal.service';
 import { Polecenia } from '../definicje';
 import { FunkcjeWspolneService } from '../funkcje-wspolne.service';
 import { KomunikacjaService } from '../komunikacja.service';
@@ -41,7 +42,7 @@ dlugoscInput: any;
 wysokoscInput = 42;
 maxLenght: number;
 
-constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private wiadomosci: WiadomosciService, private changeDetectorRef: ChangeDetectorRef, private czasy: CzasService, private komunikacja: KomunikacjaService )
+constructor(private polecenia: PoleceniaService, private petla: PetlaService, private funkcje: FunkcjeWspolneService, private all: AppComponent, private wiadomosci: WiadomosciService, private changeDetectorRef: ChangeDetectorRef, private czasy: CzasService, private komunikacja: KomunikacjaService, private dedal: DedalService )
   {
     //console.log('con linia kom')
       this.stanpolecenia = {"id":0, "nazwa": "", "czas": 500, "prefix": "", "komunikat": "", "sufix": "", "dzialanie": "bad", "polecenie": true, "nastepnyTrue": "brak", "nastepnyFalse": "brak"}
@@ -358,7 +359,7 @@ if (
     if (( this.stanpolecenia.nastepnyTrue == 'brak')||( this.stanpolecenia.nastepnyTrue == 'bad'))
       {
         polecenie = this.polecenia.sprawdzPolecenie(linia);
-        this.polecenia.HistoriaPolecen(polecenie.id, this.funkcje.getZalogowany().zalogowany, this.czasy.getCzasDedala(), this.komunikacja.getHost());
+        this.polecenia.HistoriaPolecen(polecenie.id, polecenie.nazwa, this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHost());
         setTimeout(() => {
                 this.petla.poleceniaWykonaj(polecenie.dzialanie, '');
       //         this.funkcje.OdblokujLinieDialogu('');
@@ -369,6 +370,7 @@ if (
         setTimeout(() => {
           this.petla.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
           this.funkcje.UstawStanPolecenia('');
+          this.polecenia.HistoriaPolecen(0, linia, this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHost());
       //   this.funkcje.OdblokujLinieDialogu('');
         }, this.stanpolecenia.czas);
       }   

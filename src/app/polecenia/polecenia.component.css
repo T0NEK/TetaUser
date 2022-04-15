@@ -1,0 +1,51 @@
+:host
+{
+    color: lightgreen;
+    cursor: crosshair;
+}
+#Okno
+{
+   width: 200px;
+}
+.example-viewport
+  {
+    width: 100%;
+    max-width: 100%;
+  }
+.przewijaj
+  {
+    height: var(--status);
+    width: 100%;
+    max-width: 100%;
+  }  
+.example-item
+  {
+    height: 24px;
+  }
+.example-margin {
+    margin: 0 10px;
+  }
+.kursor
+  {
+    cursor: pointer;
+  }
+.spacje
+  {
+    white-space: pre;
+  }  
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar
+{
+  background-color: lightgreen ;
+}
+::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb 
+{
+  background-color:  green;
+}
+::ng-deep .mat-slide-toggle-thumb
+{
+  background-color:  red;
+}
+::ng-deep .mat-slide-toggle-bar 
+{
+  background-color:  rgb(255, 155, 155);
+}
