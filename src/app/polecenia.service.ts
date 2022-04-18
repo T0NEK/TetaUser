@@ -103,12 +103,12 @@ var data = JSON.stringify({ "stan": stan})
              )      
 }
 
-HistoriaPolecen(polecenie: number, polecenieText: string, zalogowany: number, zalogowanyText: string, czaswykonania: string, terminal: string)
+HistoriaPolecen(polecenieid: number, polecenieText: string, osoba: number, osobaText: string, czaswykonania: string, terminal: string)
 {
-  this.zapisz_historia_polecen(5, polecenie, polecenieText, zalogowany, zalogowanyText, czaswykonania, terminal)  
+  this.zapisz_historia_polecen(5, polecenieid, polecenieText, osoba, osobaText, czaswykonania, terminal)  
 }
 
-zapisz_historia_polecen(licznik: number, polecenie: number, polecenieText: string , zalogowany: number, zalogowanyText: string, czaswykonania: string, terminal: string, modul: number = 0, zespol: number = 0)
+zapisz_historia_polecen(licznik: number, polecenieid: number, polecenieText: string , osoba: number, osobaText: string, czaswykonania: string, terminal: string)
 {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -118,7 +118,7 @@ zapisz_historia_polecen(licznik: number, polecenie: number, polecenieText: strin
       })
     };
     
-  var data = JSON.stringify({"kierunek": "historia", "osoba": zalogowany, "osobaText": zalogowanyText, "modul": modul, "zespol": zespol, "polecenieText": polecenieText, "polecenie": polecenie, "czaswykonania": czaswykonania, "terminal": terminal})  
+  var data = JSON.stringify({"kierunek": "historia", "osoba": osoba, "osobaText": osobaText, "polecenieText": polecenieText, "polecenieid": polecenieid, "czaswykonania": czaswykonania, "terminal": terminal})  
   
   if (licznik > 0 )
     {
@@ -133,12 +133,12 @@ zapisz_historia_polecen(licznik: number, polecenie: number, polecenieText: strin
                 }
                 else
                 {
-                  setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, polecenieText, zalogowany, zalogowanyText, czaswykonania, terminal )}, 500) 
+                  setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenieid, polecenieText, osoba, osobaText, czaswykonania, terminal )}, 500) 
                 }
                   },
         error => {
           console.log(error)
-          setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenie, polecenieText, zalogowany, zalogowanyText, czaswykonania, terminal)}, 1000) 
+          setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenieid, polecenieText, osoba, osobaText, czaswykonania, terminal)}, 1000) 
                 }
                 )      
     }

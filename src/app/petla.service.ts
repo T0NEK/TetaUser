@@ -28,7 +28,9 @@ private notatkisubscribe_p = new Subscription();
 private notatkitrescsubscribe_p = new Subscription();
 private zapisznotatkisubscribe_p = new Subscription();
 private zapisznotatkitrescsubscribe_p = new Subscription();
+private odpowiedzisubscribe_p = new Subscription();
 private bufordane = Array();
+private bufordaneDedal = Array();
 
 
 
@@ -42,9 +44,36 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
     //console.log(data.zalogowany, funkcje.getZalogowany().zalogowany, data.wyloguj)
       if ((data.wyloguj))
       {
-      this.poleceniaWykonaj('wyloguj_1','') 
+      this.poleceniaWykonaj('wyloguj_D','') 
       }
       } )
+
+  this.odpowiedzisubscribe_p = this.dedal.Odpowiedzi$.subscribe
+      ( data => 
+      { 
+        //console.log(data[0])
+        switch (data[0].polecenieText)
+        {
+          case 'modul'    : this.bufordaneDedal = [];
+                            this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
+                            this.poleceniaWykonaj('modul_D_1','') 
+                break;            
+          case 'zespol'   : this.bufordaneDedal = [];
+                            this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
+                            this.poleceniaWykonaj('zespol_D_1','') 
+                            break;            
+          case 'element'   : this.bufordaneDedal = [];
+                            this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
+                            this.poleceniaWykonaj('element_D_1','') 
+                            break;            
+          case 'info' : this.bufordaneDedal = [];
+                            this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
+                            this.poleceniaWykonaj('info_D_1','') 
+                break;
+        }  
+        
+      } )
+  
 
   this.poleceniasubscribe_p = this.polecenia.OdczytajPolecenia$.subscribe
     ( data => { this.poleceniaWykonaj(data, '') } )
@@ -82,6 +111,7 @@ ngOnDestroy()
    if(this.notatkitrescsubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
    if(this.zapisznotatkisubscribe_p) { this.zapisznotatkisubscribe_p.unsubscribe(); }   
    if(this.zapisznotatkitrescsubscribe_p) { this.zapisznotatkisubscribe_p.unsubscribe(); }   
+   if(this.odpowiedzisubscribe_p) { this.odpowiedzisubscribe_p.unsubscribe(); }  
   }
 
 poleceniaWykonaj(polecenie: string, tekst: string, data: any = {})
@@ -89,6 +119,7 @@ poleceniaWykonaj(polecenie: string, tekst: string, data: any = {})
  //console.log('działanie ',polecenie)
  //console.log('tekst: ',tekst)
  //console.log('bufordane: ',this.bufordane)
+ //console.log('bufordane: ',this.bufordaneDedal)
   if (polecenie != 'end')
  {
     let dowykonania = this.polecenia.sprawdzDzialania(polecenie) 
@@ -157,7 +188,12 @@ poleceniaWykonaj(polecenie: string, tekst: string, data: any = {})
       case 'wylogowanie': this.bufordane = ['', '', this.funkcje.getZalogowany().zalogowany];
                           this.komunikacja.Zaloguj(this.bufordane, this.czasy.getCzasDedala());
                           this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
-            break;              
+            break;  
+      case 'odpowiedz':   this.dedal.Polecenie( this.bufordaneDedal[1], this.bufordaneDedal[2], this.bufordaneDedal[0], 0, this.bufordane[0], this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHost(), '');
+                          this.poleceniaWykonaj(dowykonania.nastepnyTrue, tekst);         
+break;  
+
+            
       case 'bad': 
                   this.funkcje.addLiniaKomunikatuAlert(this.funkcje.getDedal(), dowykonania.komunikat);
             break;  
@@ -200,7 +236,11 @@ Informacje(dowykonania: Polecenia, tekst: string): string
     case 'bufor12': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix +this.bufordane[0] + dowykonania.sufix + this.bufordane[1]);
                     wynik = dowykonania.nastepnyTrue;
           break;
-    case 'notatka': switch (dowykonania.sufix)
+    case 'buforDedal':  this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + 'polecenie: "' + this.bufordaneDedal[1] + '" z ' + this.bufordaneDedal[2] + ':' + dowykonania.sufix);
+                        this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.bufordaneDedal[3] + dowykonania.sufix);
+                        wynik = dowykonania.nastepnyTrue;
+          break;
+case 'notatka': switch (dowykonania.sufix)
                     {
                       case 'wlasciciel': this.funkcje.addLiniaKomunikatuInfo(this.funkcje.getDedal(), dowykonania.prefix + this.notatki.getNotatkaWlasciciel() );
                             wynik = dowykonania.nastepnyTrue;
@@ -321,6 +361,7 @@ sprawdzWarunek(warunek: Polecenia): string
                         if (polecenie.id != 0)
                         {
                           wynik = warunek.nastepnyFalse;
+                          this.polecenia.HistoriaPolecen(polecenie.id,this.bufordane[0],this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHost())
                           setTimeout(() => {
                             this.poleceniaWykonaj(polecenie.dzialanie, '')
                           }, polecenie.czas);  
@@ -328,9 +369,7 @@ sprawdzWarunek(warunek: Polecenia): string
                         else
                         {
                           wynik = warunek.nastepnyTrue;
-                          setTimeout(() => {
-                          }, polecenie.czas);
-
+                          this.dedal.Polecenie(this.bufordane[0], this.czasy.getCzasDedala(), '', 0, this.bufordane[0], this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHost(), '');
                         }
                         break; 
 

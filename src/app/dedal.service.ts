@@ -6,11 +6,15 @@ import { FunkcjeWspolneService } from './funkcje-wspolne.service';
 import { KomunikacjaService } from './komunikacja.service';
 
 @Injectable({ providedIn: 'root' })
+
 export class DedalService {
 
 constructor(private http: HttpClient, private komunikacja: KomunikacjaService, private funkcje: FunkcjeWspolneService, private czasy: CzasService)
 {
-
+  setTimeout(() => {
+    this.OdczytujOdpowiedzi();  
+  }, 3000);
+  
 }
 
 
@@ -19,10 +23,10 @@ public PoleceniaDedala = new Subject<any>();
 PoleceniaDedala$ = this.PoleceniaDedala.asObservable()
 
 
-Polecenie(polecenie: number, polecenieText: string, osoba: number, osobaText: string, czas: string, terminal: string)
+Polecenie(poleceniepierwsze: string, czaspierwsze: string, polecenieodpowiedz: string, polecenieid: number, polecenieText: string, osoba: number, osobaText: string, czas: string, terminal: string, odpowiedzText: string)
   {
-    console.log(polecenie,  osoba , terminal);
-    if (polecenie != 0)
+    console.log(polecenieid,  osoba , terminal);
+    if (polecenieid != 0)
     {
         setTimeout(() => 
         {
@@ -33,7 +37,7 @@ Polecenie(polecenie: number, polecenieText: string, osoba: number, osobaText: st
     }
     else
     {
-    this.set_polecenie(5, 'set', polecenie, polecenieText , osoba , osobaText, czas, terminal, '');
+    this.set_polecenie(5, 'set', poleceniepierwsze, czaspierwsze, polecenieodpowiedz, polecenieid, polecenieText , osoba , osobaText, czas, terminal, odpowiedzText, '');
     }
   }
    
@@ -42,7 +46,7 @@ Polecenie(polecenie: number, polecenieText: string, osoba: number, osobaText: st
 
 
 
-  private set_polecenie(licznik: number, get: string, polecenie: number, polecenieText: string, osoba: number, osobaText: string, czas: string, terminal: string, powod: string)
+  private set_polecenie(licznik: number, get: string, poleceniepierwsze: string, czaspierwsze: string, polecenieodpowiedz: string, polecenieid: number, polecenieText: string, osoba: number, osobaText: string, czas: string, terminal: string, odpowiedzText: string, powod: string)
   {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -52,7 +56,7 @@ Polecenie(polecenie: number, polecenieText: string, osoba: number, osobaText: st
       })
     };
     
-  var data = JSON.stringify({"get": get, "polecenie": polecenie, "polecenieText": polecenieText, "osoba": osoba, "osobaText": osobaText, "czaswykonania": czas, "terminal": terminal })  
+  var data = JSON.stringify({"get": get, "poleceniepierwsze": poleceniepierwsze, "czaspierwsze": czaspierwsze, "polecenieodpowiedz": polecenieodpowiedz, "polecenieid": polecenieid, "polecenieText": polecenieText, "osoba": osoba, "osobaText": osobaText, "czaswykonania": czas, "terminal": terminal, "odpowiedzText": odpowiedzText })  
   
   if (licznik == 0) 
   {
@@ -71,15 +75,57 @@ Polecenie(polecenie: number, polecenieText: string, osoba: number, osobaText: st
                 }
                 else
                 {//wynik false
-                  setTimeout(() => {this.set_polecenie(licznik, get, polecenie, polecenieText , osoba, osobaText, czas, terminal, wynik.error)}, 1000) 
+                  setTimeout(() => {this.set_polecenie(licznik, get, poleceniepierwsze, czaspierwsze, polecenieodpowiedz, polecenieid, polecenieText , osoba, osobaText, czas, terminal, odpowiedzText, wynik.error)}, 1000) 
                 }
                   },
         error => {
           console.log(error)
-                  setTimeout(() => {this.set_polecenie(licznik, get, polecenie, polecenieText , osoba, osobaText, czas, terminal, error.error)}, 1000) 
+                  setTimeout(() => {this.set_polecenie(licznik, get, poleceniepierwsze, czaspierwsze, polecenieodpowiedz, polecenieid, polecenieText , osoba, osobaText, czas, terminal, odpowiedzText, error.error)}, 1000) 
                 }
                 )      
   }
   }
+
+
+OdczytujOdpowiedzi()
+{
+  this.odczytuj_odpowiedzi()
+}
+
+  private Odpowiedzi = new Subject<any>();
+  Odpowiedzi$ = this.Odpowiedzi.asObservable()
+    private odczytuj_odpowiedzi()
+    {
+      const httpOptions = {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Origin':'*',
+            'content-type': 'application/json',
+            Authorization: 'my-auth-token'
+          })
+        };
+        
+      var data = JSON.stringify({"get": "get", "osoba": this.funkcje.getZalogowany().zalogowany })  
+  
+      this.http.post(this.komunikacja.getURL() + 'dedal/', data, httpOptions).subscribe( 
+        data =>  {
+       //console.log(data)   
+          let wynik = JSON.parse(JSON.stringify(data));    
+          if (wynik.wynik == true) 
+          {
+              this.Odpowiedzi.next(wynik.polecenia);
+              setTimeout(() => {this.odczytuj_odpowiedzi()}, 1000)
+          }
+          else
+          {
+            setTimeout(() => {this.odczytuj_odpowiedzi()}, 1000)
+          }
+                          
+                 },
+        error => {
+        console.log(error)
+                  setTimeout(() => {this.odczytuj_odpowiedzi()}, 1000)
+                 }
+                 )      
+    }
 
 }

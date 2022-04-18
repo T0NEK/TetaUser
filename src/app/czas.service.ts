@@ -9,6 +9,7 @@ import { Sprawdz } from './definicje';
 import { PoleceniaService } from './polecenia.service';
 import { NotatkiService } from './notatki.service';
 import { ZdarzeniaService } from './zdarzenia.service';
+import { DedalService } from './dedal.service';
 
 @Injectable({
   providedIn: 'root'

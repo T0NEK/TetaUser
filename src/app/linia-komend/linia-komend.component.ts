@@ -370,7 +370,7 @@ if (
         setTimeout(() => {
           this.petla.poleceniaWykonaj(this.stanpolecenia.nastepnyTrue,linia);
           this.funkcje.UstawStanPolecenia('');
-          this.polecenia.HistoriaPolecen(0, linia, this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHost());
+          //this.polecenia.HistoriaPolecen(0, linia, this.funkcje.getZalogowany().zalogowany, this.funkcje.getZalogowany().imie + ' ' + this.funkcje.getZalogowany().nazwisko, this.czasy.getCzasDedala(), this.komunikacja.getHostId());
       //   this.funkcje.OdblokujLinieDialogu('');
         }, this.stanpolecenia.czas);
       }   
