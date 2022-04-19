@@ -474,6 +474,7 @@ GetSet(dowykonania: any)
   {
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.czasy.getCzasDedala()); break;
+          case 'modulyall': this.moduly.Wczytajmoduly(0, dowykonania, this.czasy.getCzasDedala()); break;
           case 'reset': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'naprawa': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;

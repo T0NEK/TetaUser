@@ -41,7 +41,7 @@ private odczytaj_moduly(licznik: number, stan: number, dowykonania: any, powod: 
     })
   };
   
-var data = JSON.stringify({ "stan": stan, "czas": czas})  
+var data = JSON.stringify({ "idosoba": stan})  
 
 if (licznik > 0 )
   {
