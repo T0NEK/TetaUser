@@ -104,7 +104,7 @@ OdczytujOdpowiedzi()
           })
         };
         
-      var data = JSON.stringify({"get": "get", "osoba": this.funkcje.getZalogowany().zalogowany })  
+      var data = JSON.stringify({"get": "get", "osoba": this.funkcje.getZalogowany().zalogowany, "terminal": this.komunikacja.getHost() })  
   
       this.http.post(this.komunikacja.getURL() + 'dedal/', data, httpOptions).subscribe( 
         data =>  {

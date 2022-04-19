@@ -66,6 +66,10 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
                             this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
                             this.poleceniaWykonaj('element_D_1','') 
                             break;            
+          case 'pytanie'   : this.bufordaneDedal = [];
+                            this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
+                            this.poleceniaWykonaj('pytanie_D_1','') 
+                            break;            
           case 'info' : this.bufordaneDedal = [];
                             this.bufordaneDedal = [...this.bufordaneDedal, data[0].polecenieText, data[0].poleceniepierwsze, data[0].czaspierwsze, data[0].odpowiedzText];
                             this.poleceniaWykonaj('info_D_1','') 
