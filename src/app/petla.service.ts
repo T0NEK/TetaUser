@@ -11,6 +11,7 @@ import { CzasService } from './czas.service'
 import { ZdarzeniaService } from './zdarzenia.service';
 import { ZespolyService } from './zespoly.service';
 import { DedalService } from './dedal.service';
+import { TestyService } from './testy.service';
 
 
 @Injectable({ providedIn: 'root'})
@@ -22,6 +23,7 @@ private zdarzeniasubscribe_p = new Subscription();
 private modulysubscribe_p = new Subscription();
 private zespolysubscribe_p = new Subscription();
 private zespolsubscribe_p = new Subscription();
+private historiasubscribe_p = new Subscription();
 private poleceniasubscribe_p = new Subscription();
 private dzialaniasubscribe_p = new Subscription();
 private notatkisubscribe_p = new Subscription();
@@ -34,7 +36,7 @@ private bufordaneDedal = Array();
 
 
 
-constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private polecenia: PoleceniaService, private moduly: ModulyService, private notatki: NotatkiService, private czasy: CzasService, private zdarzenia: ZdarzeniaService, private zespoly: ZespolyService, private dedal: DedalService)
+constructor(private funkcje: FunkcjeWspolneService, private komunikacja: KomunikacjaService, private http: HttpClient, private polecenia: PoleceniaService, private moduly: ModulyService, private notatki: NotatkiService, private czasy: CzasService, private zdarzenia: ZdarzeniaService, private zespoly: ZespolyService, private dedal: DedalService, private testy: TestyService)
 {
     //console.log('con polecenia')
 
@@ -86,7 +88,9 @@ constructor(private funkcje: FunkcjeWspolneService, private komunikacja: Komunik
   
   this.modulysubscribe_p = this.moduly.OdczytajModuly$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat) } )
-  this.zespolysubscribe_p = this.zespoly.OdczytajZespoly$.subscribe
+    this.zespolysubscribe_p = this.zespoly.OdczytajZespoly$.subscribe
+    ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
+  this.historiasubscribe_p = this.testy.TestHistoria$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
   this.zespolsubscribe_p = this.zespoly.OdczytajZespol$.subscribe
     ( data => { this.poleceniaWykonaj(data.nastepny, data.komunikat, data.data) } )
@@ -109,6 +113,7 @@ ngOnDestroy()
    if(this.modulysubscribe_p) { this.modulysubscribe_p.unsubscribe(); }   
    if(this.zespolysubscribe_p) { this.zespolysubscribe_p.unsubscribe(); }   
    if(this.zespolsubscribe_p) { this.zespolsubscribe_p.unsubscribe(); }   
+   if(this.historiasubscribe_p) { this.historiasubscribe_p.unsubscribe(); }   
    if(this.poleceniasubscribe_p) { this.poleceniasubscribe_p.unsubscribe(); }   
    if(this.dzialaniasubscribe_p) { this.dzialaniasubscribe_p.unsubscribe(); }   
    if(this.notatkisubscribe_p) { this.notatkisubscribe_p.unsubscribe(); }   
@@ -309,6 +314,7 @@ sprawdzWarunek(warunek: Polecenia): string
   const decyzjeT = ['t', 'T'];
   const decyzjeN = ['n', 'N'];
   const decyzjeC = ['1','2','3','4','5','6','7','8','9','0'];
+  const decyzjeZS = ['ZS01','ZS02','ZS03','ZS04','ZS05','ZS06','ZS07','ZS08','ZS09','ZS10'];
   let wynik: string;
   //console.log( 'warunek',warunek )
   //console.log( 'zalogowany',this.funkcje.getZalogowany() )
@@ -351,6 +357,9 @@ sprawdzWarunek(warunek: Polecenia): string
                           case 'taknie': if ( decyzjeT.concat(decyzjeN).indexOf(this.bufordane[0]) != -1 )
                                         { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
                                 break          
+                          case 'hibernacja': if ( decyzjeZS.indexOf(upper this.bufordane[0]) != -1 )
+                                { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
+                        break                            
                           default: wynik = 'bad'; break;
                           }    
           break;                  
@@ -388,6 +397,9 @@ Testy(dowykonania: any, tekst: string, data: any)
   console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
+    case 'testH': this.funkcje.addDodajHistorie(data, false, 'testy historia'); break;
+    case 'resetH': this.funkcje.addDodajHistorie(data, false, 'reset historia'); break;
+    case 'naprawaH': this.funkcje.addDodajHistorie(data, false, 'naprawa historia'); break;
     case 'zespol': this.funkcje.addDodajInformacje(data, false); break;
     case 'test': this.funkcje.addDodajTest(data, false); break;
     case 'reset': this.funkcje.addDodajReset(data, false); break;
@@ -475,9 +487,13 @@ GetSet(dowykonania: any)
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.czasy.getCzasDedala()); break;
           case 'modulyall': this.moduly.Wczytajmoduly(0, dowykonania, this.czasy.getCzasDedala()); break;
+          case 'testyH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, 'test'); break;
+          case 'resetH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, 'reset'); break;
+          case 'naprawaH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, 'naprawa'); break;
           case 'reset': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'naprawa': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
+          case 'hibernacjaon': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(), 'tak'); break;
           case 'zespoly': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespolyW': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, ['all'], this.czasy.getCzasDedala()); break;
           case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;

@@ -184,6 +184,13 @@ addDodajInformacje(dane: any, clear: boolean)
  this.DodajInformacje.next({"dane": dane, "clear": clear})
 }
 
+private DodajHistorie = new Subject<any>();
+DodajHistorie$ = this.DodajHistorie.asObservable();
+addDodajHistorie(dane: any, clear: boolean, polecenie: string)
+{
+ this.DodajHistorie.next({"dane": dane, "clear": clear, "polecenie": polecenie})
+}
+
 private DodajUszkodzenia = new Subject<any>();
 DodajUszkodzenia$ = this.DodajUszkodzenia.asObservable();
 addDodajUszkodzenia(dane: any, clear: boolean)

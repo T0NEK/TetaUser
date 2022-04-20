@@ -75,16 +75,16 @@ if (licznik > 0 )
 
 
 
-WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string)
+WczytajZespol(stan: number, dowykonania: any, bufor: any, czas: string, dostep: string = 'nie')
 {
     //console.log()
     //this.zespol = [];
-    this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], '', czas);
+    this.odczytaj_zespol(5, stan, dowykonania, bufor[0], bufor[1], dostep, '', czas);
 }
 
 private OdczytajZespol = new Subject<any>();
 OdczytajZespol$ = this.OdczytajZespol.asObservable()
-private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: string, zespol: string, powod: string, czas: string)
+private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: string, zespol: string, dostep: string, powod: string, czas: string)
 {
   const httpOptions = {
     headers: new HttpHeaders({
@@ -94,7 +94,7 @@ private odczytaj_zespol(licznik: number, stan: number, dowykonania: any, modul: 
     })
   };
   
-var data = JSON.stringify({ "stan": stan, "modul": modul, "zespol": zespol, "czas": czas})  
+var data = JSON.stringify({ "stan": stan, "modul": modul, "zespol": zespol, "czas": czas, "dostep": dostep})  
 
 if (licznik > 0 )
   {
@@ -115,7 +115,7 @@ if (licznik > 0 )
                 },
       error => {
         console.log(error)
-                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, '', czas)}, 1000) 
+                setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, dostep, '', czas)}, 1000) 
               }
               )      
   }

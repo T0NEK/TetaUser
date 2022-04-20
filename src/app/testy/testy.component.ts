@@ -19,6 +19,7 @@ export class TestyComponent implements OnInit {
   private zakladkasubscribe = new Subscription();
   private informacjasubscribe = new Subscription();
   private testsubscribe = new Subscription();
+  private historiasubscribe = new Subscription();
   private resetsubscribe = new Subscription();
   private resetwykonajsubscribe = new Subscription();
   private naprawasubscribe = new Subscription();
@@ -67,6 +68,38 @@ export class TestyComponent implements OnInit {
         else
         {
           let wiersze: Wiersze[] = this.Informacja(data);
+          let ilosc: number = wiersze.length; 
+          if (this.wskaznik)
+          {
+            this.wskaznik = false;
+            let start = this.tablicazawartosci.length;
+            for (let index = 0; index < ilosc; index++) { this.tablicazawartosci = this.tablicazawartosci.concat() }  
+            //console.log(this.tablicazawartosci);
+            this.wskaznik = true;
+            this.Wypelnij(start, ilosc, wiersze, 0, 0, 'info')
+          }
+          else
+          {
+
+          }
+          }
+          if (this.checked) { this.Przewin() }
+      }
+    );   
+
+    this.historiasubscribe = funkcje.DodajHistorie$.subscribe
+    ( data => 
+      { 
+        console.log(data)
+        if (data.clear)
+        {
+          this.tablicazawartosci = [];
+          changeDetectorRef.detectChanges();
+          this.VSVDialog.checkViewportSize()
+        }
+        else
+        {
+          let wiersze: Wiersze[] = this.Historia(data);
           let ilosc: number = wiersze.length; 
           if (this.wskaznik)
           {
@@ -167,7 +200,7 @@ export class TestyComponent implements OnInit {
             this.Resetuj(data.start + 2, 0, 0, data.dane, [1, ' - wysyłam reset', ' - czekam', ' - odbieram',' - analizuję', Math.round ( 50 / data.dane.dane[0].elementy), 1], 0); 
             setTimeout(() => 
               {
-                this.testy.ResetStop(this.funkcje.getZalogowany().zalogowany, data.dane.dane[0].idmodul, data.dane.dane[0].id, data.resetkod)
+                this.testy.ResetStop(this.funkcje.getZalogowany().zalogowany, data.dane.dane[0].idmodul, data.dane.dane[0].id, data.resetkod, this.czasy.getCzasDedala())
               }, 1000 * data.dane.dane[0].czasreset);
           }
           else
@@ -235,7 +268,7 @@ export class TestyComponent implements OnInit {
             this.Naprawiaj(data.start + 2, 0, 0, data.dane, [1, ' - wysyłam naprawa', ' - czekam', ' - odbieram',' - analizuję', Math.round ( 50 / data.dane.dane[0].elementy), 1], 0); 
             setTimeout(() => 
               {
-                this.testy.NaprawaStop(this.funkcje.getZalogowany().zalogowany, data.dane.dane[0].idmodul, data.dane.dane[0].id, data.naprawakod)
+                this.testy.NaprawaStop(this.funkcje.getZalogowany().zalogowany, data.dane.dane[0].idmodul, data.dane.dane[0].id, data.naprawakod, this.czasy.getCzasDedala())
               }, 1000 * data.dane.dane[0].czasnaprawa);
           }
           else
@@ -394,6 +427,7 @@ export class TestyComponent implements OnInit {
   if(this.informacjasubscribe) {this.informacjasubscribe.unsubscribe()};
   if(this.testsubscribe) {this.testsubscribe.unsubscribe()};
   if(this.resetsubscribe) {this.resetsubscribe.unsubscribe()};
+  if(this.historiasubscribe) {this.historiasubscribe.unsubscribe()};
   if(this.resetwykonajsubscribe) {this.resetwykonajsubscribe.unsubscribe()};
   if(this.naprawasubscribe) {this.naprawasubscribe.unsubscribe()};
   if(this.naprawawykonajsubscribe) {this.naprawawykonajsubscribe.unsubscribe()};
@@ -654,7 +688,7 @@ Bad2(numer: number, czaswykonania: number, procent: number, data: any, elementy:
         this.VSVDialog.checkViewportSize();
         if (this.checked) { this.Przewin() }
         this.Wypelnij(start, ilosc, wiersze, ++licznik, data, rodzaj, nrtestu)
-          }, 300);          
+          }, 200);          
     }
     else
     switch (rodzaj) {
@@ -851,6 +885,105 @@ Informacja(data: any): Wiersze[]
           ];
   return tablica            
   }
+
+
+Historia(data: any): Wiersze[]
+  {
+    let tablica: Wiersze[] = [];
+      tablica = [...tablica, 
+        this.StartPolecenie(data.polecenie)]
+      for (let index = 0; index < data.dane.length; index++) 
+      {
+        tablica = [...tablica,   
+          this.funkcje.setLiniaWiersz('', '', (index + 1).toString() , '. ', '',
+          [
+            this.funkcje.setNazwaLinia(' moduł: ',
+                                      [
+                                      this.funkcje.setTextNazwa('', data.dane[index].nazwamoduly ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                      ],
+                                      ''),
+            this.funkcje.setNazwaLinia(' zespół: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[index].nazwazespoly,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ''),
+            this.funkcje.setNazwaLinia(' wykonał: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[index].imie,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                        this.funkcje.setTextNazwa('', data.dane[index].nazwisko,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        ],
+                                        ''),
+            this.funkcje.setNazwaLinia(' czas: ',
+                                        [
+                                        this.funkcje.setTextNazwa('', data.dane[index].czasend,' ',this.funkcje.getKolor().liniakomend,''),
+                                        ],
+                                        '')
+            ],
+        '')
+          ]
+        switch (data.polecenie) {
+          case 'testy historia':
+                  let kolor = ( data.dane[index].iloscuszkodzen > 0 ? this.funkcje.getKolor().alert : this.funkcje.getKolor().liniakomend )
+                  tablica = [...tablica,   
+                  this.funkcje.setLiniaWiersz('', '', '  ' , '  ', '',
+                    [
+                      this.funkcje.setNazwaLinia(' ilość problemów: ',
+                                                  [
+                                                  this.funkcje.setTextNazwa('', data.dane[index].iloscuszkodzen,' ', kolor,''),
+                                                  ],
+                                                  ''),
+                      this.funkcje.setNazwaLinia( (data.dane[index].iloscuszkodzen > 0 ? ' -> ' : ''),
+                                                  [
+                                                  this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', kolor,''),
+                                                  ],
+                                                  '')
+                      ],
+                  '')
+                  ]    
+                  break;
+          case 'reset historia':
+                  tablica = [...tablica,   
+                  this.funkcje.setLiniaWiersz('', '', '  ' , '  ', '',
+                    [
+                      this.funkcje.setNazwaLinia(' działanie -> ',
+                                                  [
+                                                  this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', this.funkcje.getKolor().liniakomend,''),
+                                                  ],
+                                                  '')
+                      ],
+                  '')
+                  ]    
+                  break;
+          case 'naprawa historia':
+                    tablica = [...tablica,   
+                    this.funkcje.setLiniaWiersz('', '', '  ' , '  ', '',
+                      [
+                        this.funkcje.setNazwaLinia(' działanie -> ',
+                                                    [
+                                                    this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', this.funkcje.getKolor().liniakomend,''),
+                                                    ],
+                                                    '')
+                        ],
+                    '')
+                    ]    
+                    break;        
+          }  
+        
+      }  
+      tablica = [...tablica,   
+        this.funkcje.setLiniaWiersz('', '', '' , '-- koniec', '',
+          [
+            this.funkcje.setNazwaLinia('',
+                                      [
+                                      this.funkcje.setTextNazwa('', '' ,'','','')
+                                      ],
+                                      '')
+          ],
+      '')
+          ];
+  return tablica            
+  }
+
 
   Pusta():Wiersze[]
   {
