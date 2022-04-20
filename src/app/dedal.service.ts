@@ -25,7 +25,7 @@ PoleceniaDedala$ = this.PoleceniaDedala.asObservable()
 
 Polecenie(poleceniepierwsze: string, czaspierwsze: string, polecenieodpowiedz: string, polecenieid: number, polecenieText: string, osoba: number, osobaText: string, czas: string, terminal: string, odpowiedzText: string)
   {
-    console.log(polecenieid,  osoba , terminal);
+    //console.log(polecenieid,  osoba , terminal);
     if (polecenieid != 0)
     {
         setTimeout(() => 
@@ -67,7 +67,7 @@ Polecenie(poleceniepierwsze: string, czaspierwsze: string, polecenieodpowiedz: s
       --licznik;
       this.http.post(this.komunikacja.getURL() + 'dedal/', data, httpOptions).subscribe( 
         data =>  {
-          console.log(data, licznik)
+          //console.log(data, licznik)
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
@@ -79,7 +79,7 @@ Polecenie(poleceniepierwsze: string, czaspierwsze: string, polecenieodpowiedz: s
                 }
                   },
         error => {
-          console.log(error)
+          //console.log(error)
                   setTimeout(() => {this.set_polecenie(licznik, get, poleceniepierwsze, czaspierwsze, polecenieodpowiedz, polecenieid, polecenieText , osoba, osobaText, czas, terminal, odpowiedzText, error.error)}, 1000) 
                 }
                 )      
@@ -122,7 +122,7 @@ OdczytujOdpowiedzi()
                           
                  },
         error => {
-        console.log(error)
+        //console.log(error)
                   setTimeout(() => {this.odczytuj_odpowiedzi()}, 1000)
                  }
                  )      

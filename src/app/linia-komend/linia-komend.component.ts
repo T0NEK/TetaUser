@@ -257,7 +257,7 @@ constructor(private polecenia: PoleceniaService, private petla: PetlaService, pr
             }
             else
             { 
-              console.log('error Zmiana: ', event) 
+              //console.log('error Zmiana: ', event) 
             }
         }
       break;
@@ -339,7 +339,7 @@ if (
   || ( (!this.funkcje.getPolecenia())&&(this.funkcje.getZalogowany().narosl)&&(this.funkcje.getNrZakladki() == 2 )&&((this.funkcje.getZalogowany().zalogowany != 0)) )
   )
 {
- // console.log(linia)
+ //console.log(linia)
   if ((this.funkcje.getNrZakladki() == 2 )&&((this.funkcje.getZalogowany().zalogowany != 0)))
   {
     this.wiadomosci.WyslijWiadomosc.next(linia);

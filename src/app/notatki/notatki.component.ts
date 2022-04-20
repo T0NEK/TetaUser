@@ -112,8 +112,8 @@ constructor(private funkcje: FunkcjeWspolneService, private all: AppComponent, p
 
   Fokus(event: boolean)
   {
-    console.log(this.notatki.getNotatkaCzyEdycja())
-    console.log(event)
+    //console.log(this.notatki.getNotatkaCzyEdycja())
+   //(event)
    if (this.notatki.getNotatkaCzyEdycja())
    { 
     if (event) 

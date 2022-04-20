@@ -24,23 +24,7 @@ export class NotatkiService {
   
   getNotatki() { return this.notatki; }
 
-  //getNotatkiStan() { return this.notatkiStan; } 
-/*
-  getNotatkaId(identyfikator: string) 
-  {
-    console.log('identyfikator ', identyfikator)
-    for (let index = 0; index < this.notatki.length; index++) 
-    {
-      console.log('this.notatki[index].identyfikator  ', this.notatki[index].identyfikator)
-    if (this.notatki[index].identyfikator == identyfikator)
-    {
-      this.notatkaStan.notatka = this.notatki[index].id;
-      break;
-    }
-    }
-  return this.notatkaStan.notatka;    
-  }
-*/
+
   
 WczytajnotatkiDostep(stan: number, dowykonania: any, id: string)
   {
@@ -156,7 +140,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
       --licznik;
       this.http.post(this.komunikacja.getURL() + 'notatki/', data, httpOptions).subscribe( 
         data =>  {
-          console.log(data)
+          //console.log(data)
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
@@ -178,7 +162,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
                 }
                   },
         error => {
-          console.log(error)
+          //console.log(error)
                   setTimeout(() => {this.zapisz_notatki(licznik, stan, tytul, dowykonania, del, osoba, czas)}, 1000) 
                 }
                 )      
@@ -342,7 +326,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
       --licznik;
       this.http.post(this.komunikacja.getURL() + 'notatka/', data, httpOptions).subscribe( 
         data =>  {
-          console.log(data)
+          //console.log(data)
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
@@ -374,7 +358,7 @@ Wczytajnotatki(stan: number, dowykonania: any)
                 }
                   },
         error => {
-          console.log(error)
+          //console.log(error)
                   setTimeout(() => {this.zapisz_tresc_notatki(licznik, id, wersja, notatka, dowykonania, czas)}, 1000) 
                 }
                 )      

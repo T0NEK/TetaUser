@@ -43,7 +43,7 @@ if (licznik > 0 )
     --licznik;
     this.http.post(this.komunikacja.getURL() + 'testy/', data, httpOptions).subscribe( 
       data =>  {
-        console.log(data)
+        //console.log(data)
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
@@ -55,7 +55,7 @@ if (licznik > 0 )
               }
                 },
       error => {
-        console.log(error)
+        //console.log(error)
                 setTimeout(() => {this.zapisz_test(licznik, osoba, modul, zespol, czasstart, czasend, numer, nrtestu, error.error)}, 1000) 
               }
               )      
@@ -98,7 +98,7 @@ if (licznik > 0 )
     --licznik;
     this.http.post(this.komunikacja.getURL() + 'reset/', data, httpOptions).subscribe( 
       data =>  {
-        console.log(data)
+        //console.log(data)
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
@@ -110,7 +110,7 @@ if (licznik > 0 )
               }
                 },
       error => {
-        console.log(error)
+        //console.log(error)
                 setTimeout(() => {this.wykonaj_reset(licznik, osoba, modul, zespol, stan, resetkod, czasend, error.error, start, dane)}, 1000) 
               }
               )      
@@ -153,7 +153,7 @@ if (licznik > 0 )
     --licznik;
     this.http.post(this.komunikacja.getURL() + 'naprawa/', data, httpOptions).subscribe( 
       data =>  {
-        console.log(data)
+        //console.log(data)
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
@@ -165,7 +165,7 @@ if (licznik > 0 )
               }
                 },
       error => {
-        console.log(error)
+        //console.log(error)
                 setTimeout(() => {this.wykonaj_naprawa(licznik, osoba, modul, zespol, stan, naprawakod, czasend, error.error, start, dane)}, 1000) 
               }
               )      
@@ -200,7 +200,7 @@ if (licznik > 0 )
     --licznik;
     this.http.post(this.komunikacja.getURL() + 'testylog/', data, httpOptions).subscribe( 
       data =>  {
-        console.log(data, dowykonania)
+        //console.log(data, dowykonania)
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
@@ -212,7 +212,7 @@ if (licznik > 0 )
               }
                 },
       error => {
-        console.log(error)
+        //console.log(error)
                 setTimeout(() => {this.wczytaj_test_historia(licznik, dowykonania, osoba, modul, rodzaj, error.error)}, 1000) 
               }
               )      

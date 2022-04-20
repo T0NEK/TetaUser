@@ -18,7 +18,7 @@ export class NawigacjaComponent implements OnInit {
 
   ngOnInit() 
   {
-   // console.log('nawigacja')
+   //console.log('nawigacja')
   }
  
   Changed(event: any)

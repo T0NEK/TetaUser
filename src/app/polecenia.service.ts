@@ -125,7 +125,7 @@ zapisz_historia_polecen(licznik: number, polecenieid: number, polecenieText: str
       --licznik;
       this.http.post(this.komunikacja.getURL() + 'historia/', data, httpOptions).subscribe( 
         data =>  {
-          console.log(data)
+          //console.log(data)
                 let wynik = JSON.parse(JSON.stringify(data));
                 if (wynik.wynik == true) 
                 {
@@ -137,7 +137,7 @@ zapisz_historia_polecen(licznik: number, polecenieid: number, polecenieText: str
                 }
                   },
         error => {
-          console.log(error)
+          //console.log(error)
           setTimeout(() => {this.zapisz_historia_polecen(licznik, polecenieid, polecenieText, osoba, osobaText, czaswykonania, terminal)}, 1000) 
                 }
                 )      
@@ -219,7 +219,7 @@ var data = JSON.stringify({ "stan": stan})
                       "nastepnyFalse": wynik.polecenia[index].nastepnyFalse
                       }]
               } 
-            //  console.log(this.dzialania) 
+            //console.log(this.dzialania) 
             }
             else
             {

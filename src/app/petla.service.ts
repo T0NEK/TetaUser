@@ -357,7 +357,7 @@ sprawdzWarunek(warunek: Polecenia): string
                           case 'taknie': if ( decyzjeT.concat(decyzjeN).indexOf(this.bufordane[0]) != -1 )
                                         { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
                                 break          
-                          case 'hibernacja': if ( decyzjeZS.indexOf(upper this.bufordane[0]) != -1 )
+                          case 'hibernacja': if ( decyzjeZS.indexOf((this.bufordane[1]).toString().toUpperCase()) != -1 )
                                 { wynik = warunek.nastepnyTrue} else { wynik = warunek.nastepnyFalse}
                         break                            
                           default: wynik = 'bad'; break;
@@ -394,12 +394,13 @@ return wynik;
 
 Testy(dowykonania: any, tekst: string, data: any)
 {
-  console.log(dowykonania)
+  //console.log(dowykonania)
   switch (dowykonania.komunikat) 
   {
-    case 'testH': this.funkcje.addDodajHistorie(data, false, 'testy historia'); break;
+    case 'testH': this.funkcje.addDodajHistorie(data, false, 'test historia'); break;
     case 'resetH': this.funkcje.addDodajHistorie(data, false, 'reset historia'); break;
     case 'naprawaH': this.funkcje.addDodajHistorie(data, false, 'naprawa historia'); break;
+    case 'modulH': this.funkcje.addDodajHistorie(data, false, 'moduł historia'); break;
     case 'zespol': this.funkcje.addDodajInformacje(data, false); break;
     case 'test': this.funkcje.addDodajTest(data, false); break;
     case 'reset': this.funkcje.addDodajReset(data, false); break;
@@ -487,13 +488,15 @@ GetSet(dowykonania: any)
     case 'wczytaj': switch (dowykonania.sufix) {
           case 'moduly': this.moduly.Wczytajmoduly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.czasy.getCzasDedala()); break;
           case 'modulyall': this.moduly.Wczytajmoduly(0, dowykonania, this.czasy.getCzasDedala()); break;
-          case 'testyH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, 'test'); break;
-          case 'resetH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, 'reset'); break;
-          case 'naprawaH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, 'naprawa'); break;
+          case 'testyH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, '"test"'); break;
+          case 'resetH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, '"reset"'); break;
+          case 'naprawaH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, '"naprawa"'); break;
+          case 'modulH': this.testy.WczytajTestHistoria(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, '"naprawa", "reset", "test", "polecenie", "inne"'); break;
           case 'reset': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'naprawa': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespol': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'hibernacjaon': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(), 'tak'); break;
+          case 'hibernacjaoff': this.zespoly.WczytajZespol(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala(), 'tak'); break;
           case 'zespoly': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, this.bufordane, this.czasy.getCzasDedala()); break;
           case 'zespolyW': this.zespoly.WczytajZespoly(this.funkcje.getZalogowany().zalogowany, dowykonania, ['all'], this.czasy.getCzasDedala()); break;
           case 'notatki': this.notatki.Wczytajnotatki(this.funkcje.getZalogowany().zalogowany, dowykonania); break;

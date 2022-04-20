@@ -90,7 +90,7 @@ export class TestyComponent implements OnInit {
     this.historiasubscribe = funkcje.DodajHistorie$.subscribe
     ( data => 
       { 
-        console.log(data)
+        //console.log(data)
         if (data.clear)
         {
           this.tablicazawartosci = [];
@@ -224,7 +224,7 @@ export class TestyComponent implements OnInit {
     this.naprawasubscribe = funkcje.DodajNaprawa$.subscribe
     ( data => 
       { 
-        console.log('naprawa')
+        //console.log('naprawa')
         if (data.clear)
         {
           this.tablicazawartosci = [];
@@ -256,14 +256,14 @@ export class TestyComponent implements OnInit {
     this.naprawawykonajsubscribe = testy.WykonajNaprawa$.subscribe
     ( data => 
       { 
-        console.log(data)
+        //console.log(data)
         if (data.kierunek == 'start')
         {
         if (data.wynik)
         {
           if (data.stan)
           {
-            console.log(data.dane.dane[0])
+            //console.log(data.dane.dane[0])
             data.dane.dane[0].czasbadania = this.czasy.getCzasDedala();
             this.Naprawiaj(data.start + 2, 0, 0, data.dane, [1, ' - wysyłam naprawa', ' - czekam', ' - odbieram',' - analizuję', Math.round ( 50 / data.dane.dane[0].elementy), 1], 0); 
             setTimeout(() => 
@@ -895,78 +895,119 @@ Historia(data: any): Wiersze[]
       for (let index = 0; index < data.dane.length; index++) 
       {
         tablica = [...tablica,   
-          this.funkcje.setLiniaWiersz('', '', (index + 1).toString() , '. ', '',
+          this.funkcje.setLiniaWiersz('', '', (index + 1).toString() , '.', '',
           [
-            this.funkcje.setNazwaLinia(' moduł: ',
+            this.funkcje.setNazwaLinia(' moduł:',
                                       [
-                                      this.funkcje.setTextNazwa('', data.dane[index].nazwamoduly ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                      this.funkcje.setTextNazwa(' ', data.dane[index].nazwamoduly ,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                       ],
                                       ''),
-            this.funkcje.setNazwaLinia(' zespół: ',
+            this.funkcje.setNazwaLinia(' zespół:',
                                         [
-                                        this.funkcje.setTextNazwa('', data.dane[index].nazwazespoly,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        this.funkcje.setTextNazwa(' ', data.dane[index].nazwazespoly,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                         ],
                                         ''),
-            this.funkcje.setNazwaLinia(' wykonał: ',
+            this.funkcje.setNazwaLinia(' wykonał:',
                                         [
-                                        this.funkcje.setTextNazwa('', data.dane[index].imie,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
-                                        this.funkcje.setTextNazwa('', data.dane[index].nazwisko,' ',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
+                                        this.funkcje.setTextNazwa(' ', data.dane[index].imie,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                        this.funkcje.setTextNazwa(' ', data.dane[index].nazwisko,'',this.funkcje.getKolor().liniakomend,'liniakomend kursor')
                                         ],
                                         ''),
-            this.funkcje.setNazwaLinia(' czas: ',
+            this.funkcje.setNazwaLinia(' czas:',
                                         [
-                                        this.funkcje.setTextNazwa('', data.dane[index].czasend,' ',this.funkcje.getKolor().liniakomend,''),
+                                        this.funkcje.setTextNazwa(' ', data.dane[index].czasend,'',this.funkcje.getKolor().liniakomend,''),
                                         ],
                                         '')
             ],
         '')
           ]
-        switch (data.polecenie) {
-          case 'testy historia':
+        switch (data.dane[index].rodzaj) {
+          case 'test':
                   let kolor = ( data.dane[index].iloscuszkodzen > 0 ? this.funkcje.getKolor().alert : this.funkcje.getKolor().liniakomend )
                   tablica = [...tablica,   
-                  this.funkcje.setLiniaWiersz('', '', '  ' , '  ', '',
+                  this.funkcje.setLiniaWiersz('', '', '' , '', '',
                     [
-                      this.funkcje.setNazwaLinia(' ilość problemów: ',
+                      this.funkcje.setNazwaLinia(' polecenie: ',
                                                   [
-                                                  this.funkcje.setTextNazwa('', data.dane[index].iloscuszkodzen,' ', kolor,''),
+                                                  this.funkcje.setTextNazwa('', 'test','', this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
                                                   ],
                                                   ''),
-                      this.funkcje.setNazwaLinia( (data.dane[index].iloscuszkodzen > 0 ? ' -> ' : ''),
+                      this.funkcje.setNazwaLinia(' problemów:',
                                                   [
-                                                  this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', kolor,''),
+                                                  this.funkcje.setTextNazwa(' ', data.dane[index].iloscuszkodzen,'', kolor,''),
+                                                  ],
+                                                  ''),
+                      this.funkcje.setNazwaLinia( (data.dane[index].iloscuszkodzen > 0 ? '->' : ''),
+                                                  [
+                                                  this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,'', kolor,''),
                                                   ],
                                                   '')
                       ],
                   '')
                   ]    
                   break;
-          case 'reset historia':
+          case 'reset':
                   tablica = [...tablica,   
-                  this.funkcje.setLiniaWiersz('', '', '  ' , '  ', '',
+                  this.funkcje.setLiniaWiersz('', '', '' , '', '',
                     [
-                      this.funkcje.setNazwaLinia(' działanie -> ',
+                      this.funkcje.setNazwaLinia(' polecenie: ',
                                                   [
-                                                  this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', this.funkcje.getKolor().liniakomend,''),
+                                                  this.funkcje.setTextNazwa('', 'reset','', this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                                  ],
+                                                  ''),
+                      this.funkcje.setNazwaLinia(' działanie->',
+                                                  [
+                                                  this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,'', this.funkcje.getKolor().liniakomend,''),
                                                   ],
                                                   '')
                       ],
                   '')
                   ]    
                   break;
-          case 'naprawa historia':
+          case 'naprawa':
                     tablica = [...tablica,   
-                    this.funkcje.setLiniaWiersz('', '', '  ' , '  ', '',
+                    this.funkcje.setLiniaWiersz('', '', '' , '', '',
                       [
-                        this.funkcje.setNazwaLinia(' działanie -> ',
+                        this.funkcje.setNazwaLinia(' polecenie: ',
+                                                  [
+                                                  this.funkcje.setTextNazwa('', 'naprawa','', this.funkcje.getKolor().liniakomend,'liniakomend kursor'),
+                                                  ],
+                                                  ''),
+                      this.funkcje.setNazwaLinia(' działanie->',
                                                     [
-                                                    this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', this.funkcje.getKolor().liniakomend,''),
+                                                    this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,'', this.funkcje.getKolor().liniakomend,''),
                                                     ],
                                                     '')
                         ],
                     '')
                     ]    
-                    break;        
+                    break;
+          case 'polecenie':
+                      tablica = [...tablica,   
+                      this.funkcje.setLiniaWiersz('', '', '' , '', '',
+                        [
+                          this.funkcje.setNazwaLinia(' polecenie: ',
+                                                      [
+                                                      this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', this.funkcje.getKolor().zalogowany,''),
+                                                      ],
+                                                      '')
+                          ],
+                      '')
+                      ]    
+                      break;                  
+          case 'inne':
+                        tablica = [...tablica,   
+                        this.funkcje.setLiniaWiersz('', '', '' , '', '',
+                          [
+                            this.funkcje.setNazwaLinia(' ',
+                                                        [
+                                                        this.funkcje.setTextNazwa('', data.dane[index].uszkodzeniaText,' ', this.funkcje.getKolor().krytyczny,''),
+                                                        ],
+                                                        '')
+                            ],
+                        '')
+                        ]    
+                        break;                              
           }  
         
       }  

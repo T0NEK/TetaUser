@@ -43,7 +43,7 @@ private odczytaj_osoby(stan: number)
     this.http.post(this.komunikacja.getURL() + 'zalogowani/', data, httpOptions).subscribe( 
       data =>  {
         let wynik = JSON.parse(JSON.stringify(data));   
-       // console.log(wynik) 
+       //console.log(wynik) 
         if (wynik.wynik == true) 
         {
           /*

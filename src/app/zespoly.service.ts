@@ -48,7 +48,7 @@ if (licznik > 0 )
     --licznik;
     this.http.post(this.komunikacja.getURL() + 'zespoly/', data, httpOptions).subscribe( 
       data =>  {
-        console.log(data)
+        //console.log(data)
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
@@ -62,7 +62,7 @@ if (licznik > 0 )
               }
                 },
       error => {
-        console.log(error)
+        //console.log(error)
                 setTimeout(() => {this.odczytaj_zespoly(licznik, stan, dowykonania, modul, '', czas)}, 1000) 
               }
               )      
@@ -101,7 +101,7 @@ if (licznik > 0 )
     --licznik;
     this.http.post(this.komunikacja.getURL() + 'zespol/', data, httpOptions).subscribe( 
       data =>  {
-        console.log(data)
+        //console.log(data)
               let wynik = JSON.parse(JSON.stringify(data));
               if (wynik.wynik == true) 
               {
@@ -114,7 +114,7 @@ if (licznik > 0 )
               }
                 },
       error => {
-        console.log(error)
+        //console.log(error)
                 setTimeout(() => {this.odczytaj_zespol(licznik, stan, dowykonania, modul, zespol, dostep, '', czas)}, 1000) 
               }
               )      
