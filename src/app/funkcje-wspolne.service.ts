@@ -7,7 +7,7 @@ import { Kolory, Linia, Nazwa, Wiersze, Zalogowany } from './definicje';
 
 export class FunkcjeWspolneService {
 
-private dedal = 'dadal';
+private dedal = 'dedal';
 private osoba: Zalogowany;
 private kolory: Kolory;
 public iloscZnakowwKomend = 40;
